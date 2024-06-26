@@ -9,7 +9,9 @@
 
 #include "TRootanaEventLoop.hxx"
 #include "TAnaManager.hxx"
+#include "TTreeManager.hxx"
 
+#include "TTree.h"
 
 class Analyzer: public TRootanaEventLoop {
 
@@ -21,7 +23,8 @@ public:
   // An analysis manager.  Define and fill histograms in 
   // analysis manager.
   TAnaManager *anaManager;
-  
+  TTreeManager* treeManager;
+
   Analyzer() {
     //DisableAutoMainWindow();
     UseBatchMode();
@@ -42,9 +45,9 @@ public:
 
   void InitManager(){
     
-    if(anaManager)
-      delete anaManager;
+    if (anaManager) delete anaManager;
     anaManager = new TAnaManager();
+    treeManager = TTreeManager::GetInstance();
     
   }
   
@@ -52,14 +55,15 @@ public:
   void BeginRun(int transition,int run,int time){
     
     InitManager();
+    treeManager->MakeTree("kobra","kobra"); // should come first.
     anaManager->BeginRun(transition, run, time);
-    
+
   }
 
   void EndRun(int transition,int run,int time){
     
     anaManager->EndRun(transition, run, time);
-    
+    //tree->Write();
   }
 
 
@@ -68,7 +72,7 @@ public:
     if(!anaManager) InitManager();
     
     anaManager->ProcessMidasEvent(dataContainer);
-
+    treeManager->Fill();
     
     return true;
   }

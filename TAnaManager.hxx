@@ -23,6 +23,9 @@
 #include "TKoBRAADCHistogram.h"
 
 #include "TPPACAna.hxx"
+#include "TLPPACAna.hxx"
+#include "TPlasticAna.hxx"
+#include "TSSDAna.hxx"
 
 /// This is an example of how to organize a set of different histograms
 /// so that we can access the same information in a display or a batch
@@ -68,7 +71,10 @@ private:
   //  TH2F *fV1720PHCompare;
   //  TH2F *fV1720TimeCompare;
   std::vector<THistogramArrayBase*> fHistos;
-  TPPACAna *ppac_f2u, *ppac_f2d;
+  TLPPACAna *ppac_f1u, *ppac_f1d;
+  TPPACAna *ppac_f2u, *ppac_f2d, *ppac_f3u, *ppac_f3d;
+  TPlasticAna *pla_f2, *pla_f3;
+  TSSDAna *ssd_f2, *ssd_f3;
 
 };
 

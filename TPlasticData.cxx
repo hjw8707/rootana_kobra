@@ -9,5 +9,5 @@ void TPlasticData::Print() {
     std::cout << " TL = " << tl << ", ";
     std::cout << " TR = " << tr << ", ";
     std::cout << " TSum  = " << tsum << ", ";
-    std::cout << " TDiff = " << tdiff << ", ";
+    std::cout << " TDiff = " << tdiff << "\n";
 }

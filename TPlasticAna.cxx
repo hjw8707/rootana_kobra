@@ -94,6 +94,12 @@ TPlasticData* TPlasticAna::Processing(uint32_t tl, uint32_t tr){
     return static_cast<TPlasticData*>(outdata->Last());
 }
 
+void TPlasticAna::SetTree() {
+    TTree* tree = TTreeManager::GetInstance()->GetTree();
+    tree->Branch(Form("%spla", name.c_str()), &outdata);
+    //tree->Branch(Form("%sppac", name.c_str()), &flagSet, "flagSet/B");
+}
+
 void TPlasticAna::PrintParameters() {
     std::cout << "TPlasticAna: " << name << std::endl;
     std::cout << " Parameters" << std::endl; 
@@ -128,7 +134,9 @@ void TPlasticAna::PrintOutdata() {
     std::cout << "TPlasticAna: " << name << std::endl;
     TPlasticData* d;
     TIter next(outdata);
+    int i = 0;
     while ((d = static_cast<TPlasticData*>(next()))) {
+        std::cout << "Data " << i++ << ": ";
         d->Print();
     }
 }

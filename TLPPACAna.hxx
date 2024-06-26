@@ -1,18 +1,19 @@
-#ifndef TPlasticAna_h
-#define TPlasticAna_h
+#ifndef TLPPACAna_h
+#define TLPPACAna_h
 
 #include <string>
 
 #include "TKoBRATDCData.hxx"
 #include "TClonesArray.h"
 
-#include "TPlasticData.hxx"
+#include "TPPACData.hxx"
+
 #include "TTreeManager.hxx"
 
-class TPlasticAna {
+class TLPPACAna {
 public:
-    TPlasticAna(const char* name, const char* _parfile);
-    ~TPlasticAna();
+    TLPPACAna(const char* name, const char* _parfile);
+    ~TLPPACAna();
 
     void Clear();
 
@@ -20,19 +21,21 @@ public:
 
     void SetData(std::vector<KoBRATDCMeasurement>& _data);
     void Analysis();
-    TPlasticData* Processing(uint32_t tl, uint32_t tr);
+    TPPACData* Processing(uint32_t tx1, uint32_t tx2, 
+                            uint32_t ty1, uint32_t ty2,
+                            uint32_t ta, int lcr);
 
     void PrintParameters();
     void PrintData();
 
     void PrintOutdata();
 
-    inline const TPlasticData* GetData(int i) { return static_cast<TPlasticData*>((*outdata)[i]); }
+    inline const TPPACData* GetData(int i) { return static_cast<TPPACData*>((*outdata)[i]); }
 
     void SetTree();
 
 private:
-    static const int n = 2;
+    static const int n = 9;
 
     std::string name;
     std::vector<uint32_t> data[n]; // data for each XUP, XDN, YUP, YDN, Anode channels
@@ -42,12 +45,12 @@ private:
     bool flagSet;
     bool flagData;
     ///////////////////////////////////////////////////////
-    // channel numbers: [0,1] = [left, right]
+    // channel numbers: [0,1,2,3] = [x_up, x_dn, y_up, y_dn, anode]
     uint32_t chs[n];
     //        
-    // parameters: [0,1] = [left, right]
-    float offset[2];
-    float factor[2];
+    // parameters: [0,1,2,3] = [xl, xc, xr, y]
+    float offset[4];
+    float factor[4];
     float tdc_cut[2];
     ///////////////////////////////////////////////////////
 

@@ -10,7 +10,7 @@ TPPACAna::TPPACAna(const char* _name, const char* _parfile) {
     flagSet = false;
     flagData = false;
 
-    outdata = new TClonesArray("TPPACData", 10);
+    outdata = new TClonesArray("TPPACData");
     SetParameters(_parfile);
 }
 
@@ -33,8 +33,8 @@ void TPPACAna::SetParameters(const char* file) {
         return;}
 
     fin >> chs[0] >> chs[1] >> chs[2] >> chs[3] >> chs[4];
-    fin >> offset[0] >> offset[1] >> offset[2] >> offset[3];
-    fin >> factor[0] >> factor[1] >> factor[2] >> factor[3];
+    fin >> offset[0] >> offset[1];
+    fin >> factor[0] >> factor[1];
     fin >> tdc_cut[0] >> tdc_cut[1];
     fin.close();
     
@@ -91,10 +91,16 @@ TPPACData* TPPACAna::Processing(uint32_t tx1, uint32_t tx2,
                             uint32_t ty1, uint32_t ty2,
                             uint32_t ta){
     float x = (float(tx1) - float(tx2))*factor[0]+offset[0];
-    float y = (float(ty1) - float(ty2))*factor[2]+offset[2];
+    float y = (float(ty1) - float(ty2))*factor[1]+offset[1];
     
     new((*outdata)[outdata->GetEntriesFast()]) TPPACData(tx1, tx2, ty1, ty2, ta, x, y);
     return static_cast<TPPACData*>(outdata->Last());
+}
+
+void TPPACAna::SetTree() {
+    TTree* tree = TTreeManager::GetInstance()->GetTree();
+    tree->Branch(Form("%sppac", name.c_str()), &outdata);
+    //tree->Branch(Form("%sppac", name.c_str()), &flagSet, "flagSet/B");
 }
 
 void TPPACAna::PrintParameters() {
@@ -105,11 +111,11 @@ void TPPACAna::PrintParameters() {
         std::cout << chs[i] << " ";
     std::cout << "\n";
     std::cout << " Offsets: ";
-    for (int i = 0 ; i < 4 ; i++)
+    for (int i = 0 ; i < 2 ; i++)
         std::cout << offset[i] << " ";
     std::cout << "\n";
     std::cout << " Factors: ";
-    for (int i = 0 ; i < 4 ; i++)
+    for (int i = 0 ; i < 2 ; i++)
         std::cout << factor[i] << " ";
     std::cout << "\n";
     std::cout << " TDC cuts: " << tdc_cut[0] << " " << tdc_cut[1];
@@ -131,7 +137,9 @@ void TPPACAna::PrintOutdata() {
     std::cout << "TPPACAna: " << name << std::endl;
     TPPACData* d;
     TIter next(outdata);
+    int i = 0;
     while ((d = static_cast<TPPACData*>(next()))) {
+        std::cout << "Data " << i++ << ": ";        
         d->Print();
     }
 }

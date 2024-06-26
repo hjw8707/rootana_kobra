@@ -8,6 +8,8 @@
 
 #include "TPPACData.hxx"
 
+#include "TTreeManager.hxx"
+
 class TPPACAna {
 public:
     TPPACAna(const char* name, const char* _parfile);
@@ -30,6 +32,8 @@ public:
 
     inline const TPPACData* GetData(int i) { return static_cast<TPPACData*>((*outdata)[i]); }
 
+    void SetTree();
+
 private:
     static const int n = 5;
 
@@ -44,9 +48,9 @@ private:
     // channel numbers: [0,1,2,3] = [x_up, x_dn, y_up, y_dn, anode]
     uint32_t chs[n];
     //        
-    // parameters: [0,1,2,3] = [x_up, x_dn, y_up, y_dn]
-    float offset[4];
-    float factor[4];
+    // parameters: [0,1] = [x, y]
+    float offset[2];
+    float factor[2];
     float tdc_cut[2];
     ///////////////////////////////////////////////////////
 

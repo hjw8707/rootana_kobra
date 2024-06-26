@@ -1,0 +1,4 @@
+{
+  gSystem->Load("libanadict");
+
+}
