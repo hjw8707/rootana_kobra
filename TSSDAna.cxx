@@ -146,7 +146,7 @@ TSSDData *TSSDAna::Processing(int ch, uint32_t adc)
 void TSSDAna::SetTree()
 {
     TTree *tree = TTreeManager::GetInstance()->GetTree();
-    tree->Branch(Form("%sssd", name.c_str()), &outdata);
+    tree->Branch(Form("%s", name.c_str()), &outdata);
 }
 
 void TSSDAna::PrintParameters()

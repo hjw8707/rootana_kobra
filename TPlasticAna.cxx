@@ -166,7 +166,7 @@ TPlasticData *TPlasticAna::Processing(uint32_t tl, uint32_t tr)
 void TPlasticAna::SetTree()
 {
     TTree *tree = TTreeManager::GetInstance()->GetTree();
-    tree->Branch(Form("%spla", name.c_str()), &outdata);
+    tree->Branch(Form("%s", name.c_str()), &outdata);
     // tree->Branch(Form("%sppac", name.c_str()), &flagSet, "flagSet/B");
 }
 

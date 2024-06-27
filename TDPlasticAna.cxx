@@ -175,7 +175,7 @@ TPlasticData *TDPlasticAna::Processing(uint32_t tl, uint32_t tr, uint32_t al, ui
 void TDPlasticAna::SetTree()
 {
     TTree *tree = TTreeManager::GetInstance()->GetTree();
-    tree->Branch(Form("%sdpla", name.c_str()), &outdata);
+    tree->Branch(Form("%s", name.c_str()), &outdata);
 }
 
 void TDPlasticAna::PrintParameters()

@@ -1,0 +1,18 @@
+ f1uppac  KoBRATDC  F1PA    LPPAC     PAR_F1UPPAC.txt
+ f1dppac  KoBRATDC  F1PA    LPPAC     PAR_F1DPPAC.txt
+ f2uppac  KoBRATDC  F2PA    PPAC      PAR_F2UPPAC.txt
+ f2dppac  KoBRATDC  F2PA    PPAC      PAR_F2DPPAC.txt
+ f3uppac  KoBRATDC  F3PA    PPAC      PAR_F3UPPAC.txt
+ f3dppac  KoBRATDC  F3PA    PPAC      PAR_F3DPPAC.txt
+ censppac KoBRATDC  F3PA    PPAC      PAR_SCPPAC.txt
+ f2pla    KoBRATDC  F3PA    Plastic   PAR_F2Plastic.txt
+ f3pla    KoBRATDC  F3PA    Plastic   PAR_F3Plastic.txt
+ f2dpla   KoBRADIG  V1730   DPlastic  PAR_F2DPlastic.txt
+ f3dpla   KoBRADIG  V1730   DPlastic  PAR_F3DPlastic.txt
+ f1ppt    KoBRATDC  F3PA    Plastic   PAR_F1PPT.txt       1
+ f2uppt   KoBRATDC  F3PA    Plastic   PAR_F2PPTU.txt      1
+ f2dppt   KoBRATDC  F3PA    Plastic   PAR_F2PPTD.txt      1
+ f3uppt   KoBRATDC  F3PA    Plastic   PAR_F3PPTU.txt      1
+ f3dppt   KoBRATDC  F3PA    Plastic   PAR_F3PPTD.txt      1
+ f2ssd    KoBRAADC  F3SI    SSD       PAR_F2SSD.txt       16
+ f3ssd    KoBRAADC  F3SI    SSD       PAR_F3SSD.txt       16

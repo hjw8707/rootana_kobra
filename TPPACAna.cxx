@@ -153,7 +153,7 @@ TPPACData *TPPACAna::Processing(uint32_t tx1, uint32_t tx2,
 void TPPACAna::SetTree()
 {
     TTree *tree = TTreeManager::GetInstance()->GetTree();
-    tree->Branch(Form("%sppac", name.c_str()), &outdata);
+    tree->Branch(Form("%s", name.c_str()), &outdata);
     // tree->Branch(Form("%sppac", name.c_str()), &flagSet, "flagSet/B");
 }
 
