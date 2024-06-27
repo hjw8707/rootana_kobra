@@ -6,11 +6,12 @@
 #include "TKoBRATDCData.hxx"
 #include "TClonesArray.h"
 
+#include "TDetectorAna.hxx"
 #include "TPPACData.hxx"
 
 #include "TTreeManager.hxx"
 
-class TPPACAna {
+class TPPACAna: public TDetectorAna {
 public:
     TPPACAna(const char* name, const char* _parfile);
     ~TPPACAna();
@@ -19,7 +20,8 @@ public:
 
     void SetParameters(const char* file);
 
-    void SetData(std::vector<KoBRATDCMeasurement>& _data);
+    //void SetData(std::vector<KoBRATDCMeasurement>& _data);
+    void SetData(TGenericData* data);        
     void Analysis();
     TPPACData* Processing(uint32_t tx1, uint32_t tx2, 
                             uint32_t ty1, uint32_t ty2,
@@ -46,11 +48,11 @@ private:
     bool flagData;
     ///////////////////////////////////////////////////////
     // channel numbers: [0,1,2,3] = [x_up, x_dn, y_up, y_dn, anode]
-    uint32_t chs[n];
-    //        
-    // parameters: [0,1] = [x, y]
-    float offset[2];
-    float factor[2];
+    std::vector<uint32_t> chs;
+    //
+    // parameters: [0,1,2,3] = [xl, xc, xr, y]
+    std::vector<float> offset;
+    std::vector<float> factor;
     float tdc_cut[2];
     ///////////////////////////////////////////////////////
 

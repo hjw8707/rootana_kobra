@@ -3,22 +3,26 @@
 
 #include "TObject.h"
 
-class TPlasticData: public TObject {
-    public:
-    TPlasticData():
-            tl(0), tr(0), tsum(0), tdiff(0)
-            {}    
-    TPlasticData(uint32_t _tl, uint32_t _tr, float _tsum, float _tdiff):
-            tl(_tl), tr(_tr), tsum(_tsum), tdiff(_tdiff)
-            {}
-    virtual ~TPlasticData() {}
+class TPlasticData : public TObject
+{
+public:
+        TPlasticData() : tl(0), tr(0), tsum(0), tdiff(0), al(0), ar(0)
+        {
+        }
+        TPlasticData(uint32_t _tl, uint32_t _tr, float _tsum, float _tdiff, float _al = 0, float _ar = 0) : 
+        tl(_tl), tr(_tr), tsum(_tsum), tdiff(_tdiff), al(_al), ar(_ar)
+        {
+        }
+        virtual ~TPlasticData() {}
 
-    void Print();
+        inline float GetTAve() const { return tsum / 2.; }
+        void Print();
 
-    uint32_t tl, tr;
-    float tsum, tdiff;
+        uint32_t tl, tr;
+        float al, ar;
+        float tsum, tdiff;
 
-    ClassDef(TPlasticData,1)
+        ClassDef(TPlasticData, 1)
 };
 
 #endif

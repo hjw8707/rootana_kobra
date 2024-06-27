@@ -1,4 +1,4 @@
-#include "TPlasticAna.hxx"
+#include "TDPlasticAna.hxx"
 #include "TCollection.h"
 
 #include <iostream>
@@ -6,7 +6,7 @@
 #include <fstream>
 #include <string>
 
-TPlasticAna::TPlasticAna(const char *_name, const char *_parfile, int _n)
+TDPlasticAna::TDPlasticAna(const char *_name, const char *_parfile, int _n)
 {
     name = _name;
     n = _n;
@@ -17,13 +17,13 @@ TPlasticAna::TPlasticAna(const char *_name, const char *_parfile, int _n)
     SetParameters(_parfile);
 }
 
-TPlasticAna::~TPlasticAna()
+TDPlasticAna::~TDPlasticAna()
 {
     outdata->Clear("C");
     delete outdata;
 };
 
-void TPlasticAna::Clear()
+void TDPlasticAna::Clear()
 {
     for (int i = 0; i < n; i++)
         data[i].clear();
@@ -31,7 +31,7 @@ void TPlasticAna::Clear()
     outdata->Clear("C");
 }
 
-void TPlasticAna::SetParameters(const char *file)
+void TDPlasticAna::SetParameters(const char *file)
 {
     std::ifstream fin(file);
     if (not fin.is_open())
@@ -64,14 +64,24 @@ void TPlasticAna::SetParameters(const char *file)
             break;
         case 1:
             while (iss >> fnum)
-                offset.push_back(fnum);
+                t_offset.push_back(fnum);
             break;
         case 2:
             while (iss >> fnum)
-                factor.push_back(fnum);
+                t_factor.push_back(fnum);
             break;
         case 3:
+            while (iss >> fnum)
+                a_offset.push_back(fnum);
+            break;
+        case 4:
+            while (iss >> fnum)
+                a_factor.push_back(fnum);
+            break;
+        case 5:
             iss >> tdc_cut[0] >> tdc_cut[1];
+        case 6:
+            iss >> adc_cut[0] >> adc_cut[1];
         default:
             break;
         }
@@ -81,26 +91,24 @@ void TPlasticAna::SetParameters(const char *file)
     flagSet = true;
 }
 
-//void TPlasticAna::SetData(std::vector<KoBRATDCMeasurement> &_data)
-void TPlasticAna::SetData(TGenericData *rdata)
+//void TDPlasticAna::SetData(std::vector<KoBRADIGMeasurement> &_data)
+void TDPlasticAna::SetData(TGenericData *rdata)
 {
     if (!flagSet)
         return;
 
-    if (!rdata)
-        return;
-
-    std::vector<KoBRATDCMeasurement> _data =
-        static_cast<TKoBRATDCData *>(rdata)->GetMeasurements();
+    if (!rdata) return;
+    
+    std::vector<KoBRADIGMeasurement> _data = static_cast<TKoBRADIGData*>(rdata)->GetMeasurements();
 
     for (auto it = _data.begin(); it != _data.end(); it++)
     {
         for (int i = 0; i < n; i++)
         {
             if (chs[i] == it->GetChannel() &&
-                it->GetMeasurement() > tdc_cut[0] &&
-                it->GetMeasurement() < tdc_cut[1])
-                data[i].push_back(it->GetMeasurement());
+                it->GetTime() > tdc_cut[0] && it->GetTime() < tdc_cut[1] &&
+                it->GetEnergy() > adc_cut[0] && it->GetEnergy() < adc_cut[1])
+                data[i].push_back(std::make_pair(it->GetTime(), it->GetEnergy()));
         }
     }
 
@@ -110,7 +118,7 @@ void TPlasticAna::SetData(TGenericData *rdata)
             flagData = false;
 }
 
-void TPlasticAna::Analysis()
+void TDPlasticAna::Analysis()
 {
     if (!flagSet)
         return;
@@ -122,7 +130,7 @@ void TPlasticAna::Analysis()
     if (n == 1)
     {
         for (auto it = data[0].begin(); it != data[0].end(); it++)
-            Processing(*it, 0);
+            Processing(it->first, 0, it->second, 0);
 
         return;
     }
@@ -133,12 +141,11 @@ void TPlasticAna::Analysis()
     uint32_t *idx = new uint32_t[n];
     for (int i = 0; i < n; i++)
         idx[i] = 0;
-
     ////////////////////////////////////////////////////////////////////
     // all combinations
     while (1)
     {
-        Processing(data[0][idx[0]], data[1][idx[1]]);
+        Processing(data[0][idx[0]].first, data[1][idx[1]].first, data[0][idx[0]].second, data[1][idx[1]].second);
 
         int next = n - 1;
         while (next >= 0 && idx[next] + 1 >= data[next].size())
@@ -154,60 +161,71 @@ void TPlasticAna::Analysis()
     ////////////////////////////////////////////////////////////////////
 }
 
-TPlasticData *TPlasticAna::Processing(uint32_t tl, uint32_t tr)
+TPlasticData *TDPlasticAna::Processing(uint32_t tl, uint32_t tr, uint32_t al, uint32_t ar)
 {
-    float tsum = (float(tl) + float(tr)) * factor[0] + offset[0];
-    float tdiff = (float(tl) - float(tr)) * factor[0] + offset[0];
+    float tsum = (float(tl) + float(tr)) * t_factor[0] + t_offset[0];
+    float tdiff = (float(tl) - float(tr)) * t_factor[0] + t_offset[0];
+    float acl = al * a_factor[0] + a_offset[0];
+    float acr = ar * a_factor[1] + a_offset[1];
 
-    new ((*outdata)[outdata->GetEntriesFast()]) TPlasticData(tl, tr, tsum, tdiff);
+    new ((*outdata)[outdata->GetEntriesFast()]) TPlasticData(tl, tr, tsum, tdiff, acl, acr);
     return static_cast<TPlasticData *>(outdata->Last());
 }
 
-void TPlasticAna::SetTree()
+void TDPlasticAna::SetTree()
 {
     TTree *tree = TTreeManager::GetInstance()->GetTree();
-    tree->Branch(Form("%spla", name.c_str()), &outdata);
-    // tree->Branch(Form("%sppac", name.c_str()), &flagSet, "flagSet/B");
+    tree->Branch(Form("%sdpla", name.c_str()), &outdata);
 }
 
-void TPlasticAna::PrintParameters()
+void TDPlasticAna::PrintParameters()
 {
-    std::cout << "TPlasticAna: " << name << std::endl;
+    std::cout << "TDPlasticAna: " << name << std::endl;
     std::cout << " Parameters" << std::endl;
     std::cout << " Channels: ";
     for (int i = 0; i < n; i++)
         std::cout << chs[i] << " ";
     std::cout << "\n";
-    std::cout << " Offsets: ";
+    std::cout << " T Offsets: ";
     for (int i = 0; i < 2; i++)
-        std::cout << offset[i] << " ";
+        std::cout << t_offset[i] << " ";
     std::cout << "\n";
-    std::cout << " Factors: ";
+    std::cout << " T Factors: ";
     for (int i = 0; i < 2; i++)
-        std::cout << factor[i] << " ";
+        std::cout << t_factor[i] << " ";
+    std::cout << "\n";
+    std::cout << " A Offsets: ";
+    for (int i = 0; i < 2; i++)
+        std::cout << a_offset[i] << " ";
+    std::cout << "\n";
+    std::cout << " A Factors: ";
+    for (int i = 0; i < 2; i++)
+        std::cout << a_factor[i] << " ";
     std::cout << "\n";
     std::cout << " TDC cuts: " << tdc_cut[0] << " " << tdc_cut[1];
     std::cout << "\n";
+    std::cout << " ADC cuts: " << adc_cut[0] << " " << adc_cut[1];
+    std::cout << "\n";
 }
 
-void TPlasticAna::PrintData()
+void TDPlasticAna::PrintData()
 {
-    std::cout << "TPlasticAna: " << name << std::endl;
+    std::cout << "TDPlasticAna: " << name << std::endl;
     const char *label[n] = {"Left", "Right"};
     for (int j = 0; j < n; j++)
     {
         std::cout << " " << label[j] << ": ";
         for (int i = 0; i < int(data[j].size()); i++)
-            std::cout << data[j][i] << " ";
+            std::cout << data[j][i].first << " " << data[j][i].second;
         std::cout << "\n";
     }
 }
 
-void TPlasticAna::PrintOutdata()
+void TDPlasticAna::PrintOutdata()
 {
     if (outdata->IsEmpty())
         return;
-    std::cout << "TPlasticAna: " << name << std::endl;
+    std::cout << "TDPlasticAna: " << name << std::endl;
     TPlasticData *d;
     TIter next(outdata);
     int i = 0;

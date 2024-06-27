@@ -452,6 +452,8 @@ void TPlasticData::Streamer(TBuffer &R__b)
       TObject::Streamer(R__b);
       R__b >> tl;
       R__b >> tr;
+      R__b >> al;
+      R__b >> ar;
       R__b >> tsum;
       R__b >> tdiff;
       R__b.CheckByteCount(R__s, R__c, TPlasticData::IsA());
@@ -460,6 +462,8 @@ void TPlasticData::Streamer(TBuffer &R__b)
       TObject::Streamer(R__b);
       R__b << tl;
       R__b << tr;
+      R__b << al;
+      R__b << ar;
       R__b << tsum;
       R__b << tdiff;
       R__b.SetByteCount(R__c, kTRUE);

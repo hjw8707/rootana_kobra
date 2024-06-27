@@ -1,29 +1,30 @@
-#ifndef TPlasticAna_h
-#define TPlasticAna_h
+#ifndef TDPlasticAna_h
+#define TDPlasticAna_h
 
 #include <string>
+#include <utility>
 
-#include "TKoBRATDCData.hxx"
+#include "TKoBRADIGData.hxx"
 #include "TClonesArray.h"
 
 #include "TDetectorAna.hxx"
 #include "TPlasticData.hxx"
 #include "TTreeManager.hxx"
 
-class TPlasticAna : public TDetectorAna
+class TDPlasticAna : public TDetectorAna
 {
 public:
-    TPlasticAna(const char *name, const char *_parfile, int _n = 2);
-    ~TPlasticAna();
+    TDPlasticAna(const char *name, const char *_parfile, int _n = 2);
+    ~TDPlasticAna();
 
     void Clear();
 
     void SetParameters(const char *file);
 
-    //void SetData(std::vector<KoBRATDCMeasurement> &_data);
-    void SetData(TGenericData* data);        
+    //void SetData(std::vector<KoBRADIGMeasurement> &_data);
+    void SetData(TGenericData* data);
     void Analysis();
-    TPlasticData *Processing(uint32_t tl, uint32_t tr);
+    TPlasticData *Processing(uint32_t tl, uint32_t tr, uint32_t al, uint32_t ar);
 
     void PrintParameters();
     void PrintData();
@@ -38,10 +39,9 @@ private:
     int n;
 
     std::string name;
-    std::vector<uint32_t> data[2]; // data for each XUP, XDN, YUP, YDN, Anode channels
+    std::vector<std::pair<uint32_t, uint32_t>> data[2]; // data for each Left, Right
 
-    TClonesArray *outdata;
-    ; // processed data
+    TClonesArray *outdata; // processed data
 
     bool flagSet;
     bool flagData;
@@ -50,9 +50,12 @@ private:
     std::vector<uint32_t> chs;
     //
     // parameters: [0,1] = [left, right]
-    std::vector<float> offset;
-    std::vector<float> factor;
+    std::vector<float> t_offset;
+    std::vector<float> t_factor;
+    std::vector<float> a_offset;
+    std::vector<float> a_factor;
     float tdc_cut[2];
+    float adc_cut[2];
     ///////////////////////////////////////////////////////
 };
 
