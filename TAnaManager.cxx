@@ -2,25 +2,75 @@
 #include "TV1190Data.hxx"
 #include "TRB3Decoder.hxx"
 
+#include "TTreeManager.hxx"
+#include "TTreeFormula.h"
+
+#include "TH1.h"
+#include <string>
+
 TAnaManager::TAnaManager()
 {
+  treeMan = TTreeManager::GetInstance();
+  treeMan->MakeTree("kobra", "kobra");
+
   detMan = TDetectorManager::GetInstance();
-
-  AddHistogram(new TKoBRATDCHistograms("F1PA"));
-  AddHistogram(new TKoBRATDCHistograms("F2PA"));
-  AddHistogram(new TKoBRATDCHistograms("F3PA"));
-  AddHistogram(new TKoBRAADCHistograms("F3SI"));
-};
-
-void TAnaManager::BeginRun(int, int, int)
-{
   detMan->LoadAnaList("analist.txt");
   detMan->PrintParametersAll();
   detMan->SetTreeAll();
+
+  /*
+    AddHistogram(new TKoBRATDCHistograms("F1PA"));
+    AddHistogram(new TKoBRATDCHistograms("F2PA"));
+    AddHistogram(new TKoBRATDCHistograms("F3PA"));
+    AddHistogram(new TKoBRAADCHistograms("F3SI"));
+    AddHistogram(new TKoBRADIGHistograms("V1730"));
+    AddHistogram(new TKoBRADIGHistograms("V221730"));
+
+    AddHistogram(new TPPACHistograms("f1uppac", detMan->GetDetectorAna("f1uppac")->GetDataArray()));
+    AddHistogram(new TPPACHistograms("f1dppac", detMan->GetDetectorAna("f1dppac")->GetDataArray()));
+    AddHistogram(new TPPACHistograms("f2uppac", detMan->GetDetectorAna("f2uppac")->GetDataArray()));
+    AddHistogram(new TPPACHistograms("f2dppac", detMan->GetDetectorAna("f2dppac")->GetDataArray()));
+    AddHistogram(new TPPACHistograms("f3uppac", detMan->GetDetectorAna("f3uppac")->GetDataArray()));
+    AddHistogram(new TPPACHistograms("f3dppac", detMan->GetDetectorAna("f3dppac")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f2pla", detMan->GetDetectorAna("f2pla")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f3pla", detMan->GetDetectorAna("f3pla")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f2dpla", detMan->GetDetectorAna("f2dpla")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f3dpla", detMan->GetDetectorAna("f3dpla")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f1ppt", detMan->GetDetectorAna("f1ppt")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f2uppt", detMan->GetDetectorAna("f2uppt")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f2dppt", detMan->GetDetectorAna("f2dppt")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f3uppt", detMan->GetDetectorAna("f3uppt")->GetDataArray()));
+    AddHistogram(new TPlasticHistograms("f3dppt", detMan->GetDetectorAna("f3dppt")->GetDataArray()));
+    AddHistogram(new TSSDHistograms("f2ssd", detMan->GetDetectorAna("f2ssd")->GetDataArray()));
+    AddHistogram(new TSSDHistograms("f3ssd", detMan->GetDetectorAna("f3ssd")->GetDataArray()));
+    AddHistogram(new TPIDHistograms("pid", detMan->GetDetectorAna("f2pla")->GetDataArray(),
+                                    detMan->GetDetectorAna("f3pla")->GetDataArray(),
+                                    detMan->GetDetectorAna("f2ssd")->GetDataArray(),
+                                    detMan->GetDetectorAna("f3ssd")->GetDataArray()));
+    AddHistogram(new TTrackHistograms("f1track", detMan->GetDetectorAna("f1uppac")->GetDataArray(),
+                                      detMan->GetDetectorAna("f1dppac")->GetDataArray(), 527));
+    AddHistogram(new TTrackHistograms("f2track", detMan->GetDetectorAna("f2uppac")->GetDataArray(),
+                                      detMan->GetDetectorAna("f2dppac")->GetDataArray(), 480));
+    AddHistogram(new TTrackHistograms("f3track", detMan->GetDetectorAna("f3uppac")->GetDataArray(),
+                                      detMan->GetDetectorAna("f3dppac")->GetDataArray(), 570));
+  */
+  histMan = THistManager::GetInstance();
+  histMan->AddHistFromFile("histlist.txt");
+  canMan = TCanvasManager::GetInstance();
+  canMan->AddCanvasAndHistFromFile("canlist.txt");
+};
+
+void TAnaManager::BeginRun(int transition, int run, int)
+{
+  std::cout << "Start Run " << run << std::endl;
+  std::cout << "Transition " << transition << std::endl;
+  histMan->Reset();
+  treeMan->Reset();
 }
 
-void TAnaManager::EndRun(int, int, int)
+void TAnaManager::EndRun(int, int run, int)
 {
+  std::cout << "End Run " << run << std::endl;
 }
 
 void TAnaManager::AddHistogram(THistogramArrayBase *histo)
@@ -49,6 +99,8 @@ int TAnaManager::ProcessMidasEvent(TDataContainer &dataContainer)
   detMan->SetDataAll(dataContainer);
   detMan->AnalysisAll();
 
+  treeMan->Fill();
+  histMan->Fill();
   return 1;
 }
 

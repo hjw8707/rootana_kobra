@@ -32,7 +32,9 @@ public:
 
     void PrintOutdata();
 
-    inline const TPPACData* GetData(int i) { return static_cast<TPPACData*>((*outdata)[i]); }
+    inline const int GetNData() { return outdata->GetEntriesFast(); }
+    inline TPPACData* GetData(int i) { return static_cast<TPPACData*>((*outdata)[i]); }
+    inline TClonesArray* GetDataArray() { return outdata; }
 
     void SetTree();
 

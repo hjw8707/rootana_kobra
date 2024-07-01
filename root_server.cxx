@@ -10,85 +10,97 @@
 #include "TRootanaEventLoop.hxx"
 #include "TAnaManager.hxx"
 
+#include "TKoBRASniffer.hxx"
 
-class Analyzer: public TRootanaEventLoop {
-
-
-
+class Analyzer : public TRootanaEventLoop
+{
 
 public:
-
-  // An analysis manager.  Define and fill histograms in 
+  // An analysis manager.  Define and fill histograms in
   // analysis manager.
   TAnaManager *anaManager;
-  
-  Analyzer() {
-    //DisableAutoMainWindow();
+
+  Analyzer()
+  {
+    // DisableAutoMainWindow();
     UseBatchMode();
     anaManager = 0;
     DisableRootOutput(true);
     SetOnlineName("jsroot_server");
     gettimeofday(&LastUpdateTime, NULL);
 
+    InitManager();
   };
-
 
   virtual ~Analyzer() {};
 
-  void Initialize(){
+  void TestFunc()
+  {
+    std::cout << "Test" << std::endl;
+  };
 
-#ifdef HAVE_THTTP_SERVER
+  void Initialize()
+  {
+
     std::cout << "Using THttpServer in read/write mode" << std::endl;
     SetTHttpServerReadWrite();
-#endif
 
+    auto http = GetTHttpServer();
+    TKoBRASniffer *sniffer = new TKoBRASniffer;
+    http->SetSniffer(sniffer);
+    //http->RegisterCommand("/DoSomething", "TestFunc()", "button;rootsys/icons/ed_execute.png");
+    //http->RegisterCommand("/DoSomething2", "this->TestFunc()", "button;rootsys/icons/ed_interrupt.png");
+    //http->SetItemField("/","_toptitle","KoBRA Online Analysis");
   }
 
-  void InitManager(){
-    
-    if(anaManager)
+  void InitManager()
+  {
+
+    if (anaManager)
       delete anaManager;
     anaManager = new TAnaManager();
-    
-  }
-  
-
-  void BeginRun(int transition,int run,int time){
-    
-    InitManager();
-    
+    anaManager->SetTHttpServer(GetTHttpServer());
   }
 
-  struct timeval LastUpdateTime;  
+  void BeginRun(int transition, int run, int time)
+  {
+    anaManager->BeginRun(transition, run, time);
+  }
 
-  bool ProcessMidasEvent(TDataContainer& dataContainer){
+  void EndRun(int transition, int run, int time)
+  {
+    anaManager->EndRun(transition, run, time);
+  }  
 
-    if(!anaManager) InitManager();
-    
+  struct timeval LastUpdateTime;
+
+  bool ProcessMidasEvent(TDataContainer &dataContainer)
+  {
+
+    if (!anaManager)
+      InitManager();
+
     anaManager->ProcessMidasEvent(dataContainer);
 
     // Only update the transient histograms (like waveforms or event displays) every second.
     // Otherwise hammers CPU for no reason.
-    struct timeval nowTime;  
-    gettimeofday(&nowTime, NULL);    
-    double dtime = nowTime.tv_sec - LastUpdateTime.tv_sec + (nowTime.tv_usec - LastUpdateTime.tv_usec)/1000000.0;
-    if(dtime > 1.0){ 
-      anaManager->UpdateTransientPlots(dataContainer); 
+    /*
+    struct timeval nowTime;
+    gettimeofday(&nowTime, NULL);
+    double dtime = nowTime.tv_sec - LastUpdateTime.tv_sec + (nowTime.tv_usec - LastUpdateTime.tv_usec) / 1000000.0;
+    if (dtime > 1.0)
+    {
+      anaManager->UpdateTransientPlots(dataContainer);
       LastUpdateTime = nowTime;
     }
-    
+  */
     return true;
   }
-
-
-}; 
-
+};
 
 int main(int argc, char *argv[])
 {
 
   Analyzer::CreateSingleton<Analyzer>();
   return Analyzer::Get().ExecuteLoop(argc, argv);
-
 }
-

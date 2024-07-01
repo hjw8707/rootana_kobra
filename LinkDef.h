@@ -7,3 +7,5 @@
 #pragma link C++ class TLPPACData;
 #pragma link C++ class TPlasticData;
 
+#pragma link C++ class TKoBRASniffer+;
+

@@ -13,79 +13,70 @@
 
 #include "TTree.h"
 
-class Analyzer: public TRootanaEventLoop {
-
-
-
+class Analyzer : public TRootanaEventLoop
+{
 
 public:
-
-  // An analysis manager.  Define and fill histograms in 
+  // An analysis manager.  Define and fill histograms in
   // analysis manager.
   TAnaManager *anaManager;
-  TTreeManager* treeManager;
+  TTreeManager *treeManager;
 
-  Analyzer() {
-    //DisableAutoMainWindow();
+  Analyzer()
+  {
+    // DisableAutoMainWindow();
     UseBatchMode();
     anaManager = 0;
-    
+
+    InitManager();
   };
 
   virtual ~Analyzer() {};
 
-  void Initialize(){
-
+  void Initialize()
+  {
 #ifdef HAVE_THTTP_SERVER
     std::cout << "Using THttpServer in read/write mode" << std::endl;
     SetTHttpServerReadWrite();
 #endif
-
   }
 
-  void InitManager(){
-    
-    if (anaManager) delete anaManager;
+  void InitManager()
+  {
+    //treeManager = TTreeManager::GetInstance();
+    //treeManager->MakeTree("kobra", "kobra");
+
+    if (anaManager)
+      delete anaManager;
     anaManager = new TAnaManager();
-    treeManager = TTreeManager::GetInstance();
-    
   }
-  
-  
-  void BeginRun(int transition,int run,int time){
-    
-    InitManager();
-    treeManager->MakeTree("kobra","kobra"); // should come first.
+
+  void BeginRun(int transition, int run, int time)
+  {
+    // should come first.
     anaManager->BeginRun(transition, run, time);
-
   }
 
-  void EndRun(int transition,int run,int time){
-    
+  void EndRun(int transition, int run, int time)
+  {
     anaManager->EndRun(transition, run, time);
-    //tree->Write();
   }
 
+  bool ProcessMidasEvent(TDataContainer &dataContainer)
+  {
 
-  bool ProcessMidasEvent(TDataContainer& dataContainer){
+    if (!anaManager)
+      InitManager();
 
-    if(!anaManager) InitManager();
-    
     anaManager->ProcessMidasEvent(dataContainer);
-    treeManager->Fill();
-    
+    //treeManager->Fill();
+
     return true;
   }
-
-
-}; 
-
+};
 
 int main(int argc, char *argv[])
 {
-
   Analyzer::CreateSingleton<Analyzer>();
   return Analyzer::Get().ExecuteLoop(argc, argv);
-
 }
-

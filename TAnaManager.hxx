@@ -22,15 +22,19 @@
 #include "TKoBRATDCData.hxx"
 #include "TKoBRATDCHistogram.h"
 #include "TKoBRAADCHistogram.h"
+#include "TKoBRADIGHistogram.h"
+#include "TPPACHistogram.h"
+#include "TPlasticHistogram.h"
+#include "TSSDHistogram.h"
+#include "TPIDHistogram.h"
+#include "TTrackHistogram.h"
 
 #include "TDetectorManager.hxx"
+#include "TCanvasManager.hxx"
+#include "THistManager.hxx"
+#include "TTreeManager.hxx"
 
-#include "TDetectorAna.hxx"
-#include "TPPACAna.hxx"
-#include "TLPPACAna.hxx"
-#include "TPlasticAna.hxx"
-#include "TDPlasticAna.hxx"
-#include "TSSDAna.hxx"
+#include "THttpServer.h"
 
 /// This is an example of how to organize a set of different histograms
 /// so that we can access the same information in a display or a batch
@@ -72,16 +76,19 @@ public:
     return fHistos;
   }
 
+  inline void SetTHttpServer(THttpServer *s) { server = s; }
+
 private:
   std::vector<THistogramArrayBase *> fHistos;
   TDetectorManager *detMan;
+  TCanvasManager *canMan;
+  TTreeManager *treeMan;
+  THistManager *histMan;
 
-  TLPPACAna *ppac_f1u, *ppac_f1d;
-  TPPACAna *ppac_f2u, *ppac_f2d, *ppac_f3u, *ppac_f3d, *ppac_sc;
-  TPlasticAna *pla_f2, *pla_f3;
-  TPlasticAna *ppt_f1, *ppt_f2u, *ppt_f2d, *ppt_f3u, *ppt_f3d;
-  TSSDAna *ssd_f2, *ssd_f3;
-  TDPlasticAna *dpla_f2, *dpla_f3;
+  THttpServer *server;
+
+  TH1 *h1;
+  TTreeFormula *tf;
 };
 
 #endif

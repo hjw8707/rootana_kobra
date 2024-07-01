@@ -31,6 +31,7 @@ public:
     void PrintOutdata();
 
     inline const TPlasticData *GetData(int i) { return static_cast<TPlasticData *>((*outdata)[i]); }
+    inline TClonesArray* GetDataArray() { return outdata; }
 
     void SetTree();
 

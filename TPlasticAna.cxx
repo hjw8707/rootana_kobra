@@ -13,7 +13,7 @@ TPlasticAna::TPlasticAna(const char *_name, const char *_parfile, int _n)
     flagSet = false;
     flagData = false;
 
-    outdata = new TClonesArray("TPlasticData", 10);
+    outdata = new TClonesArray("TPlasticData", 10, 1);
     SetParameters(_parfile);
 }
 

@@ -1,9 +1,11 @@
 CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
-Makefile
 *.mid.*
 *.root
 *~
 *.so
 lib*
+ana
+root_server
+Makefile

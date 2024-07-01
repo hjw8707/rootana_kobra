@@ -31,6 +31,7 @@ public:
     void PrintOutdata();
 
     inline const TSSDData *GetData(int i) { return static_cast<TSSDData *>((*outdata)[i]); }
+    inline TClonesArray* GetDataArray() { return outdata; }
 
     void SetTree();
 

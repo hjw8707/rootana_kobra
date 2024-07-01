@@ -39,6 +39,7 @@
 #include "TLPPACData.hxx"
 #include "TPlasticData.hxx"
 #include "TSSDData.hxx"
+#include "TKoBRASniffer.hxx"
 
 // Header files passed via #pragma extra_include
 
@@ -181,6 +182,38 @@ namespace ROOT {
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TSSDData*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
+namespace ROOT {
+   static void *new_TKoBRASniffer(void *p = 0);
+   static void *newArray_TKoBRASniffer(Long_t size, void *p);
+   static void delete_TKoBRASniffer(void *p);
+   static void deleteArray_TKoBRASniffer(void *p);
+   static void destruct_TKoBRASniffer(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::TKoBRASniffer*)
+   {
+      ::TKoBRASniffer *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TKoBRASniffer >(0);
+      static ::ROOT::TGenericClassInfo 
+         instance("TKoBRASniffer", ::TKoBRASniffer::Class_Version(), "TKoBRASniffer.hxx", 7,
+                  typeid(::TKoBRASniffer), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::TKoBRASniffer::Dictionary, isa_proxy, 4,
+                  sizeof(::TKoBRASniffer) );
+      instance.SetNew(&new_TKoBRASniffer);
+      instance.SetNewArray(&newArray_TKoBRASniffer);
+      instance.SetDelete(&delete_TKoBRASniffer);
+      instance.SetDeleteArray(&deleteArray_TKoBRASniffer);
+      instance.SetDestructor(&destruct_TKoBRASniffer);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::TKoBRASniffer*)
+   {
+      return GenerateInitInstanceLocal((::TKoBRASniffer*)0);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TKoBRASniffer*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
 //______________________________________________________________________________
 atomic_TClass_ptr TPPACData::fgIsA(0);  // static to hold class pointer
 
@@ -318,6 +351,41 @@ TClass *TSSDData::Dictionary()
 TClass *TSSDData::Class()
 {
    if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TSSDData*)0x0)->GetClass(); }
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+atomic_TClass_ptr TKoBRASniffer::fgIsA(0);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *TKoBRASniffer::Class_Name()
+{
+   return "TKoBRASniffer";
+}
+
+//______________________________________________________________________________
+const char *TKoBRASniffer::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::TKoBRASniffer*)0x0)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int TKoBRASniffer::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::TKoBRASniffer*)0x0)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *TKoBRASniffer::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TKoBRASniffer*)0x0)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *TKoBRASniffer::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TKoBRASniffer*)0x0)->GetClass(); }
    return fgIsA;
 }
 
@@ -543,6 +611,39 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::TSSDData
 
+//______________________________________________________________________________
+void TKoBRASniffer::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class TKoBRASniffer.
+
+   if (R__b.IsReading()) {
+      R__b.ReadClassBuffer(TKoBRASniffer::Class(),this);
+   } else {
+      R__b.WriteClassBuffer(TKoBRASniffer::Class(),this);
+   }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_TKoBRASniffer(void *p) {
+      return  p ? new(p) ::TKoBRASniffer : new ::TKoBRASniffer;
+   }
+   static void *newArray_TKoBRASniffer(Long_t nElements, void *p) {
+      return p ? new(p) ::TKoBRASniffer[nElements] : new ::TKoBRASniffer[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_TKoBRASniffer(void *p) {
+      delete ((::TKoBRASniffer*)p);
+   }
+   static void deleteArray_TKoBRASniffer(void *p) {
+      delete [] ((::TKoBRASniffer*)p);
+   }
+   static void destruct_TKoBRASniffer(void *p) {
+      typedef ::TKoBRASniffer current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class ::TKoBRASniffer
+
 namespace {
   void TriggerDictionaryInitialization_libKoBRA_Dict_Impl() {
     static const char* headers[] = {
@@ -550,6 +651,7 @@ namespace {
 "TLPPACData.hxx",
 "TPlasticData.hxx",
 "TSSDData.hxx",
+"TKoBRASniffer.hxx",
 0
     };
     static const char* includePaths[] = {
@@ -569,6 +671,7 @@ class __attribute__((annotate("$clingAutoload$TPPACData.hxx")))  TPPACData;
 class __attribute__((annotate("$clingAutoload$TLPPACData.hxx")))  TLPPACData;
 class __attribute__((annotate("$clingAutoload$TPlasticData.hxx")))  TPlasticData;
 class __attribute__((annotate("$clingAutoload$TSSDData.hxx")))  TSSDData;
+class __attribute__((annotate("$clingAutoload$TKoBRASniffer.hxx")))  TKoBRASniffer;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libKoBRA_Dict dictionary payload"
@@ -580,10 +683,12 @@ class __attribute__((annotate("$clingAutoload$TSSDData.hxx")))  TSSDData;
 #include "TLPPACData.hxx"
 #include "TPlasticData.hxx"
 #include "TSSDData.hxx"
+#include "TKoBRASniffer.hxx"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[] = {
+"TKoBRASniffer", payloadCode, "@",
 "TLPPACData", payloadCode, "@",
 "TPPACData", payloadCode, "@",
 "TPlasticData", payloadCode, "@",

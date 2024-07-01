@@ -11,6 +11,7 @@ inline TTree* GetTree() {return tree;}
 
 void MakeTree(const char* name, const char* title);
 inline void Fill() { tree->Fill(); }
+inline void Reset() { tree->Reset(); }
 
 private:
 TTreeManager();

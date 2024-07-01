@@ -1,4 +1,5 @@
 {
-  gSystem->Load("libanadict");
+  gSystem->Load("../librootana");
+ gSystem->Load("libkobra");
 
 }

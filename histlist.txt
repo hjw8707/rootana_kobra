@@ -1,0 +1,4 @@
+pid_2pl PID_F2_SSD_Pla f3pla.GetTAve()-f2pla.GetTAve() 400 0 400 f2ssd.acal 400 0 4000
+pid_3pl PID_F3_SSD_Pla f3pla.GetTAve()-f2pla.GetTAve() 400 0 400 f3ssd.acal 400 0 4000
+pid_2pp PID_F2_SSD_PPAC f3uppt.GetTAve()-f2dppt.GetTAve() 1000 0 250 Max$(f2ssd.adc) 750 0 1500
+pid_3pp PID_F3_SSD_PPAC f3uppt.GetTAve()-f2dppt.GetTAve() 400 0 400 f3ssd.acal 400 0 4000

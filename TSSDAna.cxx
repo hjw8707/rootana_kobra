@@ -19,7 +19,7 @@ TSSDAna::TSSDAna(const char *_name, const char *_parfile, int _n)
         data.push_back(temp);
     }
 
-    outdata = new TClonesArray("TSSDData", 10);
+    outdata = new TClonesArray("TSSDData", 10, 1);
     SetParameters(_parfile);
 }
 

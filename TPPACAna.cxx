@@ -12,7 +12,7 @@ TPPACAna::TPPACAna(const char *_name, const char *_parfile)
     flagSet = false;
     flagData = false;
 
-    outdata = new TClonesArray("TPPACData");
+    outdata = new TClonesArray("TPPACData", 10, 1);
     SetParameters(_parfile);
 }
 
