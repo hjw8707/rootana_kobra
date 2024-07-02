@@ -159,18 +159,24 @@ void THistManager::Fill()
 {
     if (flagBlock)
         return;
+    //TTreeManager::GetInstance()->GetTree()->Show();
     for (size_t i = 0; i < Hist1D.size(); i++)
     {
         TH1 *h1 = Hist1D[i];
         if (h1 && (!tf1d_c[i] || tf1d_c[i]->EvalInstance()))
-            h1->Fill(tf1d_x[i]->EvalInstance());
+            for (size_t j = 0; j < tf1d_x[i]->GetNdata(); j++)
+                h1->Fill(tf1d_x[i]->EvalInstance(j));
     }
 
     for (size_t i = 0; i < Hist2D.size(); i++)
     {
         TH2 *h2 = Hist2D[i];
         if (h2 && (!tf2d_c[i] || tf2d_c[i]->EvalInstance()))
-            h2->Fill(tf2d_x[i]->EvalInstance(), tf2d_y[i]->EvalInstance());
+        {
+            for (size_t j = 0; j < tf2d_x[i]->GetNdata(); j++)
+                for (size_t k = 0; k < tf2d_y[i]->GetNdata(); k++)
+                    h2->Fill(tf2d_x[i]->EvalInstance(j), tf2d_y[i]->EvalInstance(k));
+        }
     }
 }
 

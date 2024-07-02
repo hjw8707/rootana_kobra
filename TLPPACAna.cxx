@@ -158,7 +158,8 @@ TPPACData *TLPPACAna::Processing(uint32_t tx1, uint32_t tx2,
                                  uint32_t ty1, uint32_t ty2,
                                  uint32_t ta, int lcr)
 {
-    float x = (float(tx1) - float(tx2)) * factor[lcr] + offset[lcr];
+    float lcroffset[3] = { -132.5, 0, 132.5 };
+    float x = (float(tx1) - float(tx2)) * factor[lcr] + offset[lcr] + lcroffset[lcr];
     float y = (float(ty1) - float(ty2)) * factor[3] + offset[3];
 
     new ((*outdata)[outdata->GetEntriesFast()]) TPPACData(tx1, tx2, ty1, ty2, ta, x, y);

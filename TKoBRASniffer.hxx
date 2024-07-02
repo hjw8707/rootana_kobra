@@ -4,6 +4,7 @@
 #include "TRootSniffer.h"
 #include <iostream>
 
+#include "TObjString.h"
 class TKoBRASniffer : public TRootSniffer
 {
 public:
@@ -13,7 +14,12 @@ public:
     Bool_t HistClear();
     Bool_t HistReload();
 
+    void SetRunNumber(int run);
+
     ClassDef(TKoBRASniffer, 1);
+
+private:
+    TObjString *runnum;
 };
 
 #endif

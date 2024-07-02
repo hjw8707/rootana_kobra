@@ -48,11 +48,21 @@ set(DICTHDRS
     TKoBRASniffer.hxx    
 )
 
+
+set(DICTHDRSONLY
+    TPPACData.hxx 
+    TLPPACData.hxx 
+    TPlasticData.hxx 
+    TSSDData.hxx  
+)
+
 root_generate_dictionary(KoBRA_Dict ${DICTHDRS} LINKDEF LinkDef.h)
+root_generate_dictionary(KoBRA_DictOnly ${DICTHDRSONLY} LINKDEF LinkDefOnly.h)
 #add_executable(ana ana.cxx ${SOURCES})
 #add_executable(anaDisplay anaDisplay.cxx ${SOURCES})
 #add_executable(root_server root_server.cxx ${SOURCES})
 
+add_library(anadict SHARED KoBRA_DictOnly.cxx)
 add_library(kobra SHARED KoBRA_Dict.cxx ${SOURCES})
 target_include_directories(kobra PUBLIC ./ ../libAnalyzerDisplay ../libAnalyzer ../midasio ../mvodb ../libMidasInterface )
 

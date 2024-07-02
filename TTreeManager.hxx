@@ -13,6 +13,8 @@ void MakeTree(const char* name, const char* title);
 inline void Fill() { tree->Fill(); }
 inline void Reset() { tree->Reset(); }
 
+inline void GetLastEntry() { tree->GetEntry(tree->GetEntries()-1); }
+
 private:
 TTreeManager();
 ~TTreeManager();

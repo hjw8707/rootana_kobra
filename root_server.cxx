@@ -19,7 +19,7 @@ public:
   // An analysis manager.  Define and fill histograms in
   // analysis manager.
   TAnaManager *anaManager;
-
+  TKoBRASniffer *sniffer;
   Analyzer()
   {
     // DisableAutoMainWindow();
@@ -46,11 +46,11 @@ public:
     SetTHttpServerReadWrite();
 
     auto http = GetTHttpServer();
-    TKoBRASniffer *sniffer = new TKoBRASniffer;
+    sniffer = new TKoBRASniffer;
     http->SetSniffer(sniffer);
-    //http->RegisterCommand("/DoSomething", "TestFunc()", "button;rootsys/icons/ed_execute.png");
-    //http->RegisterCommand("/DoSomething2", "this->TestFunc()", "button;rootsys/icons/ed_interrupt.png");
-    //http->SetItemField("/","_toptitle","KoBRA Online Analysis");
+    // http->RegisterCommand("/DoSomething", "TestFunc()", "button;rootsys/icons/ed_execute.png");
+    // http->RegisterCommand("/DoSomething2", "this->TestFunc()", "button;rootsys/icons/ed_interrupt.png");
+    // http->SetItemField("/","_toptitle","KoBRA Online Analysis");
   }
 
   void InitManager()
@@ -65,12 +65,13 @@ public:
   void BeginRun(int transition, int run, int time)
   {
     anaManager->BeginRun(transition, run, time);
+    sniffer->SetRunNumber(run);
   }
 
   void EndRun(int transition, int run, int time)
   {
     anaManager->EndRun(transition, run, time);
-  }  
+  }
 
   struct timeval LastUpdateTime;
 

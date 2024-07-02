@@ -1,5 +1,3 @@
 {
-  gSystem->Load("../librootana");
- gSystem->Load("libkobra");
-
+  gSystem->Load("libanadict.so");
 }

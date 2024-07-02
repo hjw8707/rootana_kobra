@@ -2,6 +2,7 @@
 #include "THistManager.hxx"
 #include "TTreeManager.hxx"
 #include "TCanvasManager.hxx"
+
 #include <iostream>
 
 ClassImp(TKoBRASniffer)
@@ -9,9 +10,13 @@ ClassImp(TKoBRASniffer)
     TKoBRASniffer::TKoBRASniffer() : TRootSniffer("kobra_sniffer")
 {
     RegisterCommand("/Clear", "this->HistClear();", "button;rootsys/icons/ed_delete.png");
-    RegisterCommand("/Reload", "this->HistReload();", "button;rootsys/icons/refresh.png");    
-    //Hide("/Clear");
-    //Hide("/Reload");
+    RegisterCommand("/Reload", "this->HistReload();", "button;rootsys/icons/refresh.png");
+    // Hide("/Clear");
+    // Hide("/Reload");
+    // CreateItem("/Anonymous","_aitl?");
+
+    runnum = new TObjString("RunNum");
+    RegisterObject("/", runnum);
 }
 TKoBRASniffer::~TKoBRASniffer() {}
 
@@ -31,4 +36,9 @@ Bool_t TKoBRASniffer::HistReload()
     THistManager::GetInstance()->AddHistFromFile("histlist.txt");
     TCanvasManager::GetInstance()->AddCanvasAndHistFromFile("canlist.txt");
     return true;
+}
+
+void TKoBRASniffer::SetRunNumber(int run)
+{
+    runnum->SetString(Form("Run=%05d",run));
 }

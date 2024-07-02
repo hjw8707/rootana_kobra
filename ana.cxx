@@ -12,7 +12,6 @@
 #include "TTreeManager.hxx"
 
 #include "TTree.h"
-
 class Analyzer : public TRootanaEventLoop
 {
 
@@ -27,8 +26,6 @@ public:
     // DisableAutoMainWindow();
     UseBatchMode();
     anaManager = 0;
-
-    InitManager();
   };
 
   virtual ~Analyzer() {};
@@ -43,9 +40,6 @@ public:
 
   void InitManager()
   {
-    //treeManager = TTreeManager::GetInstance();
-    //treeManager->MakeTree("kobra", "kobra");
-
     if (anaManager)
       delete anaManager;
     anaManager = new TAnaManager();
@@ -53,6 +47,7 @@ public:
 
   void BeginRun(int transition, int run, int time)
   {
+    InitManager();
     // should come first.
     anaManager->BeginRun(transition, run, time);
   }
@@ -69,7 +64,7 @@ public:
       InitManager();
 
     anaManager->ProcessMidasEvent(dataContainer);
-    //treeManager->Fill();
+    // treeManager->Fill();
 
     return true;
   }
