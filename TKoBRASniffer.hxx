@@ -14,12 +14,16 @@ public:
     Bool_t HistClear();
     Bool_t HistReload();
 
+    Bool_t HistFit(const char* name);
+
     void SetRunNumber(int run);
+    void SetRunStatus(bool running);
 
     ClassDef(TKoBRASniffer, 1);
 
 private:
     TObjString *runnum;
+    TObjString *runstat;
 };
 
 #endif

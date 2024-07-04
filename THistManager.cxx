@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <regex>
 
 THistManager *THistManager::instance = NULL;
 
@@ -43,6 +44,7 @@ void THistManager::AddHistFromFile(const char *file)
     TTree *tree = TTreeManager::GetInstance()->GetTree();
 
     std::string line;
+    std::regex re(R"((\"[^\"]*\")|([+-]?\d+(\.\d+)?([eE][+-]?\d+)?))"); // 문자열 또는 숫자를 추출하기 위한 정규 표현식
     while (std::getline(fin, line))
     {
         // #으로 시작하는 주석을 제거
@@ -54,13 +56,27 @@ void THistManager::AddHistFromFile(const char *file)
         if (line.empty() || line.find_first_not_of(' ') == std::string::npos)
             continue;
 
-        std::string word;
         std::vector<std::string> words;
-        std::istringstream iss(line);
-        while (iss >> word)
-            words.push_back(word);
+        auto words_begin = std::sregex_iterator(line.begin(), line.end(), re);
+        auto words_end = std::sregex_iterator();
 
-        std::vector<std::string> hists;
+        for (std::sregex_iterator i = words_begin; i != words_end; ++i)
+        {
+            std::smatch match = *i;
+            std::string match_str = match.str();
+            if (!match_str.empty())
+            {
+                if (match_str.front() == '"' && match_str.back() == '"')
+                {
+                    words.push_back(match_str.substr(1, match_str.size() - 2));
+                }
+                else
+                {
+                    words.push_back(match_str);
+                }
+            }
+        }
+
         if (words.size() >= 10)
         {                                            // for 2D ( 10: no cut, 11: cut)
             TH2 *h2 = new TH2D(words[0].c_str(),     // name
@@ -71,19 +87,19 @@ void THistManager::AddHistFromFile(const char *file)
                                std::stoi(words[7]),  // y bins
                                std::stof(words[8]),  // y low lim
                                std::stof(words[9])); // y upp lim
-            Hist2D.push_back(h2);
-            tf2d_x.push_back(new TTreeFormula(Form("tf2dx_%s", words[0].c_str()),
-                                              words[2].c_str(),
-                                              tree));
-            tf2d_y.push_back(new TTreeFormula(Form("tf2dy_%s", words[0].c_str()),
-                                              words[6].c_str(),
-                                              tree));
+            Hist2D[words[0]] = h2;
+            tf2d_x[words[0]] = new TTreeFormula(Form("tf2dx_%s", words[0].c_str()),
+                                                words[2].c_str(),
+                                                tree);
+            tf2d_y[words[0]] = new TTreeFormula(Form("tf2dy_%s", words[0].c_str()),
+                                                words[6].c_str(),
+                                                tree);
             if (words.size() > 10)
-                tf2d_c.push_back(new TTreeFormula(Form("tf2dc_%s", words[0].c_str()),
-                                                  words[10].c_str(),
-                                                  tree));
+                tf2d_c[words[0]] = new TTreeFormula(Form("tf2dc_%s", words[0].c_str()),
+                                                    words[10].c_str(),
+                                                    tree);
             else
-                tf2d_c.push_back(NULL);
+                tf2d_c[words[0]] = NULL;
         }
         else if (words.size() >= 6)
         {
@@ -92,16 +108,16 @@ void THistManager::AddHistFromFile(const char *file)
                                std::stoi(words[3]),  // x bins
                                std::stof(words[4]),  // x low lim
                                std::stof(words[5])); // x upp lim
-            Hist1D.push_back(h1);
-            tf1d_x.push_back(new TTreeFormula(Form("tf1dx_%s", words[0].c_str()),
+            Hist1D[words[0]] = h1;
+            tf1d_x[words[0]] = new TTreeFormula(Form("tf1dx_%s", words[0].c_str()),
                                               words[2].c_str(),
-                                              tree));
+                                              tree);
             if (words.size() > 6)
-                tf1d_c.push_back(new TTreeFormula(Form("tf1dc_%s", words[0].c_str()),
+                tf1d_c[words[0]] = new TTreeFormula(Form("tf1dc_%s", words[0].c_str()),
                                                   words[6].c_str(),
-                                                  tree));
+                                                  tree);
             else
-                tf1d_c.push_back(NULL);
+                tf1d_c[words[0]] = NULL;
         }
         else
             continue;
@@ -121,37 +137,37 @@ void THistManager::Clear()
 {
     flagBlock = true;
 
-    for (const auto &h1 : Hist1D)
-        if (h1)
-            delete h1;
+    for (const auto &n : Hist1D)
+        if (n.second)
+            delete n.second;
     Hist1D.clear();
 
-    for (const auto &h2 : Hist2D)
-        if (h2)
-            delete h2;
+    for (const auto &n : Hist2D)
+        if (n.second)
+            delete n.second;
     Hist2D.clear();
 
     for (const auto &tf1 : tf1d_x)
-        if (tf1)
-            delete tf1;
+        if (tf1.second)
+            delete tf1.second;
     tf1d_x.clear();
 
     for (const auto &tf1 : tf1d_c)
-        if (tf1)
-            delete tf1;
+        if (tf1.second)
+            delete tf1.second;
     tf1d_c.clear();
 
     for (const auto &h2 : tf2d_x)
-        if (h2)
-            delete h2;
+        if (h2.second)
+            delete h2.second;
     tf2d_x.clear();
     for (const auto &h2 : tf2d_y)
-        if (h2)
-            delete h2;
+        if (h2.second)
+            delete h2.second;
     tf2d_y.clear();
     for (const auto &h2 : tf2d_c)
-        if (h2)
-            delete h2;
+        if (h2.second)
+            delete h2.second;
     tf2d_c.clear();
 }
 
@@ -159,36 +175,34 @@ void THistManager::Fill()
 {
     if (flagBlock)
         return;
-    //TTreeManager::GetInstance()->GetTree()->Show();
-    for (size_t i = 0; i < Hist1D.size(); i++)
+
+    for (const auto &n : Hist1D)
     {
-        TH1 *h1 = Hist1D[i];
-        if (h1 && (!tf1d_c[i] || tf1d_c[i]->EvalInstance()))
-            for (size_t j = 0; j < tf1d_x[i]->GetNdata(); j++)
-                h1->Fill(tf1d_x[i]->EvalInstance(j));
+        if (n.second && (!tf1d_c[n.first] || tf1d_c[n.first]->EvalInstance()))
+            for (size_t j = 0; j < tf1d_x[n.first]->GetNdata(); j++)
+                n.second->Fill(tf1d_x[n.first]->EvalInstance(j));
     }
 
-    for (size_t i = 0; i < Hist2D.size(); i++)
+    for (const auto &n : Hist2D)
     {
-        TH2 *h2 = Hist2D[i];
-        if (h2 && (!tf2d_c[i] || tf2d_c[i]->EvalInstance()))
+        if (n.second && (!tf2d_c[n.first] || tf2d_c[n.first]->EvalInstance()))
         {
-            for (size_t j = 0; j < tf2d_x[i]->GetNdata(); j++)
-                for (size_t k = 0; k < tf2d_y[i]->GetNdata(); k++)
-                    h2->Fill(tf2d_x[i]->EvalInstance(j), tf2d_y[i]->EvalInstance(k));
+            for (size_t j = 0; j < tf2d_x[n.first]->GetNdata(); j++)
+                for (size_t k = 0; k < tf2d_y[n.first]->GetNdata(); k++)
+                    n.second->Fill(tf2d_x[n.first]->EvalInstance(j), tf2d_y[n.first]->EvalInstance(k));
         }
     }
 }
 
 void THistManager::Reset()
 {
-    for (const auto &h1 : Hist1D)
+    for (const auto &n : Hist1D)
     {
-        h1->Reset();
+        n.second->Reset();
     }
 
-    for (const auto &h2 : Hist2D)
+    for (const auto &n : Hist2D)
     {
-        h2->Reset();
+        n.second->Reset();
     }
 }

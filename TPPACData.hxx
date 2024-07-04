@@ -7,7 +7,7 @@ class TPPACData: public TObject {
     public:
     TPPACData():
             tx1(0), tx2(0), ty1(0), ty2(0), ta(0), 
-            x(0), y(0) 
+            x(0), y(0)
             {}    
     TPPACData(uint32_t _tx1, uint32_t _tx2, uint32_t _ty1, uint32_t _ty2,
     uint32_t _ta, float _x, float _y):

@@ -1,1 +1,1 @@
-cpid cpid 2 2 hists/pid_2pl hists/pid_3pl hists/pid_2pp hists/pid_3pp
+cpid cpid 3 4 hists/pid_2pp hists/f1_ux hists/f1_uy hists/f2_dx hists/f2_dy hists/f2_dpos hists/f3_ux hists/f3_uy hists/f3_upos hists/f3_dx hists/f3_dy hists/f3_dpos 

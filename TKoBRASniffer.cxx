@@ -11,12 +11,17 @@ ClassImp(TKoBRASniffer)
 {
     RegisterCommand("/Clear", "this->HistClear();", "button;rootsys/icons/ed_delete.png");
     RegisterCommand("/Reload", "this->HistReload();", "button;rootsys/icons/refresh.png");
+    RegisterCommand("/Fit", "this->HistFit(\"%arg1%\");", "button;rootsys/icons/bld_edit.png");
+    SetItemField("/Reload", "_hreload", "true");
     // Hide("/Clear");
     // Hide("/Reload");
     // CreateItem("/Anonymous","_aitl?");
 
     runnum = new TObjString("RunNum");
     RegisterObject("/", runnum);
+
+    runstat = new TObjString("RunStatus");
+    RegisterObject("/", runstat);
 }
 TKoBRASniffer::~TKoBRASniffer() {}
 
@@ -38,7 +43,24 @@ Bool_t TKoBRASniffer::HistReload()
     return true;
 }
 
+Bool_t TKoBRASniffer::HistFit(const char *name)
+{
+
+    TH1 *h1 = THistManager::GetInstance()->Get1DHist(name);
+    if (h1)
+        h1->Fit("gaus");
+    return true;
+}
+
 void TKoBRASniffer::SetRunNumber(int run)
 {
-    runnum->SetString(Form("Run=%05d",run));
+    runnum->SetString(Form("Run = %05d", run));
+}
+
+void TKoBRASniffer::SetRunStatus(bool running)
+{
+    if (running)
+        runstat->SetString("Status = Running");
+    else
+        runstat->SetString("Status = Idle");
 }

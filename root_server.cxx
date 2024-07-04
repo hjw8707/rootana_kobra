@@ -66,11 +66,15 @@ public:
   {
     anaManager->BeginRun(transition, run, time);
     sniffer->SetRunNumber(run);
+    sniffer->SetRunStatus(true);
+    GetTHttpServer()->ProcessRequests();
   }
 
   void EndRun(int transition, int run, int time)
   {
     anaManager->EndRun(transition, run, time);
+    sniffer->SetRunStatus(false);
+    GetTHttpServer()->ProcessRequests();
   }
 
   struct timeval LastUpdateTime;

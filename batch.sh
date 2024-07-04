@@ -14,5 +14,6 @@ do
     formatted_arg=$(printf "%05d" $arg)
     echo "Analyzing ~/online/data_2024/run${formatted_arg}.mid.lz4"
     ./ana ~/online/data_2024/run${formatted_arg}.mid.lz4
+    mv output000${formatted_arg}.root ./root
 done
 
