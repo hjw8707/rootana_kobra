@@ -11,3 +11,4 @@
 "f3_dx" "F3_DX" "f3dppac.x" 100 -100 100
 "f3_dy" "F3_DY" "f3dppac.y" 100 -100 100
 "f3_dpos" "F3_DPosition"    "f3dppac.x" 100 -100 100 "f3dppac.y" 100 -100 100
+"pid_3pp" "PID_F3_SSD_PPAC" "f3uppt.tsum - f2dppt.tsum + 103.8" 1000 150 400 "Max$(f3ssd.acal)" 1000 0 120

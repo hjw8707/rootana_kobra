@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <!--  this file used by THttpServer to display objects hierarchy -->
+   <meta charset="UTF-8">
+   <title>Online server</title>
+   <link rel="shortcut icon" href="jsrootsys/img/RootIcon.ico" />
+   <script type="text/javascript" src="jsrootsys/scripts/JSRoot.core.js"></script>
+   <script language="javascript" type="text/javascript" src="midas/midas.js"></script>
+   <script language="javascript" type="text/javascript" src="midas/mhttpd.js"></script>
+</head>
+
+<body>
+   <div id="onlineGUI">
+      loading scripts...
+   </div>
+
+   <script>
+
+      mjsonrpc_set_url('http://10.1.100.70:8081');
+      var gStatusInflight = false;
+      var gRunOngoing = false;
+      function midasStatus() {
+
+         // don't make another request if the last request is still outstanding.
+         if (gStatusInflight) {
+            return;
+         }
+
+         gStatusInflight = true;
+
+         mjsonrpc_db_get_values(["/runinfo"]).then(function (rpc) {
+            var runinfo = rpc.result.data[0];
+            document.getElementById("run_num").innerHTML = "Run Number = <b>" + runinfo["run number"] + "</b>";
+            if (runinfo.state == 3) {
+               document.getElementById("run_status").innerHTML = 'Run Status = <span style="color: green;">RUNNING</span>';
+               document.getElementById("run_end").innerHTML = "Run End = ";
+               gRunOngoing = true;
+            } else {
+               document.getElementById("run_status").innerHTML = 'Run Status = <span style="color: red;">IDLE</span>';
+               const dateObject = new Date(runinfo["stop time binary/last_written"] * 1000);
+               const humanReadableDate = dateObject.toLocaleString();
+               document.getElementById("run_end").innerHTML = "Run End = <b>" + humanReadableDate + "</b>";
+               gRunOngoing = false;
+            }
+            const dateObject = new Date(runinfo["start time binary/last_written"] * 1000);
+            const humanReadableDate = dateObject.toLocaleString();
+            document.getElementById("run_start").innerHTML = "Run Start = <b>" + humanReadableDate + "</b>";
+            gStatusInflight = false; // finished async routine
+         }).catch(function (error) {
+            console.log(error)
+            if (error.request) {
+               var s = mjsonrpc_decode_error(error);
+               console.log("mjsonrpc_error_alert: " + s);
+            } else {
+               console.log("mjsonroc_error_alert: " + error);
+            }
+
+         });
+
+
+      }
+      setInterval(midasStatus, 5000);
+
+      function GetCachedHierarchy() { return "$$$h.json$$$"; }
+
+      JSROOT.buildGUI("onlineGUI", "online").then((hpainter) => {
+         hpainter.brlayout.setBrowserTitle("KoBRA Analysis Server");
+         let runnum_p = hpainter.brlayout.main().select('#onlineGUI_browser_hierarchy')
+            .insert('div', ':first-child').attr('id', 'run_info').append('p').attr('id', 'run_num')
+         runnum_p.text('Run Number = ')
+         let runstatus_p = hpainter.brlayout.main().select('#run_info')
+            .append('p').attr('id', 'run_status')
+         runstatus_p.text('Run Status = ')
+         let runstart_p = hpainter.brlayout.main().select('#run_info')
+            .append('p').attr('id', 'run_start')
+         runstart_p.text('Run Start = ')
+         let runend_p = hpainter.brlayout.main().select('#run_info')
+            .append('p').attr('id', 'run_end')
+         runend_p.text('Run End = ')
+         return;
+      });
+   </script>
+
+</body>
+
+</html>

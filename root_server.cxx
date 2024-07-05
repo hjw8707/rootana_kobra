@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <time.h>
+#include <cstdlib>
 
 #include "TRootanaEventLoop.hxx"
 #include "TAnaManager.hxx"
@@ -48,6 +49,8 @@ public:
     auto http = GetTHttpServer();
     sniffer = new TKoBRASniffer;
     http->SetSniffer(sniffer);
+    http->AddLocation("midas/",Form("%s/resources",std::getenv("MIDASSYS")));
+    http->SetDefaultPage("online.htm");
     // http->RegisterCommand("/DoSomething", "TestFunc()", "button;rootsys/icons/ed_execute.png");
     // http->RegisterCommand("/DoSomething2", "this->TestFunc()", "button;rootsys/icons/ed_interrupt.png");
     // http->SetItemField("/","_toptitle","KoBRA Online Analysis");
