@@ -1,3 +1,5 @@
+Rootana code for KoBRA Analysis
+
 This directory contains an example of a rootana analyzer based on the
 libAnalyzer/libAnalyzerDisplay framework.  It contains analysis code appropriate for
 processing 'standard' TRIUMF MIDAS data taken with CAEN V792, V1190, V1720, V1730, DT5724, CAMAC TL2249 and Agilent data.
