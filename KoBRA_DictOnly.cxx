@@ -35,10 +35,11 @@
 #include "TDataMember.h"
 
 // Header files passed as explicit arguments
-#include "TPPACData.hxx"
-#include "TLPPACData.hxx"
-#include "TPlasticData.hxx"
-#include "TSSDData.hxx"
+#include "include/TPPACData.hxx"
+#include "include/TLPPACData.hxx"
+#include "include/TPlasticData.hxx"
+#include "include/TSSDData.hxx"
+#include "macros/kobra.hxx"
 
 // Header files passed via #pragma extra_include
 
@@ -59,7 +60,7 @@ namespace ROOT {
       ::TPPACData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TPPACData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TPPACData", ::TPPACData::Class_Version(), "TPPACData.hxx", 6,
+         instance("TPPACData", ::TPPACData::Class_Version(), "include/TPPACData.hxx", 6,
                   typeid(::TPPACData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TPPACData::Dictionary, isa_proxy, 16,
                   sizeof(::TPPACData) );
@@ -93,7 +94,7 @@ namespace ROOT {
       ::TLPPACData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TLPPACData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TLPPACData", ::TLPPACData::Class_Version(), "TLPPACData.hxx", 6,
+         instance("TLPPACData", ::TLPPACData::Class_Version(), "include/TLPPACData.hxx", 6,
                   typeid(::TLPPACData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TLPPACData::Dictionary, isa_proxy, 16,
                   sizeof(::TLPPACData) );
@@ -127,7 +128,7 @@ namespace ROOT {
       ::TPlasticData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TPlasticData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TPlasticData", ::TPlasticData::Class_Version(), "TPlasticData.hxx", 6,
+         instance("TPlasticData", ::TPlasticData::Class_Version(), "include/TPlasticData.hxx", 6,
                   typeid(::TPlasticData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TPlasticData::Dictionary, isa_proxy, 16,
                   sizeof(::TPlasticData) );
@@ -161,7 +162,7 @@ namespace ROOT {
       ::TSSDData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TSSDData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TSSDData", ::TSSDData::Class_Version(), "TSSDData.hxx", 6,
+         instance("TSSDData", ::TSSDData::Class_Version(), "include/TSSDData.hxx", 6,
                   typeid(::TSSDData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TSSDData::Dictionary, isa_proxy, 16,
                   sizeof(::TSSDData) );
@@ -179,6 +180,40 @@ namespace ROOT {
    }
    // Static variable to force the class initialization
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::TSSDData*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_KOBRA(void *p = 0);
+   static void *newArray_KOBRA(Long_t size, void *p);
+   static void delete_KOBRA(void *p);
+   static void deleteArray_KOBRA(void *p);
+   static void destruct_KOBRA(void *p);
+   static void streamer_KOBRA(TBuffer &buf, void *obj);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::KOBRA*)
+   {
+      ::KOBRA *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::KOBRA >(0);
+      static ::ROOT::TGenericClassInfo 
+         instance("KOBRA", ::KOBRA::Class_Version(), "macros/kobra.hxx", 10,
+                  typeid(::KOBRA), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::KOBRA::Dictionary, isa_proxy, 16,
+                  sizeof(::KOBRA) );
+      instance.SetNew(&new_KOBRA);
+      instance.SetNewArray(&newArray_KOBRA);
+      instance.SetDelete(&delete_KOBRA);
+      instance.SetDeleteArray(&deleteArray_KOBRA);
+      instance.SetDestructor(&destruct_KOBRA);
+      instance.SetStreamerFunc(&streamer_KOBRA);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::KOBRA*)
+   {
+      return GenerateInitInstanceLocal((::KOBRA*)0);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::KOBRA*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 //______________________________________________________________________________
@@ -318,6 +353,41 @@ TClass *TSSDData::Dictionary()
 TClass *TSSDData::Class()
 {
    if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::TSSDData*)0x0)->GetClass(); }
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+atomic_TClass_ptr KOBRA::fgIsA(0);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *KOBRA::Class_Name()
+{
+   return "KOBRA";
+}
+
+//______________________________________________________________________________
+const char *KOBRA::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::KOBRA*)0x0)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int KOBRA::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::KOBRA*)0x0)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *KOBRA::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::KOBRA*)0x0)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *KOBRA::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::KOBRA*)0x0)->GetClass(); }
    return fgIsA;
 }
 
@@ -543,20 +613,169 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::TSSDData
 
+//______________________________________________________________________________
+void KOBRA::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class KOBRA.
+
+   UInt_t R__s, R__c;
+   if (R__b.IsReading()) {
+      Version_t R__v = R__b.ReadVersion(&R__s, &R__c); if (R__v) { }
+      TObject::Streamer(R__b);
+      R__b >> tree;
+      {
+         map<Int_t,Double_t> &R__stl =  brhoMap;
+         R__stl.clear();
+         int R__i, R__n;
+         R__b >> R__n;
+         for (R__i = 0; R__i < R__n; R__i++) {
+            int R__t;
+            R__b >> R__t;
+            double R__t2;
+            R__b >> R__t2;
+            typedef int Value_t;
+            std::pair<Value_t const, double > R__t3(R__t,R__t2);
+            R__stl.insert(R__t3);
+         }
+      }
+      R__b >> runN;
+      R__b >> centBrho;
+      R__b >> tofOff;
+      R__b >> useF1;
+      R__b >> useF2orF3;
+      { TString R__str; R__str.Streamer(R__b); gcut = R__str.Data(); }
+      R__b.CheckByteCount(R__s, R__c, KOBRA::IsA());
+   } else {
+      R__c = R__b.WriteVersion(KOBRA::IsA(), kTRUE);
+      TObject::Streamer(R__b);
+      R__b << tree;
+      {
+         map<Int_t,Double_t> &R__stl =  brhoMap;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+            map<Int_t,Double_t>::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b << ((*R__k).first );
+            R__b << ((*R__k).second);
+            }
+         }
+      }
+      R__b << runN;
+      R__b << centBrho;
+      R__b << tofOff;
+      R__b << useF1;
+      R__b << useF2orF3;
+      { TString R__str = gcut.c_str(); R__str.Streamer(R__b);}
+      R__b.SetByteCount(R__c, kTRUE);
+   }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_KOBRA(void *p) {
+      return  p ? new(p) ::KOBRA : new ::KOBRA;
+   }
+   static void *newArray_KOBRA(Long_t nElements, void *p) {
+      return p ? new(p) ::KOBRA[nElements] : new ::KOBRA[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_KOBRA(void *p) {
+      delete ((::KOBRA*)p);
+   }
+   static void deleteArray_KOBRA(void *p) {
+      delete [] ((::KOBRA*)p);
+   }
+   static void destruct_KOBRA(void *p) {
+      typedef ::KOBRA current_t;
+      ((current_t*)p)->~current_t();
+   }
+   // Wrapper around a custom streamer member function.
+   static void streamer_KOBRA(TBuffer &buf, void *obj) {
+      ((::KOBRA*)obj)->::KOBRA::Streamer(buf);
+   }
+} // end of namespace ROOT for class ::KOBRA
+
+namespace ROOT {
+   static TClass *maplEintcOdoublegR_Dictionary();
+   static void maplEintcOdoublegR_TClassManip(TClass*);
+   static void *new_maplEintcOdoublegR(void *p = 0);
+   static void *newArray_maplEintcOdoublegR(Long_t size, void *p);
+   static void delete_maplEintcOdoublegR(void *p);
+   static void deleteArray_maplEintcOdoublegR(void *p);
+   static void destruct_maplEintcOdoublegR(void *p);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const map<int,double>*)
+   {
+      map<int,double> *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(map<int,double>));
+      static ::ROOT::TGenericClassInfo 
+         instance("map<int,double>", -2, "map", 100,
+                  typeid(map<int,double>), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &maplEintcOdoublegR_Dictionary, isa_proxy, 0,
+                  sizeof(map<int,double>) );
+      instance.SetNew(&new_maplEintcOdoublegR);
+      instance.SetNewArray(&newArray_maplEintcOdoublegR);
+      instance.SetDelete(&delete_maplEintcOdoublegR);
+      instance.SetDeleteArray(&deleteArray_maplEintcOdoublegR);
+      instance.SetDestructor(&destruct_maplEintcOdoublegR);
+      instance.AdoptCollectionProxyInfo(TCollectionProxyInfo::Generate(TCollectionProxyInfo::MapInsert< map<int,double> >()));
+
+      ::ROOT::AddClassAlternate("map<int,double>","std::map<int, double, std::less<int>, std::allocator<std::pair<int const, double> > >");
+      return &instance;
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const map<int,double>*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *maplEintcOdoublegR_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const map<int,double>*)0x0)->GetClass();
+      maplEintcOdoublegR_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void maplEintcOdoublegR_TClassManip(TClass* ){
+   }
+
+} // end of namespace ROOT
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_maplEintcOdoublegR(void *p) {
+      return  p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,double> : new map<int,double>;
+   }
+   static void *newArray_maplEintcOdoublegR(Long_t nElements, void *p) {
+      return p ? ::new((::ROOT::Internal::TOperatorNewHelper*)p) map<int,double>[nElements] : new map<int,double>[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_maplEintcOdoublegR(void *p) {
+      delete ((map<int,double>*)p);
+   }
+   static void deleteArray_maplEintcOdoublegR(void *p) {
+      delete [] ((map<int,double>*)p);
+   }
+   static void destruct_maplEintcOdoublegR(void *p) {
+      typedef map<int,double> current_t;
+      ((current_t*)p)->~current_t();
+   }
+} // end of namespace ROOT for class map<int,double>
+
 namespace {
   void TriggerDictionaryInitialization_libKoBRA_DictOnly_Impl() {
     static const char* headers[] = {
-"TPPACData.hxx",
-"TLPPACData.hxx",
-"TPlasticData.hxx",
-"TSSDData.hxx",
+"include/TPPACData.hxx",
+"include/TLPPACData.hxx",
+"include/TPlasticData.hxx",
+"include/TSSDData.hxx",
+"macros/kobra.hxx",
 0
     };
     static const char* includePaths[] = {
 "/home/ndpsdaq/packages/root/include",
-"/home/ndpsdaq/online/cens/rootana/kobra",
+"/home/ndpsdaq/online/cens/kobra",
 "/home/ndpsdaq/packages/root/include/",
-"/home/ndpsdaq/online/cens/rootana/kobra/",
+"/home/ndpsdaq/online/cens/kobra/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -565,10 +784,11 @@ namespace {
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
-class __attribute__((annotate("$clingAutoload$TPPACData.hxx")))  TPPACData;
-class __attribute__((annotate("$clingAutoload$TLPPACData.hxx")))  TLPPACData;
-class __attribute__((annotate("$clingAutoload$TPlasticData.hxx")))  TPlasticData;
-class __attribute__((annotate("$clingAutoload$TSSDData.hxx")))  TSSDData;
+class __attribute__((annotate("$clingAutoload$include/TPPACData.hxx")))  TPPACData;
+class __attribute__((annotate("$clingAutoload$include/TLPPACData.hxx")))  TLPPACData;
+class __attribute__((annotate("$clingAutoload$include/TPlasticData.hxx")))  TPlasticData;
+class __attribute__((annotate("$clingAutoload$include/TSSDData.hxx")))  TSSDData;
+class __attribute__((annotate("$clingAutoload$macros/kobra.hxx")))  KOBRA;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libKoBRA_DictOnly dictionary payload"
@@ -576,14 +796,16 @@ class __attribute__((annotate("$clingAutoload$TSSDData.hxx")))  TSSDData;
 
 #define _BACKWARD_BACKWARD_WARNING_H
 // Inline headers
-#include "TPPACData.hxx"
-#include "TLPPACData.hxx"
-#include "TPlasticData.hxx"
-#include "TSSDData.hxx"
+#include "include/TPPACData.hxx"
+#include "include/TLPPACData.hxx"
+#include "include/TPlasticData.hxx"
+#include "include/TSSDData.hxx"
+#include "macros/kobra.hxx"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[] = {
+"KOBRA", payloadCode, "@",
 "TLPPACData", payloadCode, "@",
 "TPPACData", payloadCode, "@",
 "TPlasticData", payloadCode, "@",

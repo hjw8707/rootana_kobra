@@ -12,10 +12,18 @@
 </head>
 
 <body>
-   <div id="onlineGUI">
+   <div id="cover" style="margin: 0px; font-size:x-large; z-index: 1;">
+      <b>KoBRA Analysis Server</b>
+   </div>
+   <div id="run_info" style="position: absolute; bottom: 0px; width: 200px; z-index: 1; font-size:small">
+      <div id="run_num">Run Num = </div>
+      <div id="run_status">Status = </div>
+      <div id="run_start">Start = </div>
+      <div id="run_end">End = </div>
+   </div>
+   <div id="onlineGUI" style="position: absolute; inset: 35px 0px 0px 0px; margin: 0px">
       loading scripts...
    </div>
-
    <script>
 
       mjsonrpc_set_url('http://10.1.100.70:8081');
@@ -32,21 +40,21 @@
 
          mjsonrpc_db_get_values(["/runinfo"]).then(function (rpc) {
             var runinfo = rpc.result.data[0];
-            document.getElementById("run_num").innerHTML = "Run Number = <b>" + runinfo["run number"] + "</b>";
+            document.getElementById("run_num").innerHTML = "Run Num = <b>" + runinfo["run number"] + "</b>";
             if (runinfo.state == 3) {
-               document.getElementById("run_status").innerHTML = 'Run Status = <span style="color: green;">RUNNING</span>';
-               document.getElementById("run_end").innerHTML = "Run End = ";
+               document.getElementById("run_status").innerHTML = 'Status = <span style="color: green;">RUNNING</span>';
+               document.getElementById("run_end").innerHTML = "End = ";
                gRunOngoing = true;
             } else {
-               document.getElementById("run_status").innerHTML = 'Run Status = <span style="color: red;">IDLE</span>';
+               document.getElementById("run_status").innerHTML = 'Status = <span style="color: red;">IDLE</span>';
                const dateObject = new Date(runinfo["stop time binary/last_written"] * 1000);
                const humanReadableDate = dateObject.toLocaleString();
-               document.getElementById("run_end").innerHTML = "Run End = <b>" + humanReadableDate + "</b>";
+               document.getElementById("run_end").innerHTML = "End = <b>" + humanReadableDate + "</b>";
                gRunOngoing = false;
             }
             const dateObject = new Date(runinfo["start time binary/last_written"] * 1000);
             const humanReadableDate = dateObject.toLocaleString();
-            document.getElementById("run_start").innerHTML = "Run Start = <b>" + humanReadableDate + "</b>";
+            document.getElementById("run_start").innerHTML = "Start = <b>" + humanReadableDate + "</b>";
             gStatusInflight = false; // finished async routine
          }).catch(function (error) {
             console.log(error)
@@ -66,8 +74,8 @@
       function GetCachedHierarchy() { return "$$$h.json$$$"; }
 
       JSROOT.buildGUI("onlineGUI", "online").then((hpainter) => {
-         hpainter.brlayout.setBrowserTitle("KoBRA Analysis Server");
-         let runnum_p = hpainter.brlayout.main().select('#onlineGUI_browser_hierarchy')
+         hpainter.brlayout.setBrowserTitle(""); //KoBRA Analysis Server");
+         /*let runnum_p = hpainter.brlayout.main().select('#onlineGUI_browser_hierarchy')
             .insert('div', ':first-child').attr('id', 'run_info').append('p').attr('id', 'run_num')
          runnum_p.text('Run Number = ')
          let runstatus_p = hpainter.brlayout.main().select('#run_info')
@@ -79,6 +87,7 @@
          let runend_p = hpainter.brlayout.main().select('#run_info')
             .append('p').attr('id', 'run_end')
          runend_p.text('Run End = ')
+*/
          return;
       });
    </script>

@@ -1,4 +1,7 @@
 [ libKoBRA_Dict.so ]
 # List of selected classes
+class TKoBRASniffer
+class TLPPACData
 class TPPACData
 class TPlasticData
+class TSSDData

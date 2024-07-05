@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/ndpsdaq/online/cens/rootana/kobra
+CMAKE_SOURCE_DIR = /home/ndpsdaq/online/cens/kobra
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/ndpsdaq/online/cens/rootana/kobra
+CMAKE_BINARY_DIR = /home/ndpsdaq/online/cens/kobra
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ndpsdaq/online/cens/rootana/kobra/CMakeFiles /home/ndpsdaq/online/cens/rootana/kobra/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ndpsdaq/online/cens/kobra/CMakeFiles /home/ndpsdaq/online/cens/kobra/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/ndpsdaq/online/cens/rootana/kobra/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ndpsdaq/online/cens/kobra/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named root_server
+
+# Build rule for target.
+root_server: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 root_server
+.PHONY : root_server
+
+# fast build rule for target.
+root_server/fast:
+	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/build
+.PHONY : root_server/fast
+
+#=============================================================================
 # Target rules for targets named ana
 
 # Build rule for target.
@@ -122,6 +135,45 @@ ana: cmake_check_build_system
 ana/fast:
 	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/build
 .PHONY : ana/fast
+
+#=============================================================================
+# Target rules for targets named kobra
+
+# Build rule for target.
+kobra: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 kobra
+.PHONY : kobra
+
+# fast build rule for target.
+kobra/fast:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/build
+.PHONY : kobra/fast
+
+#=============================================================================
+# Target rules for targets named anadict
+
+# Build rule for target.
+anadict: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 anadict
+.PHONY : anadict
+
+# fast build rule for target.
+anadict/fast:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/build
+.PHONY : anadict/fast
+
+#=============================================================================
+# Target rules for targets named KoBRA_DictOnly
+
+# Build rule for target.
+KoBRA_DictOnly: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 KoBRA_DictOnly
+.PHONY : KoBRA_DictOnly
+
+# fast build rule for target.
+KoBRA_DictOnly/fast:
+	$(MAKE) -f CMakeFiles/KoBRA_DictOnly.dir/build.make CMakeFiles/KoBRA_DictOnly.dir/build
+.PHONY : KoBRA_DictOnly/fast
 
 #=============================================================================
 # Target rules for targets named KoBRA_Dict
@@ -142,7 +194,7 @@ KoBRA_Dict.o: KoBRA_Dict.cxx.o
 
 # target to build an object file
 KoBRA_Dict.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/KoBRA_Dict.cxx.o
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/KoBRA_Dict.cxx.o
 .PHONY : KoBRA_Dict.cxx.o
 
 KoBRA_Dict.i: KoBRA_Dict.cxx.i
@@ -151,7 +203,7 @@ KoBRA_Dict.i: KoBRA_Dict.cxx.i
 
 # target to preprocess a source file
 KoBRA_Dict.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/KoBRA_Dict.cxx.i
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/KoBRA_Dict.cxx.i
 .PHONY : KoBRA_Dict.cxx.i
 
 KoBRA_Dict.s: KoBRA_Dict.cxx.s
@@ -160,251 +212,35 @@ KoBRA_Dict.s: KoBRA_Dict.cxx.s
 
 # target to generate assembly for a file
 KoBRA_Dict.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/KoBRA_Dict.cxx.s
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/KoBRA_Dict.cxx.s
 .PHONY : KoBRA_Dict.cxx.s
 
-TAnaManager.o: TAnaManager.cxx.o
+KoBRA_DictOnly.o: KoBRA_DictOnly.cxx.o
 
-.PHONY : TAnaManager.o
-
-# target to build an object file
-TAnaManager.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TAnaManager.cxx.o
-.PHONY : TAnaManager.cxx.o
-
-TAnaManager.i: TAnaManager.cxx.i
-
-.PHONY : TAnaManager.i
-
-# target to preprocess a source file
-TAnaManager.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TAnaManager.cxx.i
-.PHONY : TAnaManager.cxx.i
-
-TAnaManager.s: TAnaManager.cxx.s
-
-.PHONY : TAnaManager.s
-
-# target to generate assembly for a file
-TAnaManager.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TAnaManager.cxx.s
-.PHONY : TAnaManager.cxx.s
-
-TKoBRAADCData.o: TKoBRAADCData.cxx.o
-
-.PHONY : TKoBRAADCData.o
+.PHONY : KoBRA_DictOnly.o
 
 # target to build an object file
-TKoBRAADCData.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRAADCData.cxx.o
-.PHONY : TKoBRAADCData.cxx.o
+KoBRA_DictOnly.cxx.o:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/KoBRA_DictOnly.cxx.o
+.PHONY : KoBRA_DictOnly.cxx.o
 
-TKoBRAADCData.i: TKoBRAADCData.cxx.i
+KoBRA_DictOnly.i: KoBRA_DictOnly.cxx.i
 
-.PHONY : TKoBRAADCData.i
-
-# target to preprocess a source file
-TKoBRAADCData.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRAADCData.cxx.i
-.PHONY : TKoBRAADCData.cxx.i
-
-TKoBRAADCData.s: TKoBRAADCData.cxx.s
-
-.PHONY : TKoBRAADCData.s
-
-# target to generate assembly for a file
-TKoBRAADCData.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRAADCData.cxx.s
-.PHONY : TKoBRAADCData.cxx.s
-
-TKoBRAADCHistogram.o: TKoBRAADCHistogram.cxx.o
-
-.PHONY : TKoBRAADCHistogram.o
-
-# target to build an object file
-TKoBRAADCHistogram.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRAADCHistogram.cxx.o
-.PHONY : TKoBRAADCHistogram.cxx.o
-
-TKoBRAADCHistogram.i: TKoBRAADCHistogram.cxx.i
-
-.PHONY : TKoBRAADCHistogram.i
+.PHONY : KoBRA_DictOnly.i
 
 # target to preprocess a source file
-TKoBRAADCHistogram.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRAADCHistogram.cxx.i
-.PHONY : TKoBRAADCHistogram.cxx.i
+KoBRA_DictOnly.cxx.i:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/KoBRA_DictOnly.cxx.i
+.PHONY : KoBRA_DictOnly.cxx.i
 
-TKoBRAADCHistogram.s: TKoBRAADCHistogram.cxx.s
+KoBRA_DictOnly.s: KoBRA_DictOnly.cxx.s
 
-.PHONY : TKoBRAADCHistogram.s
-
-# target to generate assembly for a file
-TKoBRAADCHistogram.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRAADCHistogram.cxx.s
-.PHONY : TKoBRAADCHistogram.cxx.s
-
-TKoBRATDCData.o: TKoBRATDCData.cxx.o
-
-.PHONY : TKoBRATDCData.o
-
-# target to build an object file
-TKoBRATDCData.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRATDCData.cxx.o
-.PHONY : TKoBRATDCData.cxx.o
-
-TKoBRATDCData.i: TKoBRATDCData.cxx.i
-
-.PHONY : TKoBRATDCData.i
-
-# target to preprocess a source file
-TKoBRATDCData.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRATDCData.cxx.i
-.PHONY : TKoBRATDCData.cxx.i
-
-TKoBRATDCData.s: TKoBRATDCData.cxx.s
-
-.PHONY : TKoBRATDCData.s
+.PHONY : KoBRA_DictOnly.s
 
 # target to generate assembly for a file
-TKoBRATDCData.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRATDCData.cxx.s
-.PHONY : TKoBRATDCData.cxx.s
-
-TKoBRATDCHistogram.o: TKoBRATDCHistogram.cxx.o
-
-.PHONY : TKoBRATDCHistogram.o
-
-# target to build an object file
-TKoBRATDCHistogram.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRATDCHistogram.cxx.o
-.PHONY : TKoBRATDCHistogram.cxx.o
-
-TKoBRATDCHistogram.i: TKoBRATDCHistogram.cxx.i
-
-.PHONY : TKoBRATDCHistogram.i
-
-# target to preprocess a source file
-TKoBRATDCHistogram.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRATDCHistogram.cxx.i
-.PHONY : TKoBRATDCHistogram.cxx.i
-
-TKoBRATDCHistogram.s: TKoBRATDCHistogram.cxx.s
-
-.PHONY : TKoBRATDCHistogram.s
-
-# target to generate assembly for a file
-TKoBRATDCHistogram.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TKoBRATDCHistogram.cxx.s
-.PHONY : TKoBRATDCHistogram.cxx.s
-
-TPPACAna.o: TPPACAna.cxx.o
-
-.PHONY : TPPACAna.o
-
-# target to build an object file
-TPPACAna.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPPACAna.cxx.o
-.PHONY : TPPACAna.cxx.o
-
-TPPACAna.i: TPPACAna.cxx.i
-
-.PHONY : TPPACAna.i
-
-# target to preprocess a source file
-TPPACAna.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPPACAna.cxx.i
-.PHONY : TPPACAna.cxx.i
-
-TPPACAna.s: TPPACAna.cxx.s
-
-.PHONY : TPPACAna.s
-
-# target to generate assembly for a file
-TPPACAna.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPPACAna.cxx.s
-.PHONY : TPPACAna.cxx.s
-
-TPPACData.o: TPPACData.cxx.o
-
-.PHONY : TPPACData.o
-
-# target to build an object file
-TPPACData.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPPACData.cxx.o
-.PHONY : TPPACData.cxx.o
-
-TPPACData.i: TPPACData.cxx.i
-
-.PHONY : TPPACData.i
-
-# target to preprocess a source file
-TPPACData.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPPACData.cxx.i
-.PHONY : TPPACData.cxx.i
-
-TPPACData.s: TPPACData.cxx.s
-
-.PHONY : TPPACData.s
-
-# target to generate assembly for a file
-TPPACData.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPPACData.cxx.s
-.PHONY : TPPACData.cxx.s
-
-TPlasticAna.o: TPlasticAna.cxx.o
-
-.PHONY : TPlasticAna.o
-
-# target to build an object file
-TPlasticAna.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPlasticAna.cxx.o
-.PHONY : TPlasticAna.cxx.o
-
-TPlasticAna.i: TPlasticAna.cxx.i
-
-.PHONY : TPlasticAna.i
-
-# target to preprocess a source file
-TPlasticAna.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPlasticAna.cxx.i
-.PHONY : TPlasticAna.cxx.i
-
-TPlasticAna.s: TPlasticAna.cxx.s
-
-.PHONY : TPlasticAna.s
-
-# target to generate assembly for a file
-TPlasticAna.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPlasticAna.cxx.s
-.PHONY : TPlasticAna.cxx.s
-
-TPlasticData.o: TPlasticData.cxx.o
-
-.PHONY : TPlasticData.o
-
-# target to build an object file
-TPlasticData.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPlasticData.cxx.o
-.PHONY : TPlasticData.cxx.o
-
-TPlasticData.i: TPlasticData.cxx.i
-
-.PHONY : TPlasticData.i
-
-# target to preprocess a source file
-TPlasticData.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPlasticData.cxx.i
-.PHONY : TPlasticData.cxx.i
-
-TPlasticData.s: TPlasticData.cxx.s
-
-.PHONY : TPlasticData.s
-
-# target to generate assembly for a file
-TPlasticData.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/TPlasticData.cxx.s
-.PHONY : TPlasticData.cxx.s
+KoBRA_DictOnly.cxx.s:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/KoBRA_DictOnly.cxx.s
+.PHONY : KoBRA_DictOnly.cxx.s
 
 ana.o: ana.cxx.o
 
@@ -433,6 +269,774 @@ ana.cxx.s:
 	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/ana.cxx.s
 .PHONY : ana.cxx.s
 
+macros/kobra.o: macros/kobra.cxx.o
+
+.PHONY : macros/kobra.o
+
+# target to build an object file
+macros/kobra.cxx.o:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/macros/kobra.cxx.o
+.PHONY : macros/kobra.cxx.o
+
+macros/kobra.i: macros/kobra.cxx.i
+
+.PHONY : macros/kobra.i
+
+# target to preprocess a source file
+macros/kobra.cxx.i:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/macros/kobra.cxx.i
+.PHONY : macros/kobra.cxx.i
+
+macros/kobra.s: macros/kobra.cxx.s
+
+.PHONY : macros/kobra.s
+
+# target to generate assembly for a file
+macros/kobra.cxx.s:
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/macros/kobra.cxx.s
+.PHONY : macros/kobra.cxx.s
+
+root_server.o: root_server.cxx.o
+
+.PHONY : root_server.o
+
+# target to build an object file
+root_server.cxx.o:
+	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/root_server.cxx.o
+.PHONY : root_server.cxx.o
+
+root_server.i: root_server.cxx.i
+
+.PHONY : root_server.i
+
+# target to preprocess a source file
+root_server.cxx.i:
+	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/root_server.cxx.i
+.PHONY : root_server.cxx.i
+
+root_server.s: root_server.cxx.s
+
+.PHONY : root_server.s
+
+# target to generate assembly for a file
+root_server.cxx.s:
+	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/root_server.cxx.s
+.PHONY : root_server.cxx.s
+
+src/TAnaManager.o: src/TAnaManager.cxx.o
+
+.PHONY : src/TAnaManager.o
+
+# target to build an object file
+src/TAnaManager.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TAnaManager.cxx.o
+.PHONY : src/TAnaManager.cxx.o
+
+src/TAnaManager.i: src/TAnaManager.cxx.i
+
+.PHONY : src/TAnaManager.i
+
+# target to preprocess a source file
+src/TAnaManager.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TAnaManager.cxx.i
+.PHONY : src/TAnaManager.cxx.i
+
+src/TAnaManager.s: src/TAnaManager.cxx.s
+
+.PHONY : src/TAnaManager.s
+
+# target to generate assembly for a file
+src/TAnaManager.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TAnaManager.cxx.s
+.PHONY : src/TAnaManager.cxx.s
+
+src/TCanvasManager.o: src/TCanvasManager.cxx.o
+
+.PHONY : src/TCanvasManager.o
+
+# target to build an object file
+src/TCanvasManager.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TCanvasManager.cxx.o
+.PHONY : src/TCanvasManager.cxx.o
+
+src/TCanvasManager.i: src/TCanvasManager.cxx.i
+
+.PHONY : src/TCanvasManager.i
+
+# target to preprocess a source file
+src/TCanvasManager.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TCanvasManager.cxx.i
+.PHONY : src/TCanvasManager.cxx.i
+
+src/TCanvasManager.s: src/TCanvasManager.cxx.s
+
+.PHONY : src/TCanvasManager.s
+
+# target to generate assembly for a file
+src/TCanvasManager.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TCanvasManager.cxx.s
+.PHONY : src/TCanvasManager.cxx.s
+
+src/TDPlasticAna.o: src/TDPlasticAna.cxx.o
+
+.PHONY : src/TDPlasticAna.o
+
+# target to build an object file
+src/TDPlasticAna.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TDPlasticAna.cxx.o
+.PHONY : src/TDPlasticAna.cxx.o
+
+src/TDPlasticAna.i: src/TDPlasticAna.cxx.i
+
+.PHONY : src/TDPlasticAna.i
+
+# target to preprocess a source file
+src/TDPlasticAna.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TDPlasticAna.cxx.i
+.PHONY : src/TDPlasticAna.cxx.i
+
+src/TDPlasticAna.s: src/TDPlasticAna.cxx.s
+
+.PHONY : src/TDPlasticAna.s
+
+# target to generate assembly for a file
+src/TDPlasticAna.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TDPlasticAna.cxx.s
+.PHONY : src/TDPlasticAna.cxx.s
+
+src/TDetectorManager.o: src/TDetectorManager.cxx.o
+
+.PHONY : src/TDetectorManager.o
+
+# target to build an object file
+src/TDetectorManager.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TDetectorManager.cxx.o
+.PHONY : src/TDetectorManager.cxx.o
+
+src/TDetectorManager.i: src/TDetectorManager.cxx.i
+
+.PHONY : src/TDetectorManager.i
+
+# target to preprocess a source file
+src/TDetectorManager.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TDetectorManager.cxx.i
+.PHONY : src/TDetectorManager.cxx.i
+
+src/TDetectorManager.s: src/TDetectorManager.cxx.s
+
+.PHONY : src/TDetectorManager.s
+
+# target to generate assembly for a file
+src/TDetectorManager.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TDetectorManager.cxx.s
+.PHONY : src/TDetectorManager.cxx.s
+
+src/THistManager.o: src/THistManager.cxx.o
+
+.PHONY : src/THistManager.o
+
+# target to build an object file
+src/THistManager.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/THistManager.cxx.o
+.PHONY : src/THistManager.cxx.o
+
+src/THistManager.i: src/THistManager.cxx.i
+
+.PHONY : src/THistManager.i
+
+# target to preprocess a source file
+src/THistManager.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/THistManager.cxx.i
+.PHONY : src/THistManager.cxx.i
+
+src/THistManager.s: src/THistManager.cxx.s
+
+.PHONY : src/THistManager.s
+
+# target to generate assembly for a file
+src/THistManager.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/THistManager.cxx.s
+.PHONY : src/THistManager.cxx.s
+
+src/TKoBRAADCData.o: src/TKoBRAADCData.cxx.o
+
+.PHONY : src/TKoBRAADCData.o
+
+# target to build an object file
+src/TKoBRAADCData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRAADCData.cxx.o
+.PHONY : src/TKoBRAADCData.cxx.o
+
+src/TKoBRAADCData.i: src/TKoBRAADCData.cxx.i
+
+.PHONY : src/TKoBRAADCData.i
+
+# target to preprocess a source file
+src/TKoBRAADCData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRAADCData.cxx.i
+.PHONY : src/TKoBRAADCData.cxx.i
+
+src/TKoBRAADCData.s: src/TKoBRAADCData.cxx.s
+
+.PHONY : src/TKoBRAADCData.s
+
+# target to generate assembly for a file
+src/TKoBRAADCData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRAADCData.cxx.s
+.PHONY : src/TKoBRAADCData.cxx.s
+
+src/TKoBRAADCHistogram.o: src/TKoBRAADCHistogram.cxx.o
+
+.PHONY : src/TKoBRAADCHistogram.o
+
+# target to build an object file
+src/TKoBRAADCHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRAADCHistogram.cxx.o
+.PHONY : src/TKoBRAADCHistogram.cxx.o
+
+src/TKoBRAADCHistogram.i: src/TKoBRAADCHistogram.cxx.i
+
+.PHONY : src/TKoBRAADCHistogram.i
+
+# target to preprocess a source file
+src/TKoBRAADCHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRAADCHistogram.cxx.i
+.PHONY : src/TKoBRAADCHistogram.cxx.i
+
+src/TKoBRAADCHistogram.s: src/TKoBRAADCHistogram.cxx.s
+
+.PHONY : src/TKoBRAADCHistogram.s
+
+# target to generate assembly for a file
+src/TKoBRAADCHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRAADCHistogram.cxx.s
+.PHONY : src/TKoBRAADCHistogram.cxx.s
+
+src/TKoBRADIGData.o: src/TKoBRADIGData.cxx.o
+
+.PHONY : src/TKoBRADIGData.o
+
+# target to build an object file
+src/TKoBRADIGData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRADIGData.cxx.o
+.PHONY : src/TKoBRADIGData.cxx.o
+
+src/TKoBRADIGData.i: src/TKoBRADIGData.cxx.i
+
+.PHONY : src/TKoBRADIGData.i
+
+# target to preprocess a source file
+src/TKoBRADIGData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRADIGData.cxx.i
+.PHONY : src/TKoBRADIGData.cxx.i
+
+src/TKoBRADIGData.s: src/TKoBRADIGData.cxx.s
+
+.PHONY : src/TKoBRADIGData.s
+
+# target to generate assembly for a file
+src/TKoBRADIGData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRADIGData.cxx.s
+.PHONY : src/TKoBRADIGData.cxx.s
+
+src/TKoBRADIGHistogram.o: src/TKoBRADIGHistogram.cxx.o
+
+.PHONY : src/TKoBRADIGHistogram.o
+
+# target to build an object file
+src/TKoBRADIGHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRADIGHistogram.cxx.o
+.PHONY : src/TKoBRADIGHistogram.cxx.o
+
+src/TKoBRADIGHistogram.i: src/TKoBRADIGHistogram.cxx.i
+
+.PHONY : src/TKoBRADIGHistogram.i
+
+# target to preprocess a source file
+src/TKoBRADIGHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRADIGHistogram.cxx.i
+.PHONY : src/TKoBRADIGHistogram.cxx.i
+
+src/TKoBRADIGHistogram.s: src/TKoBRADIGHistogram.cxx.s
+
+.PHONY : src/TKoBRADIGHistogram.s
+
+# target to generate assembly for a file
+src/TKoBRADIGHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRADIGHistogram.cxx.s
+.PHONY : src/TKoBRADIGHistogram.cxx.s
+
+src/TKoBRASniffer.o: src/TKoBRASniffer.cxx.o
+
+.PHONY : src/TKoBRASniffer.o
+
+# target to build an object file
+src/TKoBRASniffer.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRASniffer.cxx.o
+.PHONY : src/TKoBRASniffer.cxx.o
+
+src/TKoBRASniffer.i: src/TKoBRASniffer.cxx.i
+
+.PHONY : src/TKoBRASniffer.i
+
+# target to preprocess a source file
+src/TKoBRASniffer.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRASniffer.cxx.i
+.PHONY : src/TKoBRASniffer.cxx.i
+
+src/TKoBRASniffer.s: src/TKoBRASniffer.cxx.s
+
+.PHONY : src/TKoBRASniffer.s
+
+# target to generate assembly for a file
+src/TKoBRASniffer.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRASniffer.cxx.s
+.PHONY : src/TKoBRASniffer.cxx.s
+
+src/TKoBRATDCData.o: src/TKoBRATDCData.cxx.o
+
+.PHONY : src/TKoBRATDCData.o
+
+# target to build an object file
+src/TKoBRATDCData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRATDCData.cxx.o
+.PHONY : src/TKoBRATDCData.cxx.o
+
+src/TKoBRATDCData.i: src/TKoBRATDCData.cxx.i
+
+.PHONY : src/TKoBRATDCData.i
+
+# target to preprocess a source file
+src/TKoBRATDCData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRATDCData.cxx.i
+.PHONY : src/TKoBRATDCData.cxx.i
+
+src/TKoBRATDCData.s: src/TKoBRATDCData.cxx.s
+
+.PHONY : src/TKoBRATDCData.s
+
+# target to generate assembly for a file
+src/TKoBRATDCData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRATDCData.cxx.s
+.PHONY : src/TKoBRATDCData.cxx.s
+
+src/TKoBRATDCHistogram.o: src/TKoBRATDCHistogram.cxx.o
+
+.PHONY : src/TKoBRATDCHistogram.o
+
+# target to build an object file
+src/TKoBRATDCHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRATDCHistogram.cxx.o
+.PHONY : src/TKoBRATDCHistogram.cxx.o
+
+src/TKoBRATDCHistogram.i: src/TKoBRATDCHistogram.cxx.i
+
+.PHONY : src/TKoBRATDCHistogram.i
+
+# target to preprocess a source file
+src/TKoBRATDCHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRATDCHistogram.cxx.i
+.PHONY : src/TKoBRATDCHistogram.cxx.i
+
+src/TKoBRATDCHistogram.s: src/TKoBRATDCHistogram.cxx.s
+
+.PHONY : src/TKoBRATDCHistogram.s
+
+# target to generate assembly for a file
+src/TKoBRATDCHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TKoBRATDCHistogram.cxx.s
+.PHONY : src/TKoBRATDCHistogram.cxx.s
+
+src/TLPPACAna.o: src/TLPPACAna.cxx.o
+
+.PHONY : src/TLPPACAna.o
+
+# target to build an object file
+src/TLPPACAna.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TLPPACAna.cxx.o
+.PHONY : src/TLPPACAna.cxx.o
+
+src/TLPPACAna.i: src/TLPPACAna.cxx.i
+
+.PHONY : src/TLPPACAna.i
+
+# target to preprocess a source file
+src/TLPPACAna.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TLPPACAna.cxx.i
+.PHONY : src/TLPPACAna.cxx.i
+
+src/TLPPACAna.s: src/TLPPACAna.cxx.s
+
+.PHONY : src/TLPPACAna.s
+
+# target to generate assembly for a file
+src/TLPPACAna.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TLPPACAna.cxx.s
+.PHONY : src/TLPPACAna.cxx.s
+
+src/TLPPACData.o: src/TLPPACData.cxx.o
+
+.PHONY : src/TLPPACData.o
+
+# target to build an object file
+src/TLPPACData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TLPPACData.cxx.o
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TLPPACData.cxx.o
+.PHONY : src/TLPPACData.cxx.o
+
+src/TLPPACData.i: src/TLPPACData.cxx.i
+
+.PHONY : src/TLPPACData.i
+
+# target to preprocess a source file
+src/TLPPACData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TLPPACData.cxx.i
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TLPPACData.cxx.i
+.PHONY : src/TLPPACData.cxx.i
+
+src/TLPPACData.s: src/TLPPACData.cxx.s
+
+.PHONY : src/TLPPACData.s
+
+# target to generate assembly for a file
+src/TLPPACData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TLPPACData.cxx.s
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TLPPACData.cxx.s
+.PHONY : src/TLPPACData.cxx.s
+
+src/TPIDHistogram.o: src/TPIDHistogram.cxx.o
+
+.PHONY : src/TPIDHistogram.o
+
+# target to build an object file
+src/TPIDHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPIDHistogram.cxx.o
+.PHONY : src/TPIDHistogram.cxx.o
+
+src/TPIDHistogram.i: src/TPIDHistogram.cxx.i
+
+.PHONY : src/TPIDHistogram.i
+
+# target to preprocess a source file
+src/TPIDHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPIDHistogram.cxx.i
+.PHONY : src/TPIDHistogram.cxx.i
+
+src/TPIDHistogram.s: src/TPIDHistogram.cxx.s
+
+.PHONY : src/TPIDHistogram.s
+
+# target to generate assembly for a file
+src/TPIDHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPIDHistogram.cxx.s
+.PHONY : src/TPIDHistogram.cxx.s
+
+src/TPPACAna.o: src/TPPACAna.cxx.o
+
+.PHONY : src/TPPACAna.o
+
+# target to build an object file
+src/TPPACAna.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACAna.cxx.o
+.PHONY : src/TPPACAna.cxx.o
+
+src/TPPACAna.i: src/TPPACAna.cxx.i
+
+.PHONY : src/TPPACAna.i
+
+# target to preprocess a source file
+src/TPPACAna.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACAna.cxx.i
+.PHONY : src/TPPACAna.cxx.i
+
+src/TPPACAna.s: src/TPPACAna.cxx.s
+
+.PHONY : src/TPPACAna.s
+
+# target to generate assembly for a file
+src/TPPACAna.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACAna.cxx.s
+.PHONY : src/TPPACAna.cxx.s
+
+src/TPPACData.o: src/TPPACData.cxx.o
+
+.PHONY : src/TPPACData.o
+
+# target to build an object file
+src/TPPACData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACData.cxx.o
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TPPACData.cxx.o
+.PHONY : src/TPPACData.cxx.o
+
+src/TPPACData.i: src/TPPACData.cxx.i
+
+.PHONY : src/TPPACData.i
+
+# target to preprocess a source file
+src/TPPACData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACData.cxx.i
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TPPACData.cxx.i
+.PHONY : src/TPPACData.cxx.i
+
+src/TPPACData.s: src/TPPACData.cxx.s
+
+.PHONY : src/TPPACData.s
+
+# target to generate assembly for a file
+src/TPPACData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACData.cxx.s
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TPPACData.cxx.s
+.PHONY : src/TPPACData.cxx.s
+
+src/TPPACHistogram.o: src/TPPACHistogram.cxx.o
+
+.PHONY : src/TPPACHistogram.o
+
+# target to build an object file
+src/TPPACHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACHistogram.cxx.o
+.PHONY : src/TPPACHistogram.cxx.o
+
+src/TPPACHistogram.i: src/TPPACHistogram.cxx.i
+
+.PHONY : src/TPPACHistogram.i
+
+# target to preprocess a source file
+src/TPPACHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACHistogram.cxx.i
+.PHONY : src/TPPACHistogram.cxx.i
+
+src/TPPACHistogram.s: src/TPPACHistogram.cxx.s
+
+.PHONY : src/TPPACHistogram.s
+
+# target to generate assembly for a file
+src/TPPACHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPPACHistogram.cxx.s
+.PHONY : src/TPPACHistogram.cxx.s
+
+src/TPlasticAna.o: src/TPlasticAna.cxx.o
+
+.PHONY : src/TPlasticAna.o
+
+# target to build an object file
+src/TPlasticAna.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticAna.cxx.o
+.PHONY : src/TPlasticAna.cxx.o
+
+src/TPlasticAna.i: src/TPlasticAna.cxx.i
+
+.PHONY : src/TPlasticAna.i
+
+# target to preprocess a source file
+src/TPlasticAna.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticAna.cxx.i
+.PHONY : src/TPlasticAna.cxx.i
+
+src/TPlasticAna.s: src/TPlasticAna.cxx.s
+
+.PHONY : src/TPlasticAna.s
+
+# target to generate assembly for a file
+src/TPlasticAna.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticAna.cxx.s
+.PHONY : src/TPlasticAna.cxx.s
+
+src/TPlasticData.o: src/TPlasticData.cxx.o
+
+.PHONY : src/TPlasticData.o
+
+# target to build an object file
+src/TPlasticData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticData.cxx.o
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TPlasticData.cxx.o
+.PHONY : src/TPlasticData.cxx.o
+
+src/TPlasticData.i: src/TPlasticData.cxx.i
+
+.PHONY : src/TPlasticData.i
+
+# target to preprocess a source file
+src/TPlasticData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticData.cxx.i
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TPlasticData.cxx.i
+.PHONY : src/TPlasticData.cxx.i
+
+src/TPlasticData.s: src/TPlasticData.cxx.s
+
+.PHONY : src/TPlasticData.s
+
+# target to generate assembly for a file
+src/TPlasticData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticData.cxx.s
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TPlasticData.cxx.s
+.PHONY : src/TPlasticData.cxx.s
+
+src/TPlasticHistogram.o: src/TPlasticHistogram.cxx.o
+
+.PHONY : src/TPlasticHistogram.o
+
+# target to build an object file
+src/TPlasticHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticHistogram.cxx.o
+.PHONY : src/TPlasticHistogram.cxx.o
+
+src/TPlasticHistogram.i: src/TPlasticHistogram.cxx.i
+
+.PHONY : src/TPlasticHistogram.i
+
+# target to preprocess a source file
+src/TPlasticHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticHistogram.cxx.i
+.PHONY : src/TPlasticHistogram.cxx.i
+
+src/TPlasticHistogram.s: src/TPlasticHistogram.cxx.s
+
+.PHONY : src/TPlasticHistogram.s
+
+# target to generate assembly for a file
+src/TPlasticHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TPlasticHistogram.cxx.s
+.PHONY : src/TPlasticHistogram.cxx.s
+
+src/TSSDAna.o: src/TSSDAna.cxx.o
+
+.PHONY : src/TSSDAna.o
+
+# target to build an object file
+src/TSSDAna.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDAna.cxx.o
+.PHONY : src/TSSDAna.cxx.o
+
+src/TSSDAna.i: src/TSSDAna.cxx.i
+
+.PHONY : src/TSSDAna.i
+
+# target to preprocess a source file
+src/TSSDAna.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDAna.cxx.i
+.PHONY : src/TSSDAna.cxx.i
+
+src/TSSDAna.s: src/TSSDAna.cxx.s
+
+.PHONY : src/TSSDAna.s
+
+# target to generate assembly for a file
+src/TSSDAna.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDAna.cxx.s
+.PHONY : src/TSSDAna.cxx.s
+
+src/TSSDData.o: src/TSSDData.cxx.o
+
+.PHONY : src/TSSDData.o
+
+# target to build an object file
+src/TSSDData.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDData.cxx.o
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TSSDData.cxx.o
+.PHONY : src/TSSDData.cxx.o
+
+src/TSSDData.i: src/TSSDData.cxx.i
+
+.PHONY : src/TSSDData.i
+
+# target to preprocess a source file
+src/TSSDData.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDData.cxx.i
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TSSDData.cxx.i
+.PHONY : src/TSSDData.cxx.i
+
+src/TSSDData.s: src/TSSDData.cxx.s
+
+.PHONY : src/TSSDData.s
+
+# target to generate assembly for a file
+src/TSSDData.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDData.cxx.s
+	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/src/TSSDData.cxx.s
+.PHONY : src/TSSDData.cxx.s
+
+src/TSSDHistogram.o: src/TSSDHistogram.cxx.o
+
+.PHONY : src/TSSDHistogram.o
+
+# target to build an object file
+src/TSSDHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDHistogram.cxx.o
+.PHONY : src/TSSDHistogram.cxx.o
+
+src/TSSDHistogram.i: src/TSSDHistogram.cxx.i
+
+.PHONY : src/TSSDHistogram.i
+
+# target to preprocess a source file
+src/TSSDHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDHistogram.cxx.i
+.PHONY : src/TSSDHistogram.cxx.i
+
+src/TSSDHistogram.s: src/TSSDHistogram.cxx.s
+
+.PHONY : src/TSSDHistogram.s
+
+# target to generate assembly for a file
+src/TSSDHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TSSDHistogram.cxx.s
+.PHONY : src/TSSDHistogram.cxx.s
+
+src/TTrackHistogram.o: src/TTrackHistogram.cxx.o
+
+.PHONY : src/TTrackHistogram.o
+
+# target to build an object file
+src/TTrackHistogram.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TTrackHistogram.cxx.o
+.PHONY : src/TTrackHistogram.cxx.o
+
+src/TTrackHistogram.i: src/TTrackHistogram.cxx.i
+
+.PHONY : src/TTrackHistogram.i
+
+# target to preprocess a source file
+src/TTrackHistogram.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TTrackHistogram.cxx.i
+.PHONY : src/TTrackHistogram.cxx.i
+
+src/TTrackHistogram.s: src/TTrackHistogram.cxx.s
+
+.PHONY : src/TTrackHistogram.s
+
+# target to generate assembly for a file
+src/TTrackHistogram.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TTrackHistogram.cxx.s
+.PHONY : src/TTrackHistogram.cxx.s
+
+src/TTreeManager.o: src/TTreeManager.cxx.o
+
+.PHONY : src/TTreeManager.o
+
+# target to build an object file
+src/TTreeManager.cxx.o:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TTreeManager.cxx.o
+.PHONY : src/TTreeManager.cxx.o
+
+src/TTreeManager.i: src/TTreeManager.cxx.i
+
+.PHONY : src/TTreeManager.i
+
+# target to preprocess a source file
+src/TTreeManager.cxx.i:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TTreeManager.cxx.i
+.PHONY : src/TTreeManager.cxx.i
+
+src/TTreeManager.s: src/TTreeManager.cxx.s
+
+.PHONY : src/TTreeManager.s
+
+# target to generate assembly for a file
+src/TTreeManager.cxx.s:
+	$(MAKE) -f CMakeFiles/kobra.dir/build.make CMakeFiles/kobra.dir/src/TTreeManager.cxx.s
+.PHONY : src/TTreeManager.cxx.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -441,41 +1045,105 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... root_server"
 	@echo "... ana"
+	@echo "... kobra"
+	@echo "... anadict"
+	@echo "... KoBRA_DictOnly"
 	@echo "... KoBRA_Dict"
 	@echo "... KoBRA_Dict.o"
 	@echo "... KoBRA_Dict.i"
 	@echo "... KoBRA_Dict.s"
-	@echo "... TAnaManager.o"
-	@echo "... TAnaManager.i"
-	@echo "... TAnaManager.s"
-	@echo "... TKoBRAADCData.o"
-	@echo "... TKoBRAADCData.i"
-	@echo "... TKoBRAADCData.s"
-	@echo "... TKoBRAADCHistogram.o"
-	@echo "... TKoBRAADCHistogram.i"
-	@echo "... TKoBRAADCHistogram.s"
-	@echo "... TKoBRATDCData.o"
-	@echo "... TKoBRATDCData.i"
-	@echo "... TKoBRATDCData.s"
-	@echo "... TKoBRATDCHistogram.o"
-	@echo "... TKoBRATDCHistogram.i"
-	@echo "... TKoBRATDCHistogram.s"
-	@echo "... TPPACAna.o"
-	@echo "... TPPACAna.i"
-	@echo "... TPPACAna.s"
-	@echo "... TPPACData.o"
-	@echo "... TPPACData.i"
-	@echo "... TPPACData.s"
-	@echo "... TPlasticAna.o"
-	@echo "... TPlasticAna.i"
-	@echo "... TPlasticAna.s"
-	@echo "... TPlasticData.o"
-	@echo "... TPlasticData.i"
-	@echo "... TPlasticData.s"
+	@echo "... KoBRA_DictOnly.o"
+	@echo "... KoBRA_DictOnly.i"
+	@echo "... KoBRA_DictOnly.s"
 	@echo "... ana.o"
 	@echo "... ana.i"
 	@echo "... ana.s"
+	@echo "... macros/kobra.o"
+	@echo "... macros/kobra.i"
+	@echo "... macros/kobra.s"
+	@echo "... root_server.o"
+	@echo "... root_server.i"
+	@echo "... root_server.s"
+	@echo "... src/TAnaManager.o"
+	@echo "... src/TAnaManager.i"
+	@echo "... src/TAnaManager.s"
+	@echo "... src/TCanvasManager.o"
+	@echo "... src/TCanvasManager.i"
+	@echo "... src/TCanvasManager.s"
+	@echo "... src/TDPlasticAna.o"
+	@echo "... src/TDPlasticAna.i"
+	@echo "... src/TDPlasticAna.s"
+	@echo "... src/TDetectorManager.o"
+	@echo "... src/TDetectorManager.i"
+	@echo "... src/TDetectorManager.s"
+	@echo "... src/THistManager.o"
+	@echo "... src/THistManager.i"
+	@echo "... src/THistManager.s"
+	@echo "... src/TKoBRAADCData.o"
+	@echo "... src/TKoBRAADCData.i"
+	@echo "... src/TKoBRAADCData.s"
+	@echo "... src/TKoBRAADCHistogram.o"
+	@echo "... src/TKoBRAADCHistogram.i"
+	@echo "... src/TKoBRAADCHistogram.s"
+	@echo "... src/TKoBRADIGData.o"
+	@echo "... src/TKoBRADIGData.i"
+	@echo "... src/TKoBRADIGData.s"
+	@echo "... src/TKoBRADIGHistogram.o"
+	@echo "... src/TKoBRADIGHistogram.i"
+	@echo "... src/TKoBRADIGHistogram.s"
+	@echo "... src/TKoBRASniffer.o"
+	@echo "... src/TKoBRASniffer.i"
+	@echo "... src/TKoBRASniffer.s"
+	@echo "... src/TKoBRATDCData.o"
+	@echo "... src/TKoBRATDCData.i"
+	@echo "... src/TKoBRATDCData.s"
+	@echo "... src/TKoBRATDCHistogram.o"
+	@echo "... src/TKoBRATDCHistogram.i"
+	@echo "... src/TKoBRATDCHistogram.s"
+	@echo "... src/TLPPACAna.o"
+	@echo "... src/TLPPACAna.i"
+	@echo "... src/TLPPACAna.s"
+	@echo "... src/TLPPACData.o"
+	@echo "... src/TLPPACData.i"
+	@echo "... src/TLPPACData.s"
+	@echo "... src/TPIDHistogram.o"
+	@echo "... src/TPIDHistogram.i"
+	@echo "... src/TPIDHistogram.s"
+	@echo "... src/TPPACAna.o"
+	@echo "... src/TPPACAna.i"
+	@echo "... src/TPPACAna.s"
+	@echo "... src/TPPACData.o"
+	@echo "... src/TPPACData.i"
+	@echo "... src/TPPACData.s"
+	@echo "... src/TPPACHistogram.o"
+	@echo "... src/TPPACHistogram.i"
+	@echo "... src/TPPACHistogram.s"
+	@echo "... src/TPlasticAna.o"
+	@echo "... src/TPlasticAna.i"
+	@echo "... src/TPlasticAna.s"
+	@echo "... src/TPlasticData.o"
+	@echo "... src/TPlasticData.i"
+	@echo "... src/TPlasticData.s"
+	@echo "... src/TPlasticHistogram.o"
+	@echo "... src/TPlasticHistogram.i"
+	@echo "... src/TPlasticHistogram.s"
+	@echo "... src/TSSDAna.o"
+	@echo "... src/TSSDAna.i"
+	@echo "... src/TSSDAna.s"
+	@echo "... src/TSSDData.o"
+	@echo "... src/TSSDData.i"
+	@echo "... src/TSSDData.s"
+	@echo "... src/TSSDHistogram.o"
+	@echo "... src/TSSDHistogram.i"
+	@echo "... src/TSSDHistogram.s"
+	@echo "... src/TTrackHistogram.o"
+	@echo "... src/TTrackHistogram.i"
+	@echo "... src/TTrackHistogram.s"
+	@echo "... src/TTreeManager.o"
+	@echo "... src/TTreeManager.i"
+	@echo "... src/TTreeManager.s"
 .PHONY : help
 
 

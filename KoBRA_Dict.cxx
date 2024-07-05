@@ -35,11 +35,11 @@
 #include "TDataMember.h"
 
 // Header files passed as explicit arguments
-#include "TPPACData.hxx"
-#include "TLPPACData.hxx"
-#include "TPlasticData.hxx"
-#include "TSSDData.hxx"
-#include "TKoBRASniffer.hxx"
+#include "include/TPPACData.hxx"
+#include "include/TLPPACData.hxx"
+#include "include/TPlasticData.hxx"
+#include "include/TSSDData.hxx"
+#include "include/TKoBRASniffer.hxx"
 
 // Header files passed via #pragma extra_include
 
@@ -60,7 +60,7 @@ namespace ROOT {
       ::TPPACData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TPPACData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TPPACData", ::TPPACData::Class_Version(), "TPPACData.hxx", 6,
+         instance("TPPACData", ::TPPACData::Class_Version(), "include/TPPACData.hxx", 6,
                   typeid(::TPPACData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TPPACData::Dictionary, isa_proxy, 16,
                   sizeof(::TPPACData) );
@@ -94,7 +94,7 @@ namespace ROOT {
       ::TLPPACData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TLPPACData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TLPPACData", ::TLPPACData::Class_Version(), "TLPPACData.hxx", 6,
+         instance("TLPPACData", ::TLPPACData::Class_Version(), "include/TLPPACData.hxx", 6,
                   typeid(::TLPPACData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TLPPACData::Dictionary, isa_proxy, 16,
                   sizeof(::TLPPACData) );
@@ -128,7 +128,7 @@ namespace ROOT {
       ::TPlasticData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TPlasticData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TPlasticData", ::TPlasticData::Class_Version(), "TPlasticData.hxx", 6,
+         instance("TPlasticData", ::TPlasticData::Class_Version(), "include/TPlasticData.hxx", 6,
                   typeid(::TPlasticData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TPlasticData::Dictionary, isa_proxy, 16,
                   sizeof(::TPlasticData) );
@@ -162,7 +162,7 @@ namespace ROOT {
       ::TSSDData *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TSSDData >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TSSDData", ::TSSDData::Class_Version(), "TSSDData.hxx", 6,
+         instance("TSSDData", ::TSSDData::Class_Version(), "include/TSSDData.hxx", 6,
                   typeid(::TSSDData), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TSSDData::Dictionary, isa_proxy, 16,
                   sizeof(::TSSDData) );
@@ -195,7 +195,7 @@ namespace ROOT {
       ::TKoBRASniffer *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TKoBRASniffer >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TKoBRASniffer", ::TKoBRASniffer::Class_Version(), "TKoBRASniffer.hxx", 8,
+         instance("TKoBRASniffer", ::TKoBRASniffer::Class_Version(), "include/TKoBRASniffer.hxx", 8,
                   typeid(::TKoBRASniffer), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TKoBRASniffer::Dictionary, isa_proxy, 4,
                   sizeof(::TKoBRASniffer) );
@@ -647,18 +647,18 @@ namespace ROOT {
 namespace {
   void TriggerDictionaryInitialization_libKoBRA_Dict_Impl() {
     static const char* headers[] = {
-"TPPACData.hxx",
-"TLPPACData.hxx",
-"TPlasticData.hxx",
-"TSSDData.hxx",
-"TKoBRASniffer.hxx",
+"include/TPPACData.hxx",
+"include/TLPPACData.hxx",
+"include/TPlasticData.hxx",
+"include/TSSDData.hxx",
+"include/TKoBRASniffer.hxx",
 0
     };
     static const char* includePaths[] = {
 "/home/ndpsdaq/packages/root/include",
-"/home/ndpsdaq/online/cens/rootana/kobra",
+"/home/ndpsdaq/online/cens/kobra",
 "/home/ndpsdaq/packages/root/include/",
-"/home/ndpsdaq/online/cens/rootana/kobra/",
+"/home/ndpsdaq/online/cens/kobra/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -667,11 +667,11 @@ namespace {
 #pragma clang diagnostic ignored "-Wignored-attributes"
 #pragma clang diagnostic ignored "-Wreturn-type-c-linkage"
 extern int __Cling_AutoLoading_Map;
-class __attribute__((annotate("$clingAutoload$TPPACData.hxx")))  TPPACData;
-class __attribute__((annotate("$clingAutoload$TLPPACData.hxx")))  TLPPACData;
-class __attribute__((annotate("$clingAutoload$TPlasticData.hxx")))  TPlasticData;
-class __attribute__((annotate("$clingAutoload$TSSDData.hxx")))  TSSDData;
-class __attribute__((annotate("$clingAutoload$TKoBRASniffer.hxx")))  TKoBRASniffer;
+class __attribute__((annotate("$clingAutoload$include/TPPACData.hxx")))  TPPACData;
+class __attribute__((annotate("$clingAutoload$include/TLPPACData.hxx")))  TLPPACData;
+class __attribute__((annotate("$clingAutoload$include/TPlasticData.hxx")))  TPlasticData;
+class __attribute__((annotate("$clingAutoload$include/TSSDData.hxx")))  TSSDData;
+class __attribute__((annotate("$clingAutoload$include/TKoBRASniffer.hxx")))  TKoBRASniffer;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "libKoBRA_Dict dictionary payload"
@@ -679,11 +679,11 @@ class __attribute__((annotate("$clingAutoload$TKoBRASniffer.hxx")))  TKoBRASniff
 
 #define _BACKWARD_BACKWARD_WARNING_H
 // Inline headers
-#include "TPPACData.hxx"
-#include "TLPPACData.hxx"
-#include "TPlasticData.hxx"
-#include "TSSDData.hxx"
-#include "TKoBRASniffer.hxx"
+#include "include/TPPACData.hxx"
+#include "include/TLPPACData.hxx"
+#include "include/TPlasticData.hxx"
+#include "include/TSSDData.hxx"
+#include "include/TKoBRASniffer.hxx"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";

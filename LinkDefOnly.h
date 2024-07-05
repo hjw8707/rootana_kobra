@@ -6,3 +6,5 @@
 #pragma link C++ class TSSDData;
 #pragma link C++ class TLPPACData;
 #pragma link C++ class TPlasticData;
+
+#pragma link C++ class KOBRA;
