@@ -191,13 +191,24 @@ Bool_t KOBRA::LoadDB(const char *filename)
         Double_t brho;
         try
         {
-            brho = std::stof(tokens[8]);
+            brho = std::stof(tokens[7]);
         }
         catch (...)
         {
             continue;
         }
         brhoMap[run] = brho;
+
+        Double_t f1slit;
+        try
+        {
+            f1slit = std::stof(tokens[11]) + std::stof(tokens[12]);
+        }
+        catch (...)
+        {
+            continue;
+        }
+        f1slitMap[run] = f1slit;
     }
 
     file.close();
@@ -214,6 +225,13 @@ void KOBRA::RunSetting(int run)
     catch (...)
     {
     }
+    try
+    {
+        SetUseF1(f1slitMap[runN] > 40);
+    }
+    catch (...)
+    {
+    }    
 }
 
 void KOBRA::SetAlias()

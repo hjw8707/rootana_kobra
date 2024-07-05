@@ -7,6 +7,6 @@
 
 This code has been built for KoBRA analysis based on ROOTANA in the MIDAS package. This contains:
 
-1. ana: the code to produce a root file
-2. root_server: the code to run the online analysis server
+1. rakobra: the code to produce a root file
+2. rakobra_server: the code to run the online analysis server
 3. KOBRA class (macros/kobra.cc, .hh): the class for the analysis of root files made by ana

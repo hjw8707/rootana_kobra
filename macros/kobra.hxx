@@ -82,6 +82,8 @@ public:
 
     TChain *tree;
     std::map<Int_t, Double_t> brhoMap;
+    std::map<Int_t, Double_t> f1slitMap;
+    
 private:
     Int_t runN;
 

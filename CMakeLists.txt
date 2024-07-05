@@ -47,9 +47,6 @@ set(DICTHDRSONLY
 
 root_generate_dictionary(KoBRA_Dict ${DICTHDRS} LINKDEF LinkDef.h)
 root_generate_dictionary(KoBRA_DictOnly ${DICTHDRSONLY} LINKDEF LinkDefOnly.h)
-#add_executable(ana ana.cxx ${SOURCES})
-#add_executable(anaDisplay anaDisplay.cxx ${SOURCES})
-#add_executable(root_server root_server.cxx ${SOURCES})
 
 add_library(anadict SHARED KoBRA_DictOnly.cxx ${DICTSRCSONLY})
 target_include_directories(anadict PUBLIC ./ ./include ./macros )

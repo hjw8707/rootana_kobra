@@ -638,6 +638,21 @@ void KOBRA::Streamer(TBuffer &R__b)
             R__stl.insert(R__t3);
          }
       }
+      {
+         map<Int_t,Double_t> &R__stl =  f1slitMap;
+         R__stl.clear();
+         int R__i, R__n;
+         R__b >> R__n;
+         for (R__i = 0; R__i < R__n; R__i++) {
+            int R__t;
+            R__b >> R__t;
+            double R__t2;
+            R__b >> R__t2;
+            typedef int Value_t;
+            std::pair<Value_t const, double > R__t3(R__t,R__t2);
+            R__stl.insert(R__t3);
+         }
+      }
       R__b >> runN;
       R__b >> centBrho;
       R__b >> tofOff;
@@ -651,6 +666,18 @@ void KOBRA::Streamer(TBuffer &R__b)
       R__b << tree;
       {
          map<Int_t,Double_t> &R__stl =  brhoMap;
+         int R__n=int(R__stl.size());
+         R__b << R__n;
+         if(R__n) {
+            map<Int_t,Double_t>::iterator R__k;
+            for (R__k = R__stl.begin(); R__k != R__stl.end(); ++R__k) {
+            R__b << ((*R__k).first );
+            R__b << ((*R__k).second);
+            }
+         }
+      }
+      {
+         map<Int_t,Double_t> &R__stl =  f1slitMap;
          int R__n=int(R__stl.size());
          R__b << R__n;
          if(R__n) {
