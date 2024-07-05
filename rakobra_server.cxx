@@ -11,6 +11,7 @@
 #include "TRootanaEventLoop.hxx"
 #include "TAnaManager.hxx"
 
+#include "THttpServer.h"
 #include "TKoBRASniffer.hxx"
 
 class Analyzer : public TRootanaEventLoop
@@ -21,6 +22,8 @@ public:
   // analysis manager.
   TAnaManager *anaManager;
   TKoBRASniffer *sniffer;
+  THttpServer *http;
+
   Analyzer()
   {
     // DisableAutoMainWindow();
@@ -30,6 +33,7 @@ public:
     SetOnlineName("jsroot_server");
     gettimeofday(&LastUpdateTime, NULL);
 
+    http = new THttpServer("http:9091");
     InitManager();
   };
 
@@ -44,9 +48,8 @@ public:
   {
 
     std::cout << "Using THttpServer in read/write mode" << std::endl;
-    SetTHttpServerReadWrite();
+    http->SetReadOnly(false);
 
-    auto http = GetTHttpServer();
     sniffer = new TKoBRASniffer;
     http->SetSniffer(sniffer);
     http->AddLocation("midas/",Form("%s/resources",std::getenv("MIDASSYS")));
@@ -62,7 +65,7 @@ public:
     if (anaManager)
       delete anaManager;
     anaManager = new TAnaManager();
-    anaManager->SetTHttpServer(GetTHttpServer());
+    anaManager->SetTHttpServer(http);
   }
 
   void BeginRun(int transition, int run, int time)
@@ -70,14 +73,14 @@ public:
     anaManager->BeginRun(transition, run, time);
     sniffer->SetRunNumber(run);
     sniffer->SetRunStatus(true);
-    GetTHttpServer()->ProcessRequests();
+    http->ProcessRequests();
   }
 
   void EndRun(int transition, int run, int time)
   {
     anaManager->EndRun(transition, run, time);
     sniffer->SetRunStatus(false);
-    GetTHttpServer()->ProcessRequests();
+    http->ProcessRequests();
   }
 
   struct timeval LastUpdateTime;

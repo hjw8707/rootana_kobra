@@ -111,30 +111,30 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named root_server
+# Target rules for targets named rakobra_server
 
 # Build rule for target.
-root_server: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 root_server
-.PHONY : root_server
+rakobra_server: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rakobra_server
+.PHONY : rakobra_server
 
 # fast build rule for target.
-root_server/fast:
-	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/build
-.PHONY : root_server/fast
+rakobra_server/fast:
+	$(MAKE) -f CMakeFiles/rakobra_server.dir/build.make CMakeFiles/rakobra_server.dir/build
+.PHONY : rakobra_server/fast
 
 #=============================================================================
-# Target rules for targets named ana
+# Target rules for targets named rakobra
 
 # Build rule for target.
-ana: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 ana
-.PHONY : ana
+rakobra: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 rakobra
+.PHONY : rakobra
 
 # fast build rule for target.
-ana/fast:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/build
-.PHONY : ana/fast
+rakobra/fast:
+	$(MAKE) -f CMakeFiles/rakobra.dir/build.make CMakeFiles/rakobra.dir/build
+.PHONY : rakobra/fast
 
 #=============================================================================
 # Target rules for targets named kobra
@@ -242,33 +242,6 @@ KoBRA_DictOnly.cxx.s:
 	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/KoBRA_DictOnly.cxx.s
 .PHONY : KoBRA_DictOnly.cxx.s
 
-ana.o: ana.cxx.o
-
-.PHONY : ana.o
-
-# target to build an object file
-ana.cxx.o:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/ana.cxx.o
-.PHONY : ana.cxx.o
-
-ana.i: ana.cxx.i
-
-.PHONY : ana.i
-
-# target to preprocess a source file
-ana.cxx.i:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/ana.cxx.i
-.PHONY : ana.cxx.i
-
-ana.s: ana.cxx.s
-
-.PHONY : ana.s
-
-# target to generate assembly for a file
-ana.cxx.s:
-	$(MAKE) -f CMakeFiles/ana.dir/build.make CMakeFiles/ana.dir/ana.cxx.s
-.PHONY : ana.cxx.s
-
 macros/kobra.o: macros/kobra.cxx.o
 
 .PHONY : macros/kobra.o
@@ -296,32 +269,59 @@ macros/kobra.cxx.s:
 	$(MAKE) -f CMakeFiles/anadict.dir/build.make CMakeFiles/anadict.dir/macros/kobra.cxx.s
 .PHONY : macros/kobra.cxx.s
 
-root_server.o: root_server.cxx.o
+rakobra.o: rakobra.cxx.o
 
-.PHONY : root_server.o
+.PHONY : rakobra.o
 
 # target to build an object file
-root_server.cxx.o:
-	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/root_server.cxx.o
-.PHONY : root_server.cxx.o
+rakobra.cxx.o:
+	$(MAKE) -f CMakeFiles/rakobra.dir/build.make CMakeFiles/rakobra.dir/rakobra.cxx.o
+.PHONY : rakobra.cxx.o
 
-root_server.i: root_server.cxx.i
+rakobra.i: rakobra.cxx.i
 
-.PHONY : root_server.i
+.PHONY : rakobra.i
 
 # target to preprocess a source file
-root_server.cxx.i:
-	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/root_server.cxx.i
-.PHONY : root_server.cxx.i
+rakobra.cxx.i:
+	$(MAKE) -f CMakeFiles/rakobra.dir/build.make CMakeFiles/rakobra.dir/rakobra.cxx.i
+.PHONY : rakobra.cxx.i
 
-root_server.s: root_server.cxx.s
+rakobra.s: rakobra.cxx.s
 
-.PHONY : root_server.s
+.PHONY : rakobra.s
 
 # target to generate assembly for a file
-root_server.cxx.s:
-	$(MAKE) -f CMakeFiles/root_server.dir/build.make CMakeFiles/root_server.dir/root_server.cxx.s
-.PHONY : root_server.cxx.s
+rakobra.cxx.s:
+	$(MAKE) -f CMakeFiles/rakobra.dir/build.make CMakeFiles/rakobra.dir/rakobra.cxx.s
+.PHONY : rakobra.cxx.s
+
+rakobra_server.o: rakobra_server.cxx.o
+
+.PHONY : rakobra_server.o
+
+# target to build an object file
+rakobra_server.cxx.o:
+	$(MAKE) -f CMakeFiles/rakobra_server.dir/build.make CMakeFiles/rakobra_server.dir/rakobra_server.cxx.o
+.PHONY : rakobra_server.cxx.o
+
+rakobra_server.i: rakobra_server.cxx.i
+
+.PHONY : rakobra_server.i
+
+# target to preprocess a source file
+rakobra_server.cxx.i:
+	$(MAKE) -f CMakeFiles/rakobra_server.dir/build.make CMakeFiles/rakobra_server.dir/rakobra_server.cxx.i
+.PHONY : rakobra_server.cxx.i
+
+rakobra_server.s: rakobra_server.cxx.s
+
+.PHONY : rakobra_server.s
+
+# target to generate assembly for a file
+rakobra_server.cxx.s:
+	$(MAKE) -f CMakeFiles/rakobra_server.dir/build.make CMakeFiles/rakobra_server.dir/rakobra_server.cxx.s
+.PHONY : rakobra_server.cxx.s
 
 src/TAnaManager.o: src/TAnaManager.cxx.o
 
@@ -1044,9 +1044,9 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... rakobra_server"
 	@echo "... rebuild_cache"
-	@echo "... root_server"
-	@echo "... ana"
+	@echo "... rakobra"
 	@echo "... kobra"
 	@echo "... anadict"
 	@echo "... KoBRA_DictOnly"
@@ -1057,15 +1057,15 @@ help:
 	@echo "... KoBRA_DictOnly.o"
 	@echo "... KoBRA_DictOnly.i"
 	@echo "... KoBRA_DictOnly.s"
-	@echo "... ana.o"
-	@echo "... ana.i"
-	@echo "... ana.s"
 	@echo "... macros/kobra.o"
 	@echo "... macros/kobra.i"
 	@echo "... macros/kobra.s"
-	@echo "... root_server.o"
-	@echo "... root_server.i"
-	@echo "... root_server.s"
+	@echo "... rakobra.o"
+	@echo "... rakobra.i"
+	@echo "... rakobra.s"
+	@echo "... rakobra_server.o"
+	@echo "... rakobra_server.i"
+	@echo "... rakobra_server.s"
 	@echo "... src/TAnaManager.o"
 	@echo "... src/TAnaManager.i"
 	@echo "... src/TAnaManager.s"

@@ -5,7 +5,7 @@ find_package(ROOT COMPONENTS Gui RHTTP XMLIO XMLParser)
 
 include(${ROOT_USE_FILE})
 
-link_directories(./ ../rootana/ $ENV{MIDASSYS}/build)
+link_directories(./ $ENV{ROOTANASYS}/lib $ENV{MIDASSYS}/lib)
 
 set(HAVE_ROOT_HTTP 1)
 set(HAVE_THTTP_SERVER 1)
@@ -13,6 +13,13 @@ set(HAVE_THTTP_SERVER 1)
 file(GLOB SOURCES "src/*.cxx")
 #list(APPEND SOURCES macros/kobra.cxx)
 list(APPEND SOURCES KoBRA_Dict.cxx)
+
+set(INC 
+./ 
+./include 
+./macros 
+$ENV{ROOTANASYS}/include
+)
 
 set(DICTHDRS
     "include/TPPACData.hxx"
@@ -47,16 +54,10 @@ root_generate_dictionary(KoBRA_DictOnly ${DICTHDRSONLY} LINKDEF LinkDefOnly.h)
 add_library(anadict SHARED KoBRA_DictOnly.cxx ${DICTSRCSONLY})
 target_include_directories(anadict PUBLIC ./ ./include ./macros )
 add_library(kobra SHARED KoBRA_Dict.cxx ${SOURCES})
-target_include_directories(kobra PUBLIC ./ ./include ./macros ../rootana/libAnalyzerDisplay ../rootana/libAnalyzer ../rootana/midasio ../rootana/mvodb ../rootana/libMidasInterface )
+target_include_directories(kobra PUBLIC ${INC})
 
-add_executable(ana ana.cxx)
-target_link_libraries(ana kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
+add_executable(rakobra rakobra.cxx)
+target_link_libraries(rakobra kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
 
-add_executable(root_server root_server.cxx)
-target_link_libraries(root_server kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
-
-#target_link_libraries(anaDisplay rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
-#target_include_directories(anaDisplay PUBLIC ./ ../libAnalyzer ../midasio ../mvodb ../libMidasInterface ../libAnalyzerDisplay)
-
-
-#target_include_directories(root_server PUBLIC ./ ../libAnalyzer ../midasio ../mvodb ../libMidasInterface ../libAnalyzerDisplay)
+add_executable(rakobra_server rakobra_server.cxx)
+target_link_libraries(rakobra_server kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)

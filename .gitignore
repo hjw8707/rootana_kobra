@@ -6,6 +6,6 @@ cmake_install.cmake
 *~
 *.so
 lib*
-ana
-root_server
+rakobra
+rakobra_server
 Makefile

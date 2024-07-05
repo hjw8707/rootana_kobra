@@ -1,9 +1,9 @@
 # Rootana code for KoBRA Analysis
 
-## by Jongwon Hwang (CENS, IBS)
-## jwhwang@ibs.re.kr
+### by Jongwon Hwang (CENS, IBS)
+### jwhwang@ibs.re.kr
 
-### Version: July 5, 2024
+#### Version: July 5, 2024
 
 This code has been built for KoBRA analysis based on ROOTANA in the MIDAS package. This contains:
 
