@@ -13,7 +13,7 @@ for arg in "$@"
 do
     formatted_arg=$(printf "%05d" $arg)
     echo "Analyzing ~/online/data_2024/run${formatted_arg}.mid.lz4"
-    ./rakobra ~/online/data_2024/run${formatted_arg}.mid.lz4
+    ./rakobra ~/online/KO_24_30/run${formatted_arg}.mid.lz4
     mv output000${formatted_arg}.root ./root
 done
 

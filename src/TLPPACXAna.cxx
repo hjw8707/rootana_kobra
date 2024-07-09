@@ -1,4 +1,4 @@
-#include "TLPPACAna.hxx"
+#include "TLPPACXAna.hxx"
 #include "TCollection.h"
 
 #include <iostream>
@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 
-TLPPACAna::TLPPACAna(const char *_name, const char *_parfile)
+TLPPACXAna::TLPPACXAna(const char *_name, const char *_parfile)
 {
     name = _name;
     flagSet = false;
@@ -16,13 +16,13 @@ TLPPACAna::TLPPACAna(const char *_name, const char *_parfile)
     SetParameters(_parfile);
 }
 
-TLPPACAna::~TLPPACAna()
+TLPPACXAna::~TLPPACXAna()
 {
     outdata->Clear("C");
     delete outdata;
 };
 
-void TLPPACAna::Clear()
+void TLPPACXAna::Clear()
 {
     for (int i = 0; i < n; i++)
         data[i].clear();
@@ -30,7 +30,7 @@ void TLPPACAna::Clear()
     outdata->Clear("C");
 }
 
-void TLPPACAna::SetParameters(const char *file)
+void TLPPACXAna::SetParameters(const char *file)
 {
     std::ifstream fin(file);
     if (not fin.is_open())
@@ -78,8 +78,8 @@ void TLPPACAna::SetParameters(const char *file)
     flagSet = true;
 }
 
-// void TLPPACAna::SetData(std::vector<KoBRATDCMeasurement> &_data)
-void TLPPACAna::SetData(TGenericData *rdata)
+// void TLPPACXAna::SetData(std::vector<KoBRATDCMeasurement> &_data)
+void TLPPACXAna::SetData(TGenericData *rdata)
 {
     if (!flagSet)
         return;
@@ -102,16 +102,16 @@ void TLPPACAna::SetData(TGenericData *rdata)
     }
 
     flagData = true;
-    for (int i = 6; i < n; i++) // at least yup, ydn, anode
-        if (data[i].empty())    // only the case that anode is empty
-            flagData = false;
+    //    for (int i = 6; i < n; i++) // at least yup, ydn, anode
+    if (data[6].empty()) // only the case that anode is empty
+        flagData = false;
     if ((data[0].empty() || data[1].empty()) &&
         (data[2].empty() || data[3].empty()) &&
         (data[4].empty() || data[5].empty()))
         flagData = false;
 }
 
-void TLPPACAna::Analysis()
+void TLPPACXAna::Analysis()
 {
     if (!flagSet)
         return;
@@ -122,8 +122,6 @@ void TLPPACAna::Analysis()
     uint32_t *idx = new uint32_t[m];
     std::vector<uint32_t> arr[m];
     arr[2] = data[6];
-    arr[3] = data[7];
-    arr[4] = data[8];
     for (int i = 0; i < 3; i++)
     {
         if (data[2 * i].empty() || data[2 * i + 1].empty())
@@ -137,8 +135,7 @@ void TLPPACAna::Analysis()
         // all combinations
         while (1)
         {
-            Processing(arr[0][idx[0]], arr[1][idx[1]],
-                       arr[2][idx[2]], arr[3][idx[3]], arr[4][idx[4]], i);
+            Processing(arr[0][idx[0]], arr[1][idx[1]], arr[2][idx[2]], i);
             int next = m - 1;
             while (next >= 0 && idx[next] + 1 >= data[next].size())
                 next--;
@@ -154,28 +151,26 @@ void TLPPACAna::Analysis()
     }
 }
 
-TPPACData *TLPPACAna::Processing(uint32_t tx1, uint32_t tx2,
-                                 uint32_t ty1, uint32_t ty2,
+TPPACData *TLPPACXAna::Processing(uint32_t tx1, uint32_t tx2,
                                  uint32_t ta, int lcr)
 {
     float lcroffset[3] = {-132.5, 0, 132.5};
     float x = (float(tx1) - float(tx2)) * factor[lcr] + offset[lcr] + lcroffset[lcr];
-    float y = (float(ty1) - float(ty2)) * factor[3] + offset[3];
 
-    new ((*outdata)[outdata->GetEntriesFast()]) TPPACData(tx1, tx2, ty1, ty2, ta, x, y);
+    new ((*outdata)[outdata->GetEntriesFast()]) TPPACData(tx1, tx2, 0, 0, ta, x, 0);
     return static_cast<TPPACData *>(outdata->Last());
 }
 
-void TLPPACAna::SetTree()
+void TLPPACXAna::SetTree()
 {
     TTree *tree = TTreeManager::GetInstance()->GetTree();
     tree->Branch(Form("%s", name.c_str()), &outdata);
     // tree->Branch(Form("%sLPPAC", name.c_str()), &flagSet, "flagSet/B");
 }
 
-void TLPPACAna::PrintParameters()
+void TLPPACXAna::PrintParameters()
 {
-    std::cout << "TLPPACAna: " << name << std::endl;
+    std::cout << "TLPPACXAna: " << name << std::endl;
     std::cout << " Parameters" << std::endl;
     std::cout << " Channels: ";
     for (int i = 0; i < n; i++)
@@ -193,10 +188,10 @@ void TLPPACAna::PrintParameters()
     std::cout << "\n";
 }
 
-void TLPPACAna::PrintData()
+void TLPPACXAna::PrintData()
 {
     std::cout << "TLPPACAna: " << name << std::endl;
-    const char *label[n] = {"XL_UP", "XL_DN", "XC_UP", "XC_DN", "XR_UP", "XR_DN", "Y_UP", "Y_DN", "Anode"};
+    const char *label[n] = {"XL_UP", "XL_DN", "XC_UP", "XC_DN", "XR_UP", "XR_DN", "Anode"};
     for (int j = 0; j < n; j++)
     {
         std::cout << " " << label[j] << ": ";
@@ -206,11 +201,11 @@ void TLPPACAna::PrintData()
     }
 }
 
-void TLPPACAna::PrintOutdata()
+void TLPPACXAna::PrintOutdata()
 {
     if (outdata->IsEmpty())
         return;
-    std::cout << "TLPPACAna: " << name << std::endl;
+    std::cout << "TLPPACXAna: " << name << std::endl;
     TPPACData *d;
     TIter next(outdata);
     int i = 0;

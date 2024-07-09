@@ -25,7 +25,6 @@
       loading scripts...
    </div>
    <script>
-
       mjsonrpc_set_url('http://10.1.100.70:8081');
       var gStatusInflight = false;
       var gRunOngoing = false;
@@ -71,23 +70,10 @@
       }
       setInterval(midasStatus, 5000);
 
+
       function GetCachedHierarchy() { return "$$$h.json$$$"; }
 
       JSROOT.buildGUI("onlineGUI", "online").then((hpainter) => {
-         hpainter.brlayout.setBrowserTitle(""); //KoBRA Analysis Server");
-         /*let runnum_p = hpainter.brlayout.main().select('#onlineGUI_browser_hierarchy')
-            .insert('div', ':first-child').attr('id', 'run_info').append('p').attr('id', 'run_num')
-         runnum_p.text('Run Number = ')
-         let runstatus_p = hpainter.brlayout.main().select('#run_info')
-            .append('p').attr('id', 'run_status')
-         runstatus_p.text('Run Status = ')
-         let runstart_p = hpainter.brlayout.main().select('#run_info')
-            .append('p').attr('id', 'run_start')
-         runstart_p.text('Run Start = ')
-         let runend_p = hpainter.brlayout.main().select('#run_info')
-            .append('p').attr('id', 'run_end')
-         runend_p.text('Run End = ')
-*/
          return;
       });
    </script>

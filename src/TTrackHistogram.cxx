@@ -26,7 +26,7 @@ void TTrackHistograms::CreateHistograms()
     curDir->mkdir(name.c_str(), name.c_str());
     curDir->cd(name.c_str());
 
-    std::cout << "Create Histos for " << name <<  std::endl;
+    std::cout << "Create Histos for " << name << std::endl;
     char na[100];
     char title[100];
 
@@ -62,6 +62,36 @@ void TTrackHistograms::CreateHistograms()
     tmp->SetYTitle("B [mrad]");
     push_back(tmp);
 
+    /////////////////////////////////////////////////////////////////////
+    // eff
+    sprintf(na, "%s_%s", name.c_str(), "effup");
+    // Delete old histograms, if we already have them
+    TH1D* old1 = (TH1D *)gDirectory->Get(na);
+    if (old1)
+        delete old1;
+
+    // Create new histograms
+    sprintf(title, "%s histogram for %s", name.c_str(), "effup");
+
+    TH1D* tmp1 = new TH1D(na, title, 2, 0, 2);
+    tmp1->SetXTitle("Detected or Not");
+    tmp1->SetYTitle("Number of Entries");
+    push_back(tmp1);
+
+    sprintf(na, "%s_%s", name.c_str(), "effdn");
+    // Delete old histograms, if we already have them
+    old1 = (TH1D *)gDirectory->Get(na);
+    if (old1)
+        delete old1;
+
+    // Create new histograms
+    sprintf(title, "%s histogram for %s", name.c_str(), "effdn");
+
+    tmp1 = new TH1D(na, title, 2, 0, 2);
+    tmp1->SetXTitle("Detected or Not");
+    tmp1->SetYTitle("Number of Entries");
+    push_back(tmp1);
+
     curDir->cd();
 }
 
@@ -74,13 +104,17 @@ void TTrackHistograms::UpdateHistograms(TDataContainer &)
         for (int j = 0; j < ppacdn->GetEntriesFast(); j++)
         {
             TPPACData *pdn = static_cast<TPPACData *>((*ppacdn)[j]);
-            float a = (pdn->x - pup->x)/dist;
-            float b = (pdn->y - pup->y)/dist;
+            float a = (pdn->x - pup->x) / dist;
+            float b = (pdn->y - pup->y) / dist;
             GetHistogram(0)->Fill(a);
             GetHistogram(1)->Fill(b);
             GetHistogram(2)->Fill(a, b);
         }
     }
+    if (ppacdn->GetEntriesFast() > 0)
+        GetHistogram(3)->Fill((ppacup->GetEntriesFast() > 0));
+    if (ppacup->GetEntriesFast() > 0)
+        GetHistogram(4)->Fill((ppacdn->GetEntriesFast() > 0));
 }
 
 /// Take actions at begin run

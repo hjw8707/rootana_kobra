@@ -15,6 +15,8 @@ inline void Reset() { tree->Reset(); }
 
 inline void GetLastEntry() { tree->GetEntry(tree->GetEntries()-1); }
 
+void LoadAlias(const char* file);
+
 private:
 TTreeManager();
 ~TTreeManager();

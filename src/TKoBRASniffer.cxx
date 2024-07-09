@@ -13,9 +13,6 @@ ClassImp(TKoBRASniffer)
     RegisterCommand("/Reload", "this->HistReload();", "button;rootsys/icons/refresh.png");
     RegisterCommand("/Fit", "this->HistFit(\"%arg1%\");", "button;rootsys/icons/bld_edit.png");
     SetItemField("/Reload", "_hreload", "true");
-    // Hide("/Clear");
-    // Hide("/Reload");
-    // CreateItem("/Anonymous","_aitl?");
 
     runnum = new TObjString("RunNum");
     RegisterObject("/", runnum);
@@ -40,6 +37,7 @@ Bool_t TKoBRASniffer::HistReload()
     THistManager::GetInstance()->Clear();
     THistManager::GetInstance()->AddHistFromFile("histlist.txt");
     TCanvasManager::GetInstance()->AddCanvasAndHistFromFile("canlist.txt");
+    TTreeManager::GetInstance()->LoadAlias("aliaslist.txt");
     return true;
 }
 

@@ -5,6 +5,23 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <regex>
+
+std::vector<std::string> splitText(const std::stringstream& ss) {
+    std::vector<std::string> result;
+    std::regex regex(R"((\"[^\"]*\"|\S+))"); // 따옴표 안의 문자열이나 공백이 아닌 단어를 매칭
+    std::string text = ss.str(); // stringstream을 string으로 변환
+    auto iter = std::sregex_iterator(text.begin(), text.end(), regex);
+    auto end = std::sregex_iterator();
+
+    while (iter != end) {
+        std::smatch match = *iter;
+        result.push_back(match.str());
+        ++iter;
+    }
+
+    return result;
+}
 
 TCanvasManager *TCanvasManager::instance = NULL;
 
@@ -92,11 +109,12 @@ void TCanvasManager::AddCanvasAndHistFromFile(const char *file)
         if (line.empty() || line.find_first_not_of(' ') == std::string::npos)
             continue;
 
-        std::string word;
-        std::vector<std::string> words;
-        std::istringstream iss(line);
-        while (iss >> word)
-            words.push_back(word);
+        //std::string word;
+        //std::vector<std::string> words;
+        std::stringstream iss(line);
+        //while (iss >> word)
+        //    words.push_back(word);
+        std::vector<std::string> words = splitText(iss);
 
         std::vector<std::string> hists;
         if (words.size() > 4)

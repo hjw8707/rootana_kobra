@@ -1,4 +1,5 @@
  f1uppac  KoBRATDC  F1PA    LPPAC     pars/PAR_F1UPPAC.txt
+ f1uppacx  KoBRATDC  F1PA    LPPACX     pars/PAR_F1UPPACX.txt
  f1dppac  KoBRATDC  F1PA    LPPAC     pars/PAR_F1DPPAC.txt
  f2uppac  KoBRATDC  F2PA    PPAC      pars/PAR_F2UPPAC.txt
  f2dppac  KoBRATDC  F2PA    PPAC      pars/PAR_F2DPPAC.txt

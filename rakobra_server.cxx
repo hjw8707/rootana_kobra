@@ -12,6 +12,7 @@
 #include "TAnaManager.hxx"
 
 #include "THttpServer.h"
+#include "TSystem.h"
 #include "TKoBRASniffer.hxx"
 
 class Analyzer : public TRootanaEventLoop
@@ -46,17 +47,13 @@ public:
 
   void Initialize()
   {
-
     std::cout << "Using THttpServer in read/write mode" << std::endl;
     http->SetReadOnly(false);
 
     sniffer = new TKoBRASniffer;
     http->SetSniffer(sniffer);
     http->AddLocation("midas/",Form("%s/resources",std::getenv("MIDASSYS")));
-    http->SetDefaultPage("online.htm");
-    // http->RegisterCommand("/DoSomething", "TestFunc()", "button;rootsys/icons/ed_execute.png");
-    // http->RegisterCommand("/DoSomething2", "this->TestFunc()", "button;rootsys/icons/ed_interrupt.png");
-    // http->SetItemField("/","_toptitle","KoBRA Online Analysis");
+    http->SetDefaultPage("online.htm"); 
   }
 
   void InitManager()

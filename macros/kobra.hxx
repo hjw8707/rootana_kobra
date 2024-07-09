@@ -5,6 +5,7 @@
 #include "TChain.h"
 
 #include <vector>
+#include <iostream>
 #include <string>
 
 class KOBRA : public TObject
@@ -53,7 +54,7 @@ public:
     }
     inline Double_t GetTOFOffset() { return tofOff; }
 
-    inline void SetUseF1(Bool_t us)
+    inline void SetUseF1(Bool_t us = true)
     {
         useF1 = us;
         SetAlias();
@@ -70,20 +71,25 @@ public:
     inline void SetUseF2() { SetUseF2orF3(true); }
     inline void SetUseF3() { SetUseF2orF3(false); }
 
-    inline void SetZ(Double_t a, Double_t b) { tree->SetAlias("Z", Form("%f*z+%f",a,b));}
+    inline void SetZ(Double_t a, Double_t b) { tree->SetAlias("Z", Form("%f*z+%f", a, b)); }
     void SetZ(Int_t iz1, Double_t z1, Int_t iz2, Double_t z2);
 
-    inline void SetAoQ(Double_t a, Double_t b) { tree->SetAlias("AoQ", Form("%f*aoq+%f",a,b));}
+    inline void SetAoQ(Double_t a, Double_t b) { tree->SetAlias("AoQ", Form("%f*aoq+%f", a, b)); }
     void SetAoQ(Double_t iz1, Double_t z1, Double_t iz2, Double_t z2);
+
+    inline void SetGCut(const char *_c) { gcut = _c; }
+    inline const char* GetGCut() { return gcut.c_str(); }
 
     void DrawPID0(const char *cut = NULL);
     void DrawPID(const char *cut = NULL);
     void DrawPIDC(const char *cut = NULL);
 
+    void PrintSetting(std::ostream &out = std::cout);
+
     TChain *tree;
     std::map<Int_t, Double_t> brhoMap;
     std::map<Int_t, Double_t> f1slitMap;
-    
+
 private:
     Int_t runN;
 

@@ -16,6 +16,7 @@ enum DTYPE {
 enum ATYPE {
     PPAC,
     LPPAC,
+    LPPACX,
     Plastic,
     DPlastic,
     SSD

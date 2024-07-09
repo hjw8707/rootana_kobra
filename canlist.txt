@@ -1,1 +1,6 @@
-cpid cpid 3 4 hists/pid_3pp hists/f1_ux hists/f1_uy hists/f2_dx hists/f2_dy hists/f2_dpos hists/f3_ux hists/f3_uy hists/f3_upos hists/f3_dx hists/f3_dy hists/f3_dpos 
+cf1 F1 3 3 hists/f1_ux hists/f1_uy hists/f1_upos hists/f1_dx hists/f1_dy hists/f1_dpos hists/f1_ang
+cf2 F2 3 3 hists/f2_ux hists/f2_uy hists/f2_upos hists/f2_dx hists/f2_dy hists/f2_dpos hists/f2_ang
+cf3 F3 3 3 hists/f3_ux hists/f3_uy hists/f3_upos hists/f3_dx hists/f3_dy hists/f3_dpos hists/f3_ang
+ceff Eff 2 3 hists/f1uppac_eff hists/f1uppacx_eff hists/f2uppac_eff hists/f2dppac_eff hists/f3uppac_eff hists/f3dppac_eff
+cssd SSD 2 2 hists/f2ssd_adc hists/f2ssd_e hists/f3ssd_adc hists/f3ssd_e
+cpid PID 2 2 hists/pid_2pp hists/pid_3pp hists/pid_2 hists/pid_3

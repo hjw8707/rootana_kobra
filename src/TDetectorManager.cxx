@@ -7,6 +7,7 @@
 
 #include "TPPACAna.hxx"
 #include "TLPPACAna.hxx"
+#include "TLPPACXAna.hxx"
 #include "TPlasticAna.hxx"
 #include "TDPlasticAna.hxx"
 #include "TSSDAna.hxx"
@@ -25,6 +26,7 @@ TDetectorManager::TDetectorManager()
 
     atype_map["PPAC"] = PPAC;
     atype_map["LPPAC"] = LPPAC;
+    atype_map["LPPACX"] = LPPACX;
     atype_map["Plastic"] = Plastic;
     atype_map["DPlastic"] = DPlastic;
     atype_map["SSD"] = SSD;
@@ -52,6 +54,9 @@ void TDetectorManager::AddDetectorAna(const char *name, DTYPE dtype, const char 
             break;
         case LPPAC:
             ana = new TLPPACAna(name, par);
+            break;
+        case LPPACX:
+            ana = new TLPPACXAna(name, par);
             break;
         case Plastic:
             ana = new TPlasticAna(name, par, n);

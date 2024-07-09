@@ -1,20 +1,6 @@
 #ifndef TAnaManager_h
 #define TAnaManager_h
 
-// Use this list here to decide which type of equipment to use.
-
-// #define USE_V792
-// #define USE_V1190
-// #define USE_L2249
-// #define USE_AGILENT
-// #define USE_V1720
-// #define USE_V1720_CORRELATIONS
-// #define USE_V1730DPP
-// #define USE_V1730RAW
-// #define USE_DT724
-// #define USE_TRB3
-// #define USE_CAMACADC
-
 #include "TTree.h"
 
 #include "TKoBRADIGData.hxx"
@@ -36,13 +22,6 @@
 
 #include "THttpServer.h"
 
-/// This is an example of how to organize a set of different histograms
-/// so that we can access the same information in a display or a batch
-/// analyzer.
-/// Change the set of ifdef's above to define which equipment to use.
-///
-/// We simplify a lot of code by mostly using an array of THistogramArrayBase classes
-/// for storing different histograms.
 class TAnaManager
 {
 public:

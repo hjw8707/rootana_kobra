@@ -64,7 +64,8 @@ void KOBRA::Initilize()
     tofOff = 0;
     useF1 = false;
     useF2orF3 = false;
-    gcut = "f3ssd@.GetEntriesFast() > 0 && f3ssd@.GetEntriesFast() < 3";
+    // gcut = "f3ssd@.GetEntriesFast() > 0 && f3ssd@.GetEntriesFast() < 3";
+    gcut = "";
     LoadDB("macros/runlog.txt");
 }
 
@@ -231,7 +232,7 @@ void KOBRA::RunSetting(int run)
     }
     catch (...)
     {
-    }    
+    }
 }
 
 void KOBRA::SetAlias()
@@ -265,7 +266,7 @@ void KOBRA::SetAlias()
         tree->SetAlias("aoq", "brho/(3.1*pp)");
     else
         tree->SetAlias("aoq", "1.33/(3.1*pp)");
-    tree->SetAlias("AoQ", "0.951339*aoq+0.088494");
+    tree->SetAlias("AoQ", "0.941841*aoq+0.095597");
     tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
     tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
     tree->SetAlias("Z", "21.540118*z+0.444610");
@@ -316,4 +317,19 @@ void KOBRA::SetAoQ(Double_t iz1, Double_t z1, Double_t iz2, Double_t z2)
     Double_t a = static_cast<Double_t>(iz2 - iz1) / (z2 - z1);
     Double_t b = static_cast<Double_t>(iz1) - a * z1;
     SetAoQ(a, b);
+}
+
+void KOBRA::PrintSetting(std::ostream &out)
+{
+    out << "=====================================" << std::endl;
+    out << "        KOBRA: Current Setting" << std::endl;
+    out << "=====================================" << std::endl;
+    out << "  Run Number  : " << runN << std::endl;
+    out << "  Brho Setting: " << GetBrho() << " Tm" << std::endl;
+    out << "  Use F1      : " << (GetUseF1() ? "O" : "X") << std::endl;
+    out << "  Use F2 / F3 : " << (GetUseF2orF3() ? "F2" : "F3") << std::endl;
+    out << "=====================================" << std::endl;
+    out << "  TOF Offset  : " << GetTOFOffset() << " ns" << std::endl;
+    out << "  Global Cut  : " << GetGCut() << std::endl;
+    out << "=====================================" << std::endl;
 }

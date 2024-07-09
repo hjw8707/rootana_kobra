@@ -1,4 +1,4 @@
-void ssdcal(TChain *chain){
+void ssdcal(TChain *chain, const char* cut){
   if (!chain) return;
 
   const int n = 16;
@@ -8,7 +8,8 @@ void ssdcal(TChain *chain){
   std::vector<std::vector<double>> allpeaks;
   for (int i = 0 ; i < n ; i++) {
     chain->Draw(Form("f3ssd.adc>>hssd%02i(500,0,1000)",i),
-		Form("f3ssd.ch == %i",i));
+		Form("f3ssd.ch == %i",i),
+		cut);
 
     TH1 *h1;
     h1 = static_cast<TH1*>(gDirectory->Get(Form("hssd%02i",i)));

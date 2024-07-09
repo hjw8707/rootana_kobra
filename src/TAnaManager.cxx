@@ -12,14 +12,14 @@ TAnaManager::TAnaManager()
 {
   treeMan = TTreeManager::GetInstance();
   treeMan->MakeTree("kobra", "kobra");
-
+  treeMan->LoadAlias("aliaslist.txt");
   detMan = TDetectorManager::GetInstance();
   detMan->LoadAnaList("analist.txt");
   detMan->PrintParametersAll();
   detMan->SetTreeAll();
 
-  AddHistogram(new TPlasticHistograms("f2dpla", detMan->GetDetectorAna("f2dpla")->GetDataArray()));
-  AddHistogram(new TPlasticHistograms("f3dpla", detMan->GetDetectorAna("f3dpla")->GetDataArray()));
+  // AddHistogram(new TPlasticHistograms("f2dpla", detMan->GetDetectorAna("f2dpla")->GetDataArray()));
+  // AddHistogram(new TPlasticHistograms("f3dpla", detMan->GetDetectorAna("f3dpla")->GetDataArray()));
   /*
     AddHistogram(new TKoBRATDCHistograms("F1PA"));
     AddHistogram(new TKoBRATDCHistograms("F2PA"));
@@ -47,12 +47,7 @@ TAnaManager::TAnaManager()
                                         detMan->GetDetectorAna("f3pla")->GetDataArray(),
                                         detMan->GetDetectorAna("f2ssd")->GetDataArray(),
                                         detMan->GetDetectorAna("f3ssd")->GetDataArray()));
-        AddHistogram(new TTrackHistograms("f1track", detMan->GetDetectorAna("f1uppac")->GetDataArray(),
-                                          detMan->GetDetectorAna("f1dppac")->GetDataArray(), 527));
-        AddHistogram(new TTrackHistograms("f2track", detMan->GetDetectorAna("f2uppac")->GetDataArray(),
-                                          detMan->GetDetectorAna("f2dppac")->GetDataArray(), 480));
-        AddHistogram(new TTrackHistograms("f3track", detMan->GetDetectorAna("f3uppac")->GetDataArray(),
-                                          detMan->GetDetectorAna("f3dppac")->GetDataArray(), 570));
+
       */
   histMan = THistManager::GetInstance();
   histMan->AddHistFromFile("histlist.txt");
