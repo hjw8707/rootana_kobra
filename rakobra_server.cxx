@@ -1,6 +1,5 @@
-// Default program for dealing with various standard TRIUMF VME setups:
-// V792, V1190 (VME), L2249 (CAMAC), Agilent current meter
 //
+// RootAna for KoBRA (online monitoring server)
 //
 
 #include <stdio.h>
@@ -14,6 +13,7 @@
 #include "THttpServer.h"
 #include "TSystem.h"
 #include "TKoBRASniffer.hxx"
+#include "TStyle.h"
 
 class Analyzer : public TRootanaEventLoop
 {
@@ -53,7 +53,9 @@ public:
     sniffer = new TKoBRASniffer;
     http->SetSniffer(sniffer);
     http->AddLocation("midas/",Form("%s/resources",std::getenv("MIDASSYS")));
-    http->SetDefaultPage("online.htm"); 
+    http->SetDefaultPage("online.htm");
+    gStyle->SetPadGridX(true);
+    gStyle->SetPadGridY(true);
   }
 
   void InitManager()
@@ -93,15 +95,15 @@ public:
     // Only update the transient histograms (like waveforms or event displays) every second.
     // Otherwise hammers CPU for no reason.
     /*
-    struct timeval nowTime;
-    gettimeofday(&nowTime, NULL);
-    double dtime = nowTime.tv_sec - LastUpdateTime.tv_sec + (nowTime.tv_usec - LastUpdateTime.tv_usec) / 1000000.0;
-    if (dtime > 1.0)
-    {
+      struct timeval nowTime;
+      gettimeofday(&nowTime, NULL);
+      double dtime = nowTime.tv_sec - LastUpdateTime.tv_sec + (nowTime.tv_usec - LastUpdateTime.tv_usec) / 1000000.0;
+      if (dtime > 1.0)
+      {
       anaManager->UpdateTransientPlots(dataContainer);
       LastUpdateTime = nowTime;
-    }
-  */
+      }
+    */
     return true;
   }
 };

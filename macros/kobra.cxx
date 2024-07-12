@@ -2,6 +2,15 @@
 
 #include "TFile.h"
 #include "TSystem.h"
+#include "TCutG.h"
+#include "TStyle.h"
+#include "TSystem.h"
+#include "TSystemDirectory.h"
+#include "TLatex.h"
+#include "TPaveText.h"
+#include "TCanvas.h"
+#include "TH2.h"
+#include "TSelectorEntries.h"
 
 #include <iostream>
 #include <fstream>
@@ -58,15 +67,20 @@ KOBRA::~KOBRA()
 
 void KOBRA::Initilize()
 {
-    tree = new TChain("kobra", "kobra");
-    runN = 0;
-    centBrho = 0;
-    tofOff = 0;
-    useF1 = false;
-    useF2orF3 = false;
-    // gcut = "f3ssd@.GetEntriesFast() > 0 && f3ssd@.GetEntriesFast() < 3";
-    gcut = "";
-    LoadDB("macros/runlog.txt");
+  tree = new TChain("kobra", "kobra");
+  runN = 0;
+  centBrho = 0;
+  tofOff = 0;
+  useF1 = false;
+  useF2orF3 = false;
+  // gcut = "f3ssd@.GetEntriesFast() > 0 && f3ssd@.GetEntriesFast() < 3";
+  gcut = "";
+  LoadDB("macros/runlog.txt");
+  gStyle->SetPadGridX(true);
+  gStyle->SetPadGridY(true);
+  //    SetCut();
+  gStyle->SetCanvasDefX(2600);
+  gStyle->SetCanvasDefY(100);
 }
 
 Bool_t KOBRA::LoadTree(const char *filename)
@@ -218,69 +232,154 @@ Bool_t KOBRA::LoadDB(const char *filename)
 
 void KOBRA::RunSetting(int run)
 {
-    runN = run;
-    try
-    {
-        SetBrho(brhoMap[runN]);
-    }
-    catch (...)
-    {
-    }
-    try
-    {
-        SetUseF1(f1slitMap[runN] > 40);
-    }
-    catch (...)
-    {
-    }
+  runN = run;
+  /*  try
+      {
+      SetBrho(brhoMap[runN]);
+      }
+      catch (...)
+      {
+      }
+      try
+      {
+      SetUseF1(f1slitMap[runN] > 40);
+      }
+      catch (...)
+      {
+      }*/
+  SetBrho(1.356);
+  SetUseF1(true);
+  AddCuts("./cut");
 }
+
 
 void KOBRA::SetAlias()
 {
-    if (!tree)
-        return;
+  if (!tree)
+    return;
 
-    std::cout << "Set Alias" << std::endl;
-    tree->SetAlias("f1a", "(f1dppac.x - f1uppac.x)/527*1000.");
-    tree->SetAlias("f1b", "(f1dppac.y - f1uppac.y)/527*1000.");
-    tree->SetAlias("f2a", "(f2dppac.x - f2uppac.x)/480*1000.");
-    tree->SetAlias("f2b", "(f2dppac.y - f2uppac.y)/480*1000.");
-    tree->SetAlias("f3a", "(f3dppac.x - f3uppac.x)/570*1000.");
-    tree->SetAlias("f3b", "(f3dppac.y - f3uppac.y)/570*1000.");
+  std::cout << "Set Alias" << std::endl;
+  tree->SetAlias("f1a", "(f1dppac.x - f1uppac.x)/527*1000.");
+  tree->SetAlias("f1b", "(f1dppac.y - f1uppac.y)/527*1000.");
+  tree->SetAlias("f2a", "(f2dppac.x - f2uppac.x)/480*1000.");
+  tree->SetAlias("f2b", "(f2dppac.y - f2uppac.y)/480*1000.");
+  tree->SetAlias("f3a", "(f3dppac.x - f3uppac.x)/570*1000.");
+  tree->SetAlias("f3b", "(f3dppac.y - f3uppac.y)/570*1000.");
+  tree->SetAlias("f1x", "f1uppacx.x");
+  tree->SetAlias("f1y", "f1uppac.y");
+  tree->SetAlias("f2y", "f2dppac.y");
+  tree->SetAlias("f2x", "f2dppac.x");
+  tree->SetAlias("f2y", "f2dppac.y");
+  tree->SetAlias("f3x", "760.*tan(f3a/1000.)+f3dppac.x");
+  tree->SetAlias("f3y", "760.*tan(f3b/1000.)+f3dppac.y");
 
-    tree->SetAlias("db", "f1uppac.x");
-    tree->SetAlias("tof", Form("(f3uppt.tsum - f2dppt.tsum) + 103.8 + %f", tofOff));
-    //  tree->SetAlias("de", "Max$(f2ssd.acal)");
-    if (useF2orF3)
-        tree->SetAlias("de", "Max$(f2ssd.acal)");
-    else
-        tree->SetAlias("de", "Max$(f3ssd.acal)");
+    
+  tree->SetAlias("db", "f1uppacx.x");
+  tree->SetAlias("tof", Form("(f3uppt.tsum - f2dppt.tsum) + 103.8 + %f", tofOff));
+  //  tree->SetAlias("de", "Max$(f2ssd.acal)");
+  tree->SetAlias("ycor","(-0.00245304*f3uppac.y^2-0.034376*f3uppac.y+19.8065)/20");
 
-    tree->SetAlias("brho", Form("(1+db/4100)*%f", centBrho));
+  if (useF2orF3)
+    tree->SetAlias("de", "Max$(f2ssd.acal)");
+  else
+    tree->SetAlias("de", "Sum$(f3ssd.acal)/ycor");
+    
+  tree->SetAlias("brho", Form("(1+db/4100)*%f", centBrho));
 
-    tree->SetAlias("beta", "12398.5/tof/299."); // F2 DPPAC - F3 UPPAC
-    tree->SetAlias("gamma", "1/sqrt(1-beta*beta)");
-    tree->SetAlias("pp", "gamma*beta");
+  tree->SetAlias("beta", "12398.5/tof/299."); // F2 DPPAC - F3 UPPAC
+  tree->SetAlias("gamma", "1/sqrt(1-beta*beta)");
+  tree->SetAlias("pp", "gamma*beta");
 
-    if (useF1)
-        tree->SetAlias("aoq", "brho/(3.1*pp)");
-    else
-        tree->SetAlias("aoq", "1.33/(3.1*pp)");
-    tree->SetAlias("AoQ", "0.941841*aoq+0.095597");
-    tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
-    tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
-    tree->SetAlias("Z", "21.540118*z+0.444610");
+  if (useF1)
+    tree->SetAlias("aoq", "brho/(3.1*pp)");
+  else
+    tree->SetAlias("aoq", "1.33/(3.1*pp)");
+  tree->SetAlias("AoQ", "0.941841*aoq+0.095597");
+  tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
+  tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
+  tree->SetAlias("Z", "21.540118*z+0.444610");
+}
+
+void KOBRA::AddCut(const char* filename) {
+
+  std::ifstream file(filename);
+  if (!file.is_open())
+    {
+      std::cerr << "파일을 열 수 없습니다: " << filename << std::endl;
+      return ;
+    }
+
+
+  int linen = 0;
+  std::string line;
+  TCutG *cut;
+  while (std::getline(file, line))
+    {
+      // #으로 시작하는 주석을 제거
+      size_t commentPos = line.find('#');
+      if (commentPos != std::string::npos)
+	line = line.substr(0, commentPos);
+
+      // 공백만 있는 줄은 무시
+      if (line.empty() || line.find_first_not_of(' ') == std::string::npos)
+	continue;
+
+      std::vector<std::string> tokens = split(line, ' ');
+      if (linen == 0) {
+	cut = new TCutG(tokens[0].c_str());
+	if (tokens.size() > 1) cut->SetTitle(tokens[1].c_str());
+      }
+      else {
+	try {
+	  cut->AddPoint(std::stof(tokens[0]), std::stof(tokens[1]));
+	}
+	catch (...)
+	  { continue; }
+      }
+      linen++;
+    }
+  if (cut) {
+    cut->SetVarX("AoQ");
+    cut->SetVarY("Z");
+    cut->SetFillStyle(1000);
+    cutgs[cut->GetName()] = cut;}
+  file.close();
+}
+
+
+void KOBRA::AddCuts(const char* path) {
+
+  TSystemDirectory dir(path, path);
+
+  TList* filesList = dir.GetListOfFiles();
+  if (!filesList) {
+    std::cerr << "Error: " << path << " is not a valid directory or cannot be accessed.\n";
+    return;
+  }
+
+  TIter next(filesList);
+  TSystemFile* file;
+  while ((file = (TSystemFile*)next())) {
+    TString fileName = file->GetName();
+    if (!file->IsDirectory() && fileName.EndsWith("txt")) {
+      AddCut(Form("%s/%s",path,fileName.Data()));
+    }
+  }
+
 }
 
 void KOBRA::DrawPID0(const char *cut)
 {
-    if (!tree)
-        return;
+  if (!tree)
+    return;
 
-    std::string cuts = gcut;
-    if (cut)
-        cuts += Form("&& %s", cut);
-    tree->Draw("de:tof>>hpid0(400,150,350,400,0,150)", cuts.c_str(), "col");
+  std::string cuts = gcut;
+  if (cut)
+    if (cuts.empty())
+      cuts += Form("%s", cut);
+    else
+      cuts += Form("&& %s", cut);
+  tree->Draw("de:tof>>hpid0(400,150,350,400,0,150)", cuts.c_str(), "col");
 }
 
 void KOBRA::DrawPID(const char *cut)
@@ -288,21 +387,64 @@ void KOBRA::DrawPID(const char *cut)
     if (!tree)
         return;
 
-    std::string cuts = gcut;
-    if (cut)
-        cuts += Form("&& %s", cut);
+  std::string cuts = gcut;
+  if (cut)
+    if (cuts.empty())
+      cuts += Form("%s", cut);
+    else
+      cuts += Form("&& %s", cut);
     tree->Draw("z:aoq>>hpid(400,1.5,3,400,0,1)", cuts.c_str(), "col");
 }
 
-void KOBRA::DrawPIDC(const char *cut)
+void KOBRA::DrawPIDC(Bool_t flagShowCount, Bool_t flagShowPPS, const char *cut)
 {
-    if (!tree)
-        return;
+  if (!tree)
+    return;
 
-    std::string cuts = gcut;
-    if (cut)
-        cuts += Form("&& %s", cut);
-    tree->Draw("Z:AoQ>>hpidc(400,1.5,3,400,0,20)", cuts.c_str(), "col");
+  std::string cuts = gcut;
+  if (cut)
+    if (cuts.empty())
+      cuts += Form("%s", cut);
+    else
+      cuts += Form("&& %s", cut);
+  auto c1 = new TCanvas(Form("cpid_r%d",runN),"PID",1600,1200);
+  tree->Draw(Form("Z:AoQ>>hpidc_r%d(400,1.9,2.8,400,4,14)",runN), cuts.c_str(), "col");
+  TH2 *h2 = static_cast<TH2*>(gDirectory->Get(Form("hpidc_r%d",runN)));
+  h2->SetTitle(Form("PID for Run %d;A/Q;Z",runN));
+
+  if (flagShowCount || flagShowPPS) {
+    TLatex text;
+    text.SetTextFont(62);
+    text.SetTextSize(0.03);
+
+    Double_t time = GetElapsedTime();
+    for (const auto& it : cutgs) {
+      TCutG* cut = it.second;
+      cut->SetLineStyle(2);
+      cut->Draw("SAME");
+      Double_t x = cut->GetMean(1);
+      Double_t y = cut->GetMean(2);
+      TString title = cut->GetTitle();
+      TString aaa = title(0,2);
+      TString zzz = title(2,title.Length());
+      std::cout << cut->GetName() << std::endl;
+      Int_t count = GetEntries(cut->GetName());
+      text.SetTextFont(62);
+      text.SetTextColor(12);
+      text.SetTextSize(0.03);      
+      text.SetTextAlign(22);
+      text.DrawLatex(x, y+0.1, Form("^{%s}%s",aaa.Data(),zzz.Data()));
+
+      text.SetTextFont(52);      
+      text.SetTextColor(12);
+      text.SetTextSize(0.03);
+      text.SetTextAlign(12);
+      TString a;
+      if (flagShowCount) a = Form("%d",count);
+      else a = Form("%.3f", float(count/time));
+      text.DrawLatex(x+0.02, y-0.3, a.Data());
+    }
+  }
 }
 
 void KOBRA::SetZ(Int_t iz1, Double_t z1, Int_t iz2, Double_t z2)
@@ -332,4 +474,71 @@ void KOBRA::PrintSetting(std::ostream &out)
     out << "  TOF Offset  : " << GetTOFOffset() << " ns" << std::endl;
     out << "  Global Cut  : " << GetGCut() << std::endl;
     out << "=====================================" << std::endl;
+}
+
+void KOBRA::CountIsotopes() {
+  ////////////////////////////////////////////////////////////
+  // Counting
+  std::cout << "=========================================" << std::endl;
+  std::cout << "   Counts of Isotopes " << std::endl;
+  std::cout << "=========================================" << std::endl;
+  for (const auto& it : cutgs) {
+    std::cout << " ";
+    std::cout << it.second->GetTitle();
+    std::cout << ": ";
+   std::cout << GetEntries(it.second->GetName());
+    std::cout << std::endl;
+  }
+  std::cout << "=========================================" << std::endl;
+  ////////////////////////////////////////////////////////////
+
+}
+
+void KOBRA::DrawAllCut() {
+
+  for (const auto &it: cutgs) {
+    it.second->Draw("SAME");
+  }
+}
+
+
+void KOBRA::DrawXDist(const char *cut) {
+  auto c1 = new TCanvas(Form("cxd_r%d",runN),"X Distribution",1200,400);
+  c1->Divide(3,1);
+
+  c1->cd(1);
+  tree->Draw(Form("f1x>>hf1x_r%d(100,-200,200)",runN),cut);
+
+  c1->cd(2);
+  tree->Draw(Form("f2x>>hf2x_r%d(100,-200,200)",runN),cut);
+  
+  c1->cd(3);
+  tree->Draw(Form("f3x>>hf3x_r%d(100,-200,200)",runN),cut);
+  
+
+}
+
+Double_t KOBRA::GetElapsedTime() {
+
+  ULong_t ts;
+  tree->SetBranchAddress("scaler.ts",&ts);
+
+  Int_t ntree = tree->GetNtrees();
+  Double_t totalTime = 0;
+  for (Int_t i = 0 ; i < ntree ; i++) {
+    if ( i < ntree - 1 ) tree->GetEntry(tree->GetTreeOffset()[i] - 1);
+    else tree->GetEntry(tree->GetEntries() - 1);
+    totalTime +=  float(ts/1E8);}
+  tree->GetEntry(0);
+  return totalTime;
+}
+
+Long64_t KOBRA::GetEntries(const char *selection)
+{
+   TSelectorEntries *s = new TSelectorEntries(selection);
+   tree->Process(s);
+   //tree->SetNotify(nullptr);
+   Long64_t res = s->GetSelectedRows();
+   delete s;
+   return res;
 }

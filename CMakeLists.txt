@@ -22,10 +22,12 @@ $ENV{ROOTANASYS}/include
 )
 
 set(DICTHDRS
-    "include/TPPACData.hxx"
+  "include/THeader.hxx"
+  "include/TPPACData.hxx"
     "include/TLPPACData.hxx"
     "include/TPlasticData.hxx" 
-    "include/TSSDData.hxx" 
+    "include/TSSDData.hxx"
+    "include/TScalerData.hxx"
     "include/TKoBRASniffer.hxx"
 )
 
@@ -34,14 +36,17 @@ set(DICTSRCSONLY
     "src/TLPPACData.cxx"
     "src/TPlasticData.cxx"
     "src/TSSDData.cxx"
+    "src/TScalerData.cxx"    
     "macros/kobra.cxx"
 )
 
 set(DICTHDRSONLY
-    "include/TPPACData.hxx"
+  "include/THeader.hxx"
+  "include/TPPACData.hxx"
     "include/TLPPACData.hxx"
     "include/TPlasticData.hxx"
     "include/TSSDData.hxx"
+    "include/TScalerData.hxx"
     "macros/kobra.hxx"
 )
 
@@ -50,7 +55,8 @@ root_generate_dictionary(KoBRA_DictOnly ${DICTHDRSONLY} LINKDEF LinkDefOnly.h)
 
 add_library(anadict SHARED KoBRA_DictOnly.cxx ${DICTSRCSONLY})
 target_include_directories(anadict PUBLIC ./ ./include ./macros )
-add_library(kobra SHARED KoBRA_Dict.cxx ${SOURCES})
+target_link_libraries(anadict ${ROOT_LIBRARIES})
+add_library(kobra SHARED ${SOURCES})
 target_include_directories(kobra PUBLIC ${INC})
 
 add_executable(rakobra rakobra.cxx)
@@ -58,3 +64,6 @@ target_link_libraries(rakobra kobra rootana -lm -lz -lpthread -lssl -lmidas ${RO
 
 add_executable(rakobra_server rakobra_server.cxx)
 target_link_libraries(rakobra_server kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
+
+add_executable(midcheck midcheck.cxx)
+target_link_libraries(midcheck kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)

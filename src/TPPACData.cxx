@@ -3,8 +3,8 @@
 
 ClassImp(TPPACData)
 
-uint32_t TPPACData::GetTXSum() { return (tx1 + tx2 - 2*ta); }
-uint32_t TPPACData::GetTYSum() { return (ty1 + ty2 - 2*ta); }
+Int_t TPPACData::GetTXSum() { return Int_t(tx1 + tx2 - 2*ta); }
+Int_t TPPACData::GetTYSum() { return Int_t(ty1 + ty2 - 2*ta); }
 
 void TPPACData::Print() {
     std::cout << " TPPACData" << std::endl;

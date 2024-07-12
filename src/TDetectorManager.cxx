@@ -11,10 +11,12 @@
 #include "TPlasticAna.hxx"
 #include "TDPlasticAna.hxx"
 #include "TSSDAna.hxx"
+#include "TScalerAna.hxx"
 
 #include "TKoBRATDCData.hxx"
 #include "TKoBRAADCData.hxx"
 #include "TKoBRADIGData.hxx"
+#include "TKoBRASCAData.hxx"
 
 TDetectorManager *TDetectorManager::instance = NULL;
 
@@ -23,6 +25,7 @@ TDetectorManager::TDetectorManager()
     dtype_map["KoBRATDC"] = KoBRATDC;
     dtype_map["KoBRAADC"] = KoBRAADC;
     dtype_map["KoBRADIG"] = KoBRADIG;
+    dtype_map["KoBRASCA"] = KoBRASCA;
 
     atype_map["PPAC"] = PPAC;
     atype_map["LPPAC"] = LPPAC;
@@ -30,6 +33,7 @@ TDetectorManager::TDetectorManager()
     atype_map["Plastic"] = Plastic;
     atype_map["DPlastic"] = DPlastic;
     atype_map["SSD"] = SSD;
+    atype_map["Scaler"] = Scaler;
 }
 
 void TDetectorManager::AddDetectorAna(const char *name, DTYPE dtype, const char *bank, TDetectorAna *ana)
@@ -67,6 +71,9 @@ void TDetectorManager::AddDetectorAna(const char *name, DTYPE dtype, const char 
         case SSD:
             ana = new TSSDAna(name, par, n);
             break;
+        case Scaler:
+            ana = new TScalerAna(name, par);
+            break;	    
         default:
             break;
         }
@@ -159,6 +166,9 @@ void TDetectorManager::SetDataAll(TDataContainer &container)
         case KoBRADIG:
             pair.second->SetData(static_cast<TGenericData *>(container.GetEventData<TKoBRADIGData>(banks[pair.first].c_str())));
             break;
+        case KoBRASCA:
+            pair.second->SetData(static_cast<TGenericData *>(container.GetEventData<TKoBRASCAData>(banks[pair.first].c_str())));
+            break;	    
         default:
             break;
         }

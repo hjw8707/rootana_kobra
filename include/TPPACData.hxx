@@ -16,8 +16,8 @@ class TPPACData: public TObject {
             {}
     virtual ~TPPACData() {}
 
-   uint32_t GetTXSum(); 
-   uint32_t GetTYSum();
+   Int_t GetTXSum(); 
+   Int_t GetTYSum();
 
     void Print();
 

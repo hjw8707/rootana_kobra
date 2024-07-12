@@ -55,17 +55,20 @@ TAnaManager::TAnaManager()
   canMan->AddCanvasAndHistFromFile("canlist.txt");
 };
 
-void TAnaManager::BeginRun(int transition, int run, int)
+void TAnaManager::BeginRun(int transition, int run, int time)
 {
-  std::cout << "Start Run " << run << std::endl;
+  std::cout << "Start Run " << run << ", " << time << std::endl;
   std::cout << "Transition " << transition << std::endl;
+  treeMan->GetHeader()->SetRunNum(run);
+  treeMan->GetHeader()->SetStartTimeStamp(time);
   // histMan->Reset();
   // treeMan->Reset();
 }
 
-void TAnaManager::EndRun(int, int run, int)
+void TAnaManager::EndRun(int, int run, int time)
 {
-  std::cout << "End Run " << run << std::endl;
+  treeMan->GetHeader()->SetStopTimeStamp(time);
+  std::cout << "End Run " << run << ", " << time << std::endl;
 }
 
 void TAnaManager::AddHistogram(THistogramArrayBase *histo)

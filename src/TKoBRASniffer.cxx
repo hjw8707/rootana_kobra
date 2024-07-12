@@ -13,6 +13,7 @@ ClassImp(TKoBRASniffer)
     RegisterCommand("/Reload", "this->HistReload();", "button;rootsys/icons/refresh.png");
     RegisterCommand("/Fit", "this->HistFit(\"%arg1%\");", "button;rootsys/icons/bld_edit.png");
     SetItemField("/Reload", "_hreload", "true");
+    RegisterCommand("/SetBrho", "this->SetBrho(%arg1%);", "button;rootsys/icons/htmlfile.gif");
 
     runnum = new TObjString("RunNum");
     RegisterObject("/", runnum);
@@ -47,6 +48,14 @@ Bool_t TKoBRASniffer::HistFit(const char *name)
     TH1 *h1 = THistManager::GetInstance()->Get1DHist(name);
     if (h1)
         h1->Fit("gaus");
+    return true;
+}
+
+Bool_t TKoBRASniffer::SetBrho(float br)
+{
+    std::cout << "Set Brho to be " << br << " Tm" << std::endl;
+    TTreeManager::GetInstance()->GetTree()->SetAlias("brho", Form("(1+f1uppacx.x/4100)*%f", br));
+    THistManager::GetInstance()->Reset();
     return true;
 }
 

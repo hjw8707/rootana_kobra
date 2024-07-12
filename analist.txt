@@ -19,3 +19,4 @@
  f3ssd    KoBRAADC  F3SI    SSD       pars/PAR_F3SSD.txt       16
  f2ssdt   KoBRATDC  F3PA    Plastic   pars/PAR_F2SSDT.txt      1
  f3ssdt   KoBRATDC  F3PA    Plastic   pars/PAR_F3SSDT.txt      1
+ scaler   KoBRASCA  F2495   Scaler    no_scaler_par 

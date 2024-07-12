@@ -15,6 +15,7 @@ public:
     Bool_t HistReload();
 
     Bool_t HistFit(const char* name);
+    Bool_t SetBrho(float br);
 
     void SetRunNumber(int run);
     void SetRunStatus(bool running);

@@ -10,7 +10,8 @@
 enum DTYPE {
     KoBRATDC,
     KoBRAADC,
-    KoBRADIG
+    KoBRADIG,
+    KoBRASCA,
 };
 
 enum ATYPE {
@@ -19,7 +20,8 @@ enum ATYPE {
     LPPACX,
     Plastic,
     DPlastic,
-    SSD
+    SSD,
+    Scaler,
 };
 
 class TDetectorManager {
