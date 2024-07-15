@@ -1,5 +1,6 @@
 #include "TCanvasManager.hxx"
 #include "TDirectory.h"
+#include "TROOT.h"
 
 #include <iostream>
 #include <fstream>
@@ -27,7 +28,8 @@ TCanvasManager *TCanvasManager::instance = NULL;
 
 TCanvasManager::TCanvasManager()
 {
-    canvases = new TClonesArray("TCanvas");
+  canvases = new TClonesArray("TCanvas");
+  gROOT->SetBatch();
 }
 
 TCanvasManager::~TCanvasManager()
@@ -50,7 +52,7 @@ void TCanvasManager::Clear()
 
 void TCanvasManager::AddCanvas(const char *name, const char *title, int xdiv, int ydiv)
 {
-    TCanvas *can;
+  TCanvas *can;
     can = GetCanvas(name);
     if (can)
     {

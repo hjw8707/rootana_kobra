@@ -37,7 +37,7 @@
 "pid_2pp" "PID_F2_SSD_PPAC;TOF [ns];dE [MeV]" "f3uppt.tsum - f2dppt.tsum + 103.8" 1000 150 500 "Max$(f2ssd.acal)" 1000 0 120
 "pid_3pp" "PID_F3_SSD_PPAC;TOF [ns];dE [MeV]" "f3uppt.tsum - f2dppt.tsum + 103.8" 1000 150 500 "Max$(f3ssd.acal)" 1000 0 120
 "pid_2" "PID with F2;A/Q;Z" "AoQ" 400 1.5 4 "Z2" 400 0 20
-"pid_3" "PID with F3;A/Q;Z" "AoQ" 400 1.9 2.7 "Z3" 400 3 14
+"pid_3" "PID with F3;A/Q;Z" "AoQ" 400 2.1 3.1 "Z3" 400 3 14
 "f1uppac_eff" "F1 U PPAC Eff." "f1uppac@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
 "f1uppacx_eff" "F1 UX PPAC Eff." "f1uppacx@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
 "f1dppac_eff" "F1 D PPAC Eff." "f1dppac@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
@@ -49,3 +49,8 @@
 "f3u_pla_eff" "F3 U PPAC WRT F3 Pla Eff." "f3uppac@.GetEntriesFast() > 0" 2 0 2 "f3pla@.GetEntriesFast() > 0"
 "f1u_f1d_eff" "F1 U PPAC WRT F1 D Eff." "f1uppac@.GetEntriesFast() > 0" 2 0 2 "f1dppac@.GetEntriesFast() > 0"
 "f1d_f1u_eff" "F1 D PPAC WRT F1 U Eff." "f1dppac@.GetEntriesFast() > 0" 2 0 2 "f1uppac@.GetEntriesFast() > 0"
+"f1uppac_eff_ssd" "F1 U PPAC Eff." "f1uppac@.GetEntriesFast() > 0" 2 0 2 "de3 > 0"
+"f1uppacx_eff_ssd" "F1 UX PPAC Eff." "f1uppacx@.GetEntriesFast() > 0" 2 0 2 "de3 > 0"
+"f2dppac_eff_ssd" "F2 D PPAC Eff." "f2dppac@.GetEntriesFast() > 0" 2 0 2  "de3 > 0"
+"f3uppac_eff_ssd" "F3 U PPAC Eff." "f3uppac@.GetEntriesFast() > 0" 2 0 2  "de3 > 0"
+"f3dppac_eff_ssd" "F3 D PPAC Eff." "f3dppac@.GetEntriesFast() > 0" 2 0 2   "de3 > 0"
