@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 
+
 class KOBRA : public TObject
 {
 
@@ -75,7 +76,7 @@ public:
 
   void DrawPID0(const char *cut = NULL);
   void DrawPID(const char *cut = NULL);
-  void DrawPIDC(Bool_t flagShowCount = false, Bool_t flagShowPPS = false, const char *cut = NULL);
+  void DrawPIDC(Int_t show = 0, const char *cut = NULL); // show = 0: nothing, 1: count, 2: pps
 
   void DrawXDist(const char *cut = NULL);
   void DrawPPACEff(const char *cut = NULL);
@@ -100,6 +101,11 @@ public:
   std::map<Int_t, Double_t> brhoMap;
   std::map<Int_t, Double_t> f1slitMap;
 
+  ////////////////////////////////////////////////////////////
+  // run group for each isotope (defined at kobra.cxx)
+  static std::vector<int> o18, o19, o20, o21;
+  ////////////////////////////////////////////////////////////
+  
 private:
   Int_t runN;
 
@@ -116,6 +122,7 @@ private:
   std::map<std::string, TCutG*> cutgs;
   
   TClonesArray *ca;
+
 
   ClassDef(KOBRA, 1)
 };

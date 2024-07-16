@@ -22,7 +22,24 @@
 #include <string>
 #include <numeric>
 
+
 ClassImp(KOBRA);
+
+std::vector<int> KOBRA::o18 = {69, 70, 71, 72, 73,
+			       75, 76, 77, 78, 79, 80, 81, 82,
+			       84, 85};
+std::vector<int> KOBRA::o19 = {102, 103, 104, 105,
+			       107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
+			       121, 122};
+std::vector<int> KOBRA::o20 = {130, 131, 132, 133, 134, 135, 136, 137,
+			       147, 148,
+			       150,
+			       152, 153,
+			       156, 157};
+
+std::vector<int> KOBRA::o21 = {170, 171, 172,
+			       180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191};
+
 
 KOBRA::KOBRA()
 {
@@ -238,21 +255,21 @@ Bool_t KOBRA::LoadDB(const char *filename)
 void KOBRA::RunSetting(int run)
 {
   runN = run;
-  /*  try
+  try
       {
       SetBrho(brhoMap[runN]);
       }
       catch (...)
       {
       }
-      try
+  /*  try
       {
       SetUseF1(f1slitMap[runN] > 40);
       }
       catch (...)
       {
       }*/
-  SetBrho(1.356);
+  //SetBrho(1.356);
   SetUseF1(true);
   AddCuts("./cut");
 
@@ -421,7 +438,7 @@ void KOBRA::DrawPID(const char *cut)
     tree->Draw("z:aoq>>hpid(400,1.5,3,400,0,1)", cuts.c_str(), "col");
 }
 
-void KOBRA::DrawPIDC(Bool_t flagShowCount, Bool_t flagShowPPS, const char *cut)
+void KOBRA::DrawPIDC(Int_t show, const char *cut)
 {
   if (!tree)
     return;
@@ -434,26 +451,34 @@ void KOBRA::DrawPIDC(Bool_t flagShowCount, Bool_t flagShowPPS, const char *cut)
       cuts += Form("&& %s", cut);
   auto c1 = new TCanvas(Form("cpid_r%d",runN),"PID",1600,1200);
   tree->Draw(Form("Z:AoQ>>hpidc_r%d(400,2.1,3.1,400,4,14)",runN), cuts.c_str(), "col");
-  //tree->Draw(Form("Z:AoQ>>hpidc_r%d(400,1.8,2.8,400,4,14)",runN), cuts.c_str(), "col");
-  TH2 *h2 = static_cast<TH2*>(gDirectory->Get(Form("hpidc_r%d",runN)));
-  if (flagShowCount)
-    h2->SetTitle(Form("PID for Run %d: Count;A/Q;Z",runN));
-  else if (flagShowPPS)
-    h2->SetTitle(Form("PID for Run %d: Rate [pps];A/Q;Z",runN));
-  else
-    h2->SetTitle(Form("PID for Run %d;A/Q;Z",runN));
 
-  if (flagShowCount || flagShowPPS) {
+  TH2 *h2 = static_cast<TH2*>(gDirectory->Get(Form("hpidc_r%d",runN)));
+
+  switch (show) {
+  case 0:
+    h2->SetTitle(Form("PID for Run %d;A/Q;Z",runN));
+    break;
+  case 1:
+    h2->SetTitle(Form("PID for Run %d: Count;A/Q;Z",runN));
+    break;
+  case 2:
+    h2->SetTitle(Form("PID for Run %d: Rate [pps];A/Q;Z",runN));
+    break;
+  default:
+    break;
+  }
+
+  if (show > 0) {
     TLatex text;
     text.SetTextFont(62);
     text.SetTextSize(0.03);
 
     Double_t time = GetElapsedTime();
-    //	Double_t time = 2421;
     for (const auto& it : cutgs) {
       TCutG* cut = it.second;
       cut->SetLineStyle(2);
       cut->Draw("SAME");
+      
       Double_t x = cut->GetMean(1);
       Double_t y = cut->GetMean(2);
       TString title = cut->GetTitle();
@@ -471,8 +496,10 @@ void KOBRA::DrawPIDC(Bool_t flagShowCount, Bool_t flagShowPPS, const char *cut)
       text.SetTextSize(0.03);
       text.SetTextAlign(12);
       TString a;
-      if (flagShowCount) a = Form("%d",count);
-      else a = Form("%.3f", float(count/time));
+
+      if (show == 1) a = Form("%d",count);
+      else           a = Form("%.3f", float(count/time));
+      
       text.DrawLatex(x+0.005, y-0.3, a.Data());
     }
   }
@@ -594,68 +621,70 @@ Double_t KOBRA::GetElapsedTime() {
     return res;
   }
 
-  void KOBRA::DrawPPACEff(const char *cut){
-    auto c1 = new TCanvas(Form("cpeff_r%d",runN),"PPAC Eff.",800,1200);
-    c1->Divide(2,3);
+void KOBRA::DrawPPACEff(const char *cut){
+  auto c1 = new TCanvas(Form("cpeff_r%d",runN),"PPAC Eff.",800,1200);
+  c1->Divide(2,3);
 
-    TH1 *h1;
-    c1->cd(1);
-    tree->Draw(Form("f1uppac@.GetEntriesFast()>>hf1up_r%d(2,0,2)",runN),cut);
-    h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1up_r%d",runN)));
-    std::cout << " F1 Up PPAC Eff. : " << h1->GetMean() << std::endl;
+  TH1 *h1;
+  c1->cd(1);
+  tree->Draw(Form("f1uppac@.GetEntriesFast()>>hf1up_r%d(2,0,2)",runN),cut);
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1up_r%d",runN)));
+  std::cout << " F1 Up PPAC Eff. : " << h1->GetMean() << std::endl;
   
-    c1->cd(2);
-    tree->Draw(Form("f1uppacx@.GetEntriesFast()>>hf1upx_r%d(2,0,2)",runN),cut);  
-    h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1upx_r%d",runN)));
-    std::cout << " F1 Up PPACX Eff.: " << h1->GetMean() << std::endl;
+  c1->cd(2);
+  tree->Draw(Form("f1uppacx@.GetEntriesFast()>>hf1upx_r%d(2,0,2)",runN),cut);  
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1upx_r%d",runN)));
+  std::cout << " F1 Up PPACX Eff.: " << h1->GetMean() << std::endl;
   
-    c1->cd(4);
-    tree->Draw(Form("f2dppac@.GetEntriesFast()>>hf2dp_r%d(2,0,2)",runN),cut);
-    h1 = static_cast<TH1*>(gDirectory->Get(Form("hf2dp_r%d",runN)));
-    std::cout << " F2 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
+  c1->cd(4);
+  tree->Draw(Form("f2dppac@.GetEntriesFast()>>hf2dp_r%d(2,0,2)",runN),cut);
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf2dp_r%d",runN)));
+  std::cout << " F2 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
   
-    c1->cd(5);
-    tree->Draw(Form("f3uppac@.GetEntriesFast()>>hf3up_r%d(2,0,2)",runN),cut);
-    h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3up_r%d",runN)));
-    std::cout << " F3 Up PPAC Eff. : " << h1->GetMean() << std::endl;
+  c1->cd(5);
+  tree->Draw(Form("f3uppac@.GetEntriesFast()>>hf3up_r%d(2,0,2)",runN),cut);
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3up_r%d",runN)));
+  std::cout << " F3 Up PPAC Eff. : " << h1->GetMean() << std::endl;
   
-    c1->cd(6);
-    tree->Draw(Form("f3dppac@.GetEntriesFast()>>hf3dp_r%d(2,0,2)",runN),cut);  
-    h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3dp_r%d",runN)));
-    std::cout << " F3 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
-  }
+  c1->cd(6);
+  tree->Draw(Form("f3dppac@.GetEntriesFast()>>hf3dp_r%d(2,0,2)",runN),cut);  
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3dp_r%d",runN)));
+  std::cout << " F3 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
+}
 
-  TGraph* KOBRA::PPACRate() {
+TGraph* KOBRA::PPACRate() {
 
-    ULong_t ts;
-    UInt_t ppac, pct;
-    tree->SetBranchAddress("scaler.ts",&ts);
-    tree->SetBranchAddress("scaler.ppac",&ppac);
-    tree->SetBranchAddress("scaler.reft",&pct);
+  TGraph *gr = new TGraph;
 
-    TGraph *gr = new TGraph;
-
-    Double_t lastts = -1;
-    Double_t lastppac = -1;
-    for (Int_t i = 0 ; i < tree->GetEntries() ; i+=4) {
-      tree->GetEntry(i);
-      if (i > 1) {
-	Double_t dt = (double)(ts - lastts);
-	Double_t dppac = (double)(ppac - lastppac);
-	if (dt != 0)
-	  gr->AddPoint(pct, dppac/(dt*1.E-8));}
-      lastts = (double)ts;
-      lastppac = (double)ppac;
+  Double_t lastts = -1;
+  Double_t lastppac = -1;
+  for (Int_t i = 0 ; i < tree->GetEntries() ; i+=4) {
+    tree->GetEntry(i);
+    if (!ca || ca->GetEntriesFast() == 0) continue;
+    if (i > 1) {
+      Double_t dt = (double)(static_cast<TScalerData*>(ca->At(0))->ts - lastts);
+      Double_t dppac = (double)( static_cast<TScalerData*>(ca->At(0))->ppac - lastppac);
+      if (dt != 0) {
+	gr->AddPoint( static_cast<TScalerData*>(ca->At(0))->reft, dppac/(dt*1.E-8));
+      }
     }
-    gr->Draw("AC");
-    return gr;
+    lastts = (double)(static_cast<TScalerData*>(ca->At(0))->ts);
+    lastppac = (double)(static_cast<TScalerData*>(ca->At(0))->ppac);
   }
 
-  void KOBRA::ApplyOffsetToCut(Double_t xoff, Double_t yoff) {
-    for (const auto& it : cutgs) {
-      TCutG* cut = it.second;
-      for (Int_t i = 0 ; i < cut->GetN() ; i++) {
-	cut->GetX()[i] += xoff;
-	cut->GetY()[i] += yoff;
-      }}
-  }
+  gr->GetXaxis()->SetTimeDisplay(1);
+  gr->GetXaxis()->SetTimeFormat("%H:%M:%S%F2024-07-15 15:00:00");
+  
+  gr->SetTitle("PPAC Or Rate;Time [s];Rate [pps]");
+  gr->Draw("AL");
+  return gr;
+}
+
+void KOBRA::ApplyOffsetToCut(Double_t xoff, Double_t yoff) {
+  for (const auto& it : cutgs) {
+    TCutG* cut = it.second;
+    for (Int_t i = 0 ; i < cut->GetN() ; i++) {
+      cut->GetX()[i] += xoff;
+      cut->GetY()[i] += yoff;
+    }}
+}

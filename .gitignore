@@ -9,3 +9,6 @@ lib*
 rakobra
 rakobra_server
 Makefile
+midcheck
+figs
+*Dict*
