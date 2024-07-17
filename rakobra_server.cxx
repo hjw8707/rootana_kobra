@@ -60,7 +60,6 @@ public:
 
   void InitManager()
   {
-
     if (anaManager)
       delete anaManager;
     anaManager = new TAnaManager();

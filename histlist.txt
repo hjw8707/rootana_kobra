@@ -11,6 +11,7 @@
 "f2_uy" "F2 UY"   "f2uppac.y" 200 -100 100
 "f2_upos" "F2 U Position"     "f2uppac.x" 100 -100 100 "f2uppac.y" 100 -100 100
 "f2_dx" "F2 DX"   "f2dppac.x" 200 -100 100
+"f2_dx_o18" "F2 DX 18O" "f2dppac.x" 200 -100 100 "abs(AoQ - 2.26) < 0.03 && abs(Z - 8) < 0.7"
 "f2_dx_o19" "F2 DX 19O"   "f2dppac.x" 200 -100 100 "abs(AoQ - 2.39) < 0.02 && abs(Z - 8) < 0.7"
 "f2_dx_o20" "F2 DX 20O"   "f2dppac.x" 200 -100 100 "abs(AoQ - 2.52) < 0.02 && abs(Z - 8) < 0.7"
 "f2_dy" "F2 DY"   "f2dppac.y" 200 -100 100
@@ -18,6 +19,7 @@
 "f2_ang" "F2 Angle" "f2a" 100 -100 100 "f2b" 100 -100 100
 "f2_xa" "F2 X A" "f2dppac.x" 100 -100 100 "f2a" 100 -100 100
 "f3_x" "F3 X" "f3x" 200 -100 100
+"f3_x_o18" "F3 X 18O" "f3x" 200 -100 100 "abs(AoQ - 2.26) < 0.03 && abs(Z - 8) < 0.7"
 "f3_x_o19" "F3 X 19O" "f3x" 200 -100 100 "abs(AoQ - 2.39) < 0.02 && abs(Z - 8) < 0.7"
 "f3_x_o20" "F3 X 20O" "f3x" 200 -100 100 "abs(AoQ - 2.52) < 0.02 && abs(Z - 8) < 0.7"
 "f3_y" "F3 Y" "f3y" 200 -100 100
@@ -37,7 +39,7 @@
 "pid_2pp" "PID_F2_SSD_PPAC;TOF [ns];dE [MeV]" "f3uppt.tsum - f2dppt.tsum + 103.8" 1000 150 500 "Max$(f2ssd.acal)" 1000 0 120
 "pid_3pp" "PID_F3_SSD_PPAC;TOF [ns];dE [MeV]" "f3uppt.tsum - f2dppt.tsum + 103.8" 1000 150 500 "Max$(f3ssd.acal)" 1000 0 120
 "pid_2" "PID with F2;A/Q;Z" "AoQ" 400 1.5 4 "Z2" 400 0 20
-"pid_3" "PID with F3;A/Q;Z" "AoQ" 400 2.1 3.1 "Z3" 400 3 14
+"pid_3" "PID with F3;A/Q;Z" "AoQ" 400 1.8 3.1 "Z3" 400 3 14
 "f1uppac_eff" "F1 U PPAC Eff." "f1uppac@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
 "f1uppacx_eff" "F1 UX PPAC Eff." "f1uppacx@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
 "f1dppac_eff" "F1 D PPAC Eff." "f1dppac@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"

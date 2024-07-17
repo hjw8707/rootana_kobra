@@ -91,12 +91,12 @@ void DrawCanvas(int run, KOBRA &ko, const char* cut) {
 
 void shift(int run) {
 
-  double brho = 1.4285;
+  double brho = 1.3520;
   
   KOBRA ko(run);
   ko.SetUseF1();
   ko.SetBrho(brho);
-  ko.ApplyOffsetToCut(-0.025);
+  ko.ApplyOffsetToCut(-0.005);
   
   //  gStyle->SetPalette(kInvertedDarkBodyRadiator);
   gStyle->SetPalette(kDeepSea);
@@ -109,21 +109,20 @@ void shift(int run) {
   DrawCanvas(run, ko, "o19");
   DrawCanvas(run, ko, "o20");
   DrawCanvas(run, ko, "o21");
+  DrawCanvas(run, ko, "o22");
 
   ////////////////////////////////////////////////////////////
   // Efficiency
-  Int_t f1uppac = ko.tree->GetEntries("f1uppacx@.GetEntriesFast() > 0");
-  Int_t f1u2dppac = ko.tree->GetEntries("f2dppac@.GetEntriesFast() > 0 && f1uppacx@.GetEntriesFast() > 0");
-  Int_t f2dppac = ko.tree->GetEntries("f2dppac@.GetEntriesFast() > 0");
-  Int_t f2d3uppac = ko.tree->GetEntries("f2dppac@.GetEntriesFast() > 0 && f3uppac@.GetEntriesFast() > 0");  
-  Int_t f3uppac = ko.tree->GetEntries("f3uppac@.GetEntriesFast() > 0");
-  Int_t f3u3dppac = ko.tree->GetEntries("f3uppac@.GetEntriesFast() > 0 && f3dppac@.GetEntriesFast() > 0");  
-  Int_t f3dppac = ko.tree->GetEntries("f3dppac@.GetEntriesFast() > 0");
+  Int_t f1ussdppac = ko.tree->GetEntries("f3ssd@.GetEntriesFast() > 0 && f1uppacx@.GetEntriesFast() > 0");
+  Int_t f2dssdppac = ko.tree->GetEntries("f3ssd@.GetEntriesFast() > 0 && f2dppac@.GetEntriesFast() > 0");
+  Int_t f3ussdppac = ko.tree->GetEntries("f3ssd@.GetEntriesFast() > 0 && f3uppac@.GetEntriesFast() > 0");
+  Int_t f3dssdppac = ko.tree->GetEntries("f3ssd@.GetEntriesFast() > 0 && f3dppac@.GetEntriesFast() > 0");  
+  Int_t f3ssd = ko.tree->GetEntries("f3ssd@.GetEntriesFast() > 0");
 
-  Double_t eff_f1u = (double)f1u2dppac/f2dppac;
-  Double_t eff_f2d = (double)f2d3uppac/f3uppac;
-  Double_t eff_f3u = (double)f3u3dppac/f3dppac;
-  Double_t eff_f3d = (double)f3u3dppac/f3uppac;
+  Double_t eff_f1u = (double)f1ussdppac/f3ssd;
+  Double_t eff_f2d = (double)f2dssdppac/f3ssd;
+  Double_t eff_f3u = (double)f3ussdppac/f3ssd;
+  Double_t eff_f3d = (double)f3dssdppac/f3ssd;
 
   std::cout << "=========================================" << std::endl;
   std::cout << "   Efficiencies of PPACs " << std::endl;
@@ -140,6 +139,7 @@ void shift(int run) {
   Int_t count19o = ko.tree->GetEntries("o19");
   Int_t count20o = ko.tree->GetEntries("o20");
   Int_t count21o = ko.tree->GetEntries("o21");
+  Int_t count22o = ko.tree->GetEntries("o22");
   ////////////////////////////////////////////////////////////
   // Counting
   std::cout << "=========================================" << std::endl;
@@ -150,6 +150,25 @@ void shift(int run) {
   std::cout << " 19O: " << count19o << std::endl;
   std::cout << " 20O: " << count20o << std::endl;
   std::cout << " 21O: " << count21o << std::endl;
+  std::cout << " 22O: " << count22o << std::endl;
   std::cout << "=========================================" << std::endl;
   ////////////////////////////////////////////////////////////
+
+  Double_t time = ko.GetElapsedTime();
+  ////////////////////////////////////////////////////////////
+  // Counting
+  std::cout << "=========================================" << std::endl;
+  std::cout << "   Rates of Isotopes " << std::endl;
+  std::cout << "=========================================" << std::endl;
+  std::cout << " Elapsed Time: " << time << " sec." << std::endl;
+  std::cout.precision(4);
+  std::cout << " 17O: " << static_cast<Double_t>(count17o)/time << std::endl;
+  std::cout << " 18O: " << static_cast<Double_t>(count18o)/time << std::endl;
+  std::cout << " 19O: " << static_cast<Double_t>(count19o)/time << std::endl;
+  std::cout << " 20O: " << static_cast<Double_t>(count20o)/time << std::endl;
+  std::cout << " 21O: " << static_cast<Double_t>(count21o)/time << std::endl;
+  std::cout << " 22O: " << static_cast<Double_t>(count22o)/time << std::endl;
+  std::cout << "=========================================" << std::endl;
+  ////////////////////////////////////////////////////////////  
+  
 }

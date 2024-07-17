@@ -10,3 +10,4 @@
 #pragma link C++ class TScalerData;
 
 #pragma link C++ class KOBRA;
+#pragma link C++ class CURRY;

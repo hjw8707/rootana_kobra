@@ -1,5 +1,7 @@
 #include "kobra.hxx"
 
+#include "curry.hxx"
+
 #include "TFile.h"
 #include "TSystem.h"
 #include "TCutG.h"
@@ -12,6 +14,7 @@
 #include "TH2.h"
 #include "TChainElement.h"
 #include "TSelectorEntries.h"
+#include "TColor.h"
 
 #include "TScalerData.hxx"
 
@@ -65,18 +68,23 @@ KOBRA::KOBRA(int run)
 {
     Initilize();
     LoadTree(run);
+    runNs.push_back(run);
     RunSetting(run);
 }
 KOBRA::KOBRA(std::vector<int> runs)
 {
     Initilize();
     LoadTree(runs);
+    for (const auto &it : runs)
+      runNs.push_back(it);
     RunSetting(runs[0]);
 }
 KOBRA::KOBRA(int runb, int rune)
 {
     Initilize();
     LoadTree(runb, rune);
+    for (int i = runb ; i <= rune ; i++)
+      runNs.push_back(i);
     RunSetting(runb);
 }
 
@@ -89,7 +97,6 @@ KOBRA::~KOBRA()
 void KOBRA::Initilize()
 {
   tree = new TChain("kobra", "kobra");
-  runN = 0;
   centBrho = 0;
   tofOff = 0;
   useF1 = false;
@@ -103,6 +110,17 @@ void KOBRA::Initilize()
 
   gStyle->SetCanvasDefX(2600);
   gStyle->SetCanvasDefY(100);
+  //  gStyle->SetPalette(kPastel);
+
+  const Int_t NRGBs = 5;
+  const Int_t NCont = 255;
+
+  Double_t stops[NRGBs] = { 0.00, 0.34, 0.61, 0.84, 1.00 };
+  Double_t red[NRGBs]   = { 0.00, 0.00, 0.87, 1.00, 0.51 };
+  Double_t green[NRGBs] = { 0.00, 0.81, 1.00, 0.20, 0.00 };
+  Double_t blue[NRGBs]  = { 0.51, 1.00, 0.12, 0.00, 0.00 };
+  TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
+  gStyle->SetNumberContours(NCont);
 }
 
 Bool_t KOBRA::LoadTree(const char *filename)
@@ -254,21 +272,13 @@ Bool_t KOBRA::LoadDB(const char *filename)
 
 void KOBRA::RunSetting(int run)
 {
-  runN = run;
   try
       {
-      SetBrho(brhoMap[runN]);
+      SetBrho(brhoMap[run]);
       }
       catch (...)
       {
       }
-  /*  try
-      {
-      SetUseF1(f1slitMap[runN] > 40);
-      }
-      catch (...)
-      {
-      }*/
   //SetBrho(1.356);
   SetUseF1(true);
   AddCuts("./cut");
@@ -440,6 +450,7 @@ void KOBRA::DrawPID(const char *cut)
 
 void KOBRA::DrawPIDC(Int_t show, const char *cut)
 {
+  if (show < 0 || show > 2) return;
   if (!tree)
     return;
 
@@ -449,31 +460,27 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
       cuts += Form("%s", cut);
     else
       cuts += Form("&& %s", cut);
-  auto c1 = new TCanvas(Form("cpid_r%d",runN),"PID",1600,1200);
-  tree->Draw(Form("Z:AoQ>>hpidc_r%d(400,2.1,3.1,400,4,14)",runN), cuts.c_str(), "col");
+  auto c1 = new TCanvas(Form("cpid_r%d",runNs.front()),"PID",1600,1200);
+  tree->Draw(Form("Z:AoQ>>hpidc_r%d(400,2.1,3.1,400,4,14)",runNs.front()), cuts.c_str(), "col");
 
-  TH2 *h2 = static_cast<TH2*>(gDirectory->Get(Form("hpidc_r%d",runN)));
+  TH2 *h2 = static_cast<TH2*>(gDirectory->Get(Form("hpidc_r%d",runNs.front())));
 
-  switch (show) {
-  case 0:
-    h2->SetTitle(Form("PID for Run %d;A/Q;Z",runN));
-    break;
-  case 1:
-    h2->SetTitle(Form("PID for Run %d: Count;A/Q;Z",runN));
-    break;
-  case 2:
-    h2->SetTitle(Form("PID for Run %d: Rate [pps];A/Q;Z",runN));
-    break;
-  default:
-    break;
-  }
+  std::string runstr;
+  if (runNs.size() > 1)
+    runstr = Form("Run %d-%d",runNs.front(),runNs.back());
+  else
+    runstr = Form("Run %d",runNs.front());
+
+  const char* showcase[3] = { "", ": Count", ": Rate [pps]" };
+  h2->SetTitle(Form("PID for %s%s;A/Q;Z",runstr.c_str(),showcase[show]));
 
   if (show > 0) {
     TLatex text;
     text.SetTextFont(62);
     text.SetTextSize(0.03);
 
-    Double_t time = GetElapsedTime();
+    Double_t time;
+    time = GetElapsedTime();
     for (const auto& it : cutgs) {
       TCutG* cut = it.second;
       cut->SetLineStyle(2);
@@ -498,10 +505,20 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
       TString a;
 
       if (show == 1) a = Form("%d",count);
-      else           a = Form("%.3f", float(count/time));
+      else           a = Form("%.4f", float(count/time));
       
       text.DrawLatex(x+0.005, y-0.3, a.Data());
     }
+    std::string timestr;
+    Int_t itime = time;
+    if (itime > 3600)
+      timestr = Form("%02d:%02d:%02d", itime/3600, (itime%3600)/60, itime%60);
+    else if (itime > 60)
+      timestr = Form("%02d:%02d", itime/60, itime%60);
+    else
+      timestr = "";
+      
+    text.DrawLatexNDC(0.15,0.92,Form("Brho: %.4f Tm / Time: %.0f sec. or %s",GetBrho(),time, timestr.c_str()));
   }
 }
 
@@ -524,7 +541,7 @@ void KOBRA::PrintSetting(std::ostream &out)
     out << "=====================================" << std::endl;
     out << "        KOBRA: Current Setting" << std::endl;
     out << "=====================================" << std::endl;
-    out << "  Run Number  : " << runN << std::endl;
+    out << "  Run Number  : " << runNs.front() << std::endl;
     out << "  Brho Setting: " << GetBrho() << " Tm" << std::endl;
     out << "  Use F1      : " << (GetUseF1() ? "O" : "X") << std::endl;
     out << "  Use F2 / F3 : " << (GetUseF2orF3() ? "F2" : "F3") << std::endl;
@@ -561,17 +578,17 @@ void KOBRA::DrawAllCut() {
 
 
 void KOBRA::DrawXDist(const char *cut) {
-  auto c1 = new TCanvas(Form("cxd_r%d_%s",runN,cut),"X Distribution",1200,400);
+  auto c1 = new TCanvas(Form("cxd_r%d_%s",runNs.front(),cut),"X Distribution",1200,400);
   c1->Divide(3,1);
 
   c1->cd(1);
-  tree->Draw(Form("f1x>>hf1x_r%d_%s(100,-200,200)",runN,cut),cut);
+  tree->Draw(Form("f1x>>hf1x_r%d_%s(100,-200,200)",runNs.front(),cut),cut);
 
   c1->cd(2);
-  tree->Draw(Form("f2x>>hf2x_r%d_%s(100,-200,200)",runN,cut),cut);
+  tree->Draw(Form("f2x>>hf2x_r%d_%s(100,-200,200)",runNs.front(),cut),cut);
   
   c1->cd(3);
-  tree->Draw(Form("f3x>>hf3x_r%d_%s(100,-200,200)",runN,cut),cut);
+  tree->Draw(Form("f3x>>hf3x_r%d_%s(100,-200,200)",runNs.front(),cut),cut);
   
 
 }
@@ -589,66 +606,77 @@ Double_t KOBRA::GetElapsedTime() {
   }
 
   std::vector<Long64_t> nSum;
-  for (auto it = nEntries.begin() ; it != nEntries.end() ; it++) 
-    nSum.push_back(std::accumulate(nEntries.begin(), it+1,0));
+  for (auto it = nEntries.begin() ; it != nEntries.end() ; it++)  {
+    Int_t sum = std::accumulate(nEntries.begin(), it+1,0);
+    nSum.push_back(sum); }
 
   Double_t totalTime = 0;  
-
-  //  TClonesArray *ca = nullptr;
-  //  tree->SetBranchAddress("scaler", &ca);
-
   for (auto it = nSum.begin() ; it != nSum.end() ; it++) {
+    Int_t n0, n1;
     if (it == nSum.begin()) {
-      tree->GetEntry(0);  Int_t n0 = static_cast<TScalerData*>(ca->At(0))->reft;
-      tree->GetEntry((*it)-1);  Int_t n1 = static_cast<TScalerData*>(ca->At(0))->reft;
-      totalTime += (Double_t)(n1 - n0);
-    }
+      for (int i = 0 ; i <= tree->GetEntries() ; i++) {
+	tree->GetEntry(i);
+	if (ca->GetEntriesFast() > 0) {
+	  n0 = static_cast<TScalerData*>(ca->At(0))->reft;
+	  break; }}
+      for (int i = *it - 1 ; i >= 0 ; i--) {
+	tree->GetEntry(i);
+	if (ca->GetEntriesFast() > 0) {
+	  n1 = static_cast<TScalerData*>(ca->At(0))->reft;
+	  break; }}}
     else {
-      tree->GetEntry(*(it-1));  Int_t n0 = static_cast<TScalerData*>(ca->At(0))->reft;
-      tree->GetEntry((*it)-1);  Int_t n1 = static_cast<TScalerData*>(ca->At(0))->reft;
-      totalTime += (Double_t)(n1 - n0);      
-    }}
+      for (int i = *(it-1) ; i <= tree->GetEntries() ; i++) {
+	tree->GetEntry(i);
+	if (ca->GetEntriesFast() > 0) {
+	  n0 = static_cast<TScalerData*>(ca->At(0))->reft;
+	  break; }}      
+      for (int i = *it - 1 ; i >= 0 ; i--) {
+	tree->GetEntry(i);
+	if (ca->GetEntriesFast() > 0) {
+	  n1 = static_cast<TScalerData*>(ca->At(0))->reft;
+	  break; }}}
+    totalTime += (Double_t)(n1 - n0);}
   return totalTime;
 }
 
-  Long64_t KOBRA::GetEntries(const char *selection)
-  {
-    TSelectorEntries *s = new TSelectorEntries(selection);
-    tree->Process(s);
-    tree->SetNotify(nullptr);
-    Long64_t res = s->GetSelectedRows();
-    delete s;
-    return res;
-  }
+Long64_t KOBRA::GetEntries(const char *selection)
+{
+  TSelectorEntries *s = new TSelectorEntries(selection);
+  tree->Process(s);
+  tree->SetNotify(nullptr);
+  Long64_t res = s->GetSelectedRows();
+  delete s;
+  return res;
+}
 
 void KOBRA::DrawPPACEff(const char *cut){
-  auto c1 = new TCanvas(Form("cpeff_r%d",runN),"PPAC Eff.",800,1200);
+  auto c1 = new TCanvas(Form("cpeff_r%d",runNs.front()),"PPAC Eff.",800,1200);
   c1->Divide(2,3);
 
   TH1 *h1;
   c1->cd(1);
-  tree->Draw(Form("f1uppac@.GetEntriesFast()>>hf1up_r%d(2,0,2)",runN),cut);
-  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1up_r%d",runN)));
+  tree->Draw(Form("f1uppac@.GetEntriesFast()>>hf1up_r%d(2,0,2)",runNs.front()),cut);
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1up_r%d",runNs.front())));
   std::cout << " F1 Up PPAC Eff. : " << h1->GetMean() << std::endl;
   
   c1->cd(2);
-  tree->Draw(Form("f1uppacx@.GetEntriesFast()>>hf1upx_r%d(2,0,2)",runN),cut);  
-  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1upx_r%d",runN)));
+  tree->Draw(Form("f1uppacx@.GetEntriesFast()>>hf1upx_r%d(2,0,2)",runNs.front()),cut);  
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf1upx_r%d",runNs.front())));
   std::cout << " F1 Up PPACX Eff.: " << h1->GetMean() << std::endl;
   
   c1->cd(4);
-  tree->Draw(Form("f2dppac@.GetEntriesFast()>>hf2dp_r%d(2,0,2)",runN),cut);
-  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf2dp_r%d",runN)));
+  tree->Draw(Form("f2dppac@.GetEntriesFast()>>hf2dp_r%d(2,0,2)",runNs.front()),cut);
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf2dp_r%d",runNs.front())));
   std::cout << " F2 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
   
   c1->cd(5);
-  tree->Draw(Form("f3uppac@.GetEntriesFast()>>hf3up_r%d(2,0,2)",runN),cut);
-  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3up_r%d",runN)));
+  tree->Draw(Form("f3uppac@.GetEntriesFast()>>hf3up_r%d(2,0,2)",runNs.front()),cut);
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3up_r%d",runNs.front())));
   std::cout << " F3 Up PPAC Eff. : " << h1->GetMean() << std::endl;
   
   c1->cd(6);
-  tree->Draw(Form("f3dppac@.GetEntriesFast()>>hf3dp_r%d(2,0,2)",runN),cut);  
-  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3dp_r%d",runN)));
+  tree->Draw(Form("f3dppac@.GetEntriesFast()>>hf3dp_r%d(2,0,2)",runNs.front()),cut);  
+  h1 = static_cast<TH1*>(gDirectory->Get(Form("hf3dp_r%d",runNs.front())));
   std::cout << " F3 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
 }
 
@@ -658,15 +686,14 @@ TGraph* KOBRA::PPACRate() {
 
   Double_t lastts = -1;
   Double_t lastppac = -1;
-  for (Int_t i = 0 ; i < tree->GetEntries() ; i+=4) {
+  for (Int_t i = 0 ; i < tree->GetEntries() ; i+=10) {
     tree->GetEntry(i);
     if (!ca || ca->GetEntriesFast() == 0) continue;
     if (i > 1) {
       Double_t dt = (double)(static_cast<TScalerData*>(ca->At(0))->ts - lastts);
       Double_t dppac = (double)( static_cast<TScalerData*>(ca->At(0))->ppac - lastppac);
       if (dt != 0) {
-	gr->AddPoint( static_cast<TScalerData*>(ca->At(0))->reft, dppac/(dt*1.E-8));
-      }
+	gr->AddPoint(static_cast<TScalerData*>(ca->At(0))->reft, dppac/(dt*1.E-8));}
     }
     lastts = (double)(static_cast<TScalerData*>(ca->At(0))->ts);
     lastppac = (double)(static_cast<TScalerData*>(ca->At(0))->ppac);
@@ -687,4 +714,26 @@ void KOBRA::ApplyOffsetToCut(Double_t xoff, Double_t yoff) {
       cut->GetX()[i] += xoff;
       cut->GetY()[i] += yoff;
     }}
+}
+
+TCutG* KOBRA::Make2DCut(const char* name, const char* title){
+  std::cout << " Make a 2D cut with the name of " << name << std::endl;
+  std::cout << " Please click points on the plot. " << std::endl;
+
+  Double_t x, y, xl, yl;
+  Bool_t end;
+
+  TCutG *cut = new TCutG(name);
+  cut->SetTitle(title);
+  cut->SetVarX("AoQ");
+  cut->SetVarY("Z");
+  while (true) {
+    xl = x; yl = y;
+    CURRY::GetInstance()->Run(&x, &y, &end);
+    cut->AddPoint(x, y);
+    if (end) break;    
+  }
+  cut->SetLineStyle(2);
+  cut->Draw("SAME");
+  return cut;
 }

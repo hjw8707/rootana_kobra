@@ -38,6 +38,7 @@ set(DICTSRCSONLY
     "src/TSSDData.cxx"
     "src/TScalerData.cxx"    
     "macros/kobra.cxx"
+    "macros/curry.cxx"
 )
 
 set(DICTHDRSONLY
@@ -48,6 +49,7 @@ set(DICTHDRSONLY
     "include/TSSDData.hxx"
     "include/TScalerData.hxx"
     "macros/kobra.hxx"
+    "macros/curry.hxx"
 )
 
 root_generate_dictionary(KoBRA_Dict ${DICTHDRS} LINKDEF LinkDef.h)

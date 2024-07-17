@@ -6,6 +6,7 @@
 #include "TCutG.h"
 #include "TClonesArray.h"
 #include "TGraph.h"
+#include "TPad.h"
 
 #include <vector>
 #include <iostream>
@@ -96,6 +97,8 @@ public:
   TGraph* PPACRate();
 
   void ApplyOffsetToCut(Double_t xoff, Double_t yoff = 0);
+
+  TCutG* Make2DCut(const char* name, const char* title);
   
   TChain *tree;
   std::map<Int_t, Double_t> brhoMap;
@@ -107,7 +110,7 @@ public:
   ////////////////////////////////////////////////////////////
   
 private:
-  Int_t runN;
+  std::vector<Int_t> runNs;
 
   Double_t centBrho;
   Double_t tofOff;
