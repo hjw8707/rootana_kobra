@@ -16,7 +16,9 @@ public:
 
   inline void GetLastEntry() { tree->GetEntry(tree->GetEntries()-1); }
 
+  void MakeHeader();
   inline THeader* GetHeader() { return header; }
+  void WriteHeader();
   
   void LoadAlias(const char* file);
 

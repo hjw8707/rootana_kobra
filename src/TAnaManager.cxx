@@ -12,6 +12,7 @@ TAnaManager::TAnaManager()
 {
   treeMan = TTreeManager::GetInstance();
   treeMan->MakeTree("kobra", "kobra");
+  treeMan->MakeHeader();
   treeMan->LoadAlias("aliaslist.txt");
   detMan = TDetectorManager::GetInstance();
   detMan->LoadAnaList("analist.txt");
@@ -68,6 +69,7 @@ void TAnaManager::BeginRun(int transition, int run, int time)
 void TAnaManager::EndRun(int, int run, int time)
 {
   treeMan->GetHeader()->SetStopTimeStamp(time);
+  treeMan->WriteHeader();
   std::cout << "End Run " << run << ", " << time << std::endl;
 }
 

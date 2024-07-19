@@ -8,10 +8,12 @@
 #include "TGraph.h"
 #include "TPad.h"
 
+
 #include <vector>
 #include <iostream>
 #include <string>
 
+class THeader;
 
 class KOBRA : public TObject
 {
@@ -99,6 +101,8 @@ public:
   void ApplyOffsetToCut(Double_t xoff, Double_t yoff = 0);
 
   TCutG* Make2DCut(const char* name, const char* title);
+
+  inline THeader* GetHeader(int i) { return headers[i]; }
   
   TChain *tree;
   std::map<Int_t, Double_t> brhoMap;
@@ -111,6 +115,7 @@ public:
   
 private:
   std::vector<Int_t> runNs;
+  std::vector<THeader*> headers;
 
   Double_t centBrho;
   Double_t tofOff;

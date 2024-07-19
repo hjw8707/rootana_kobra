@@ -16,6 +16,7 @@
 #include "TSelectorEntries.h"
 #include "TColor.h"
 
+#include "THeader.hxx"
 #include "TScalerData.hxx"
 
 #include <iostream>
@@ -150,8 +151,16 @@ Bool_t KOBRA::LoadTree(const char *filename)
         return false;
     }
 
+    THeader *head = dynamic_cast<THeader *>(file.Get("header"));
+    if (!head)
+    {
+        std::cout << "THeader does not exist in file " << filename << "." << std::endl;
+        return false;
+    }
+
     // Add the file to the TChain
     tree->Add(filename);
+    headers.push_back(head);
     std::cout << "TTree kobra from file " << filename << " added to TChain." << std::endl;
     return true;
 }
@@ -689,18 +698,21 @@ TGraph* KOBRA::PPACRate() {
   for (Int_t i = 0 ; i < tree->GetEntries() ; i+=10) {
     tree->GetEntry(i);
     if (!ca || ca->GetEntriesFast() == 0) continue;
+    time_t start_ts = GetHeader(tree->GetTreeNumber())->GetStartTimeStamp();
+    time_t day0 = start_ts - (start_ts%86400) - 9*3600; // 00:00:00 of the day
     if (i > 1) {
       Double_t dt = (double)(static_cast<TScalerData*>(ca->At(0))->ts - lastts);
       Double_t dppac = (double)( static_cast<TScalerData*>(ca->At(0))->ppac - lastppac);
       if (dt != 0) {
-	gr->AddPoint(static_cast<TScalerData*>(ca->At(0))->reft, dppac/(dt*1.E-8));}
+	gr->AddPoint(day0 + static_cast<TScalerData*>(ca->At(0))->reft, dppac/(dt*1.E-8));}
     }
     lastts = (double)(static_cast<TScalerData*>(ca->At(0))->ts);
     lastppac = (double)(static_cast<TScalerData*>(ca->At(0))->ppac);
   }
 
   gr->GetXaxis()->SetTimeDisplay(1);
-  gr->GetXaxis()->SetTimeFormat("%H:%M:%S%F2024-07-15 15:00:00");
+  gr->GetXaxis()->SetTimeFormat("%m-%d %H:%M");
+  gr->GetXaxis()->SetNdivisions(505);
   
   gr->SetTitle("PPAC Or Rate;Time [s];Rate [pps]");
   gr->Draw("AL");

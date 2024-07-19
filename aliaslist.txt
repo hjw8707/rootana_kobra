@@ -13,7 +13,7 @@
 "beta"  "12398.5/tof/299."
 "gamma" "1/sqrt(1-beta*beta)"
 "pp"    "gamma*beta"
-"brho"  "(1+f1uppacx.x/4100)*1.3520"
+"brho"  "(1+f1uppacx.x/4100)*1.4291"
 "aoq"   "brho/(3.1*pp)"
 "AoQ"   "0.941841*aoq+0.095597"
 "corfac"    "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta"

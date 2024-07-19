@@ -15,8 +15,14 @@ TTreeManager::TTreeManager() : tree(NULL), header(NULL)
 void TTreeManager::MakeTree(const char *name, const char *title)
 {
     tree = new TTree(name, title);
-    header = new THeader();
-    tree->Branch("header",&header);
+}
+
+void TTreeManager::MakeHeader(){
+  header = new THeader();
+}
+
+void TTreeManager::WriteHeader(){
+  header->Write();
 }
 
 TTreeManager *TTreeManager::GetInstance()

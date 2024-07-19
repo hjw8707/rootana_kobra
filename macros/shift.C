@@ -91,12 +91,12 @@ void DrawCanvas(int run, KOBRA &ko, const char* cut) {
 
 void shift(int run) {
 
-  double brho = 1.3520;
+  double brho = 1.4291;
   
   KOBRA ko(run);
   ko.SetUseF1();
   ko.SetBrho(brho);
-  ko.ApplyOffsetToCut(-0.005);
+  ko.ApplyOffsetToCut(-0.025, -0.02);
   
   //  gStyle->SetPalette(kInvertedDarkBodyRadiator);
   gStyle->SetPalette(kDeepSea);
