@@ -7,3 +7,4 @@ cpid PID 1 2 hists/pid_3pp hists/pid_3
 ccenter Centering 2 2 hists/f2_dx_o19 hists/f2_dx_o20 hists/f3_x_o19 hists/f3_x_o20
 cNEWeff NewEff 2 2 hists/f2d_pla_eff hists/f3u_pla_eff hists/f1u_f1d_eff hists/f1d_f1u_eff 
 ceffssd EffSSD 2 3 hists/f1uppac_eff_ssd hists/f1uppacx_eff_ssd hists/f2dppac_eff_ssd hists/f3uppac_eff_ssd hists/f3dppac_eff_ssd
+cpos POS 2 2 hists/f3_dpos hists/cens_dpos hists/stark_target_xy hists/f3censab

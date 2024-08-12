@@ -1,5 +1,6 @@
 "f1_ux" "F1 UX"   "f1uppac.x" 400 -200 200
 "f1_uxx" "F1 UXX"   "f1uppacx.x" 400 -200 200
+"f1_uxx_o20" "F1 UXX (20O)"   "f1uppacx.x" 16 -160 160 "abs(AoQ - 2.51) < 0.02 && abs(Z3pla - 7.7) < 0.9"
 "f1_uy" "F1 UY"   "f1uppac.y" 200 -100 100
 "f1_upos" "F1 U Position"   "f1uppac.x" 100 -200 200 "f1uppac.y" 100 -100 100
 "f1_dx" "F1 DX"   "f1dppac.x" 400 -200 200
@@ -24,14 +25,29 @@
 "f3_x_o20" "F3 X 20O" "f3x" 200 -100 100 "abs(AoQ - 2.52) < 0.02 && abs(Z - 8) < 0.7"
 "f3_y" "F3 Y" "f3y" 200 -100 100
 "f3_pos" "F3 XY" "f3x" 200 -100 100 "f3y" 200 -100 100
-"f3_ux" "F3 UX" "f3uppac.x" 200 -100 100
-"f3_uy" "F3 UY" "f3uppac.y" 200 -100 100
-"f3_upos" "F3 U Position"    "f3uppac.x" 100 -100 100 "f3uppac.y" 100 -100 100
-"f3_dx" "F3 DX" "f3dppac.x" 200 -100 100
-"f3_dy" "F3 DY" "f3dppac.y" 200 -100 100
-"f3_dpos" "F3 D Position"    "f3dppac.x" 100 -100 100 "f3dppac.y" 100 -100 100
-"f3_ang" "F3 Angle" "f3a" 100 -100 100 "f3b" 100 -100 100
+"f3_ux" "F3 UX" "f3uppac.x" 400 -100 100
+"f3_uy" "F3 UY" "f3uppac.y" 400 -100 100
+"f3_upos" "F3 U Position"    "f3uppac.x" 400 -100 100 "f3uppac.y" 400 -100 100
+"f3_dx" "F3 DX" "f3dppac.x" 400 -100 100
+"f3_dy" "F3 DY" "f3dppac.y" 400 -100 100
+"f3_dpos" "F3 D Position"    "f3dppac.x" 400 -100 100 "f3dppac.y" 400 -100 100
+"f3_ang" "F3 Angle" "f3a" 400 -100 100 "f3b" 400 -100 100
 "f3_xa" "F3 X A" "f3x" 100 -100 100 "f3a" 100 -100 100
+"cens_dx" "CENS X" "censppac.x" 400 -100 100
+"cens_dy" "CENS Y" "censppac.y" 400 -100 100
+"cens_dpos" "CENS Position"    "censppac.x" 400 -100 100 "censppac.y" 400 -100 100
+"censp_x" "CENS PX" "censx" 400 -100 100
+"censp_y" "CENS PY" "censy" 400 -100 100
+"censp_pos" "CENS Proj. Position"    "censx" 400 -100 100 "censy" 400 -100 100
+"stark_target_x" "STARK Target X" "starkx" 400 -100 100 "censppac.x != 0"
+"stark_target_y" "STARK Target Y" "starky" 400 -100 100 "censppac.x != 0"
+"stark_target_xy" "STARK Target XY" "starkx" 400 -100 100 "starky" 400 -100 100 "censppac.x != 0"
+"stark_target2_x" "STARK Target X" "stark2x" 400 -100 100
+"stark_target2_y" "STARK Target Y" "stark2y" 400 -100 100
+"stark_target2_xy" "STARK Target XY" "stark2x" 400 -100 100 "stark2y" 400 -100 100 
+"f3censa" "Beam X Angle" "f3censa" 400 -50 50 "censppac.x != 0"
+"f3censb" "Beam Y Angle" "f3censb" 400 -50 50 "censppac.x != 0"
+"f3censab" "Beam XY Angle" "f3censa" 400 -50 50 "f3censb" 400 -50 50 "censppac.x != 0"
 "f2ssd_adc" "F2 SSD ADC" "f2ssd.ch" 16 0 16 "f2ssd.adc" 410 0 4100
 "f2ssd_e" "F2 SSD E" "f2ssd.ch" 16 0 16 "f2ssd.acal" 640 0 140
 "f3ssd_adc" "F3 SSD ADC" "f3ssd.ch" 16 0 16 "f3ssd.adc" 410 0 4100
@@ -40,6 +56,7 @@
 "pid_3pp" "PID_F3_SSD_PPAC;TOF [ns];dE [MeV]" "f3uppt.tsum - f2dppt.tsum + 103.8" 1000 150 500 "Max$(f3ssd.acal)" 1000 0 120
 "pid_2" "PID with F2;A/Q;Z" "AoQ" 400 1.5 4 "Z2" 400 0 20
 "pid_3" "PID with F3;A/Q;Z" "AoQ" 400 1.8 3.1 "Z3" 400 3 14
+"pid_3pla" "PID with F3;A/Q;Z" "AoQ" 400 1.8 3.1 "Z3pla" 400 3 14
 "f1uppac_eff" "F1 U PPAC Eff." "f1uppac@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
 "f1uppacx_eff" "F1 UX PPAC Eff." "f1uppacx@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"
 "f1dppac_eff" "F1 D PPAC Eff." "f1dppac@.GetEntriesFast() > 0" 2 0 2 "f2dppac@.GetEntriesFast() > 0"

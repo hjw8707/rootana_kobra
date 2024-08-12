@@ -82,10 +82,12 @@ public:
   void DrawPIDC(Int_t show = 0, const char *cut = NULL); // show = 0: nothing, 1: count, 2: pps
 
   void DrawXDist(const char *cut = NULL);
+  void DrawMomDist(const char *cut = NULL, Bool_t flagRate = false);
   void DrawPPACEff(const char *cut = NULL);
   void PrintSetting(std::ostream &out = std::cout);
 
-  void CountIsotopes();  
+  void CountIsotopes();
+  void RateIsotopes();  
   
   void AddCut(const char* filename);
   void AddCuts(const char* path);
@@ -97,9 +99,11 @@ public:
   Long64_t GetEntries(const char* selection);
 
   TGraph* PPACRate();
+  TGraph* TriggerRate();
 
-  void ApplyOffsetToCut(Double_t xoff, Double_t yoff = 0);
-
+  void ApplyOffsetToCut(Double_t xoff, Double_t yoff = 0, Double_t xscale = -1, Double_t yscale = -1);
+  void SetCutStyle(Int_t color = 1, Int_t width = 1, Int_t style = 2);
+  
   TCutG* Make2DCut(const char* name, const char* title);
 
   inline THeader* GetHeader(int i) { return headers[i]; }
