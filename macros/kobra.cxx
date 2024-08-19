@@ -16,6 +16,7 @@
 #include "TSelectorEntries.h"
 #include "TColor.h"
 #include "TGaxis.h"
+#include "TMath.h"
 
 #include "THeader.hxx"
 #include "TScalerData.hxx"
@@ -30,21 +31,30 @@
 
 ClassImp(KOBRA);
 
-std::vector<int> KOBRA::o18 = {69, 70, 71, 72, 73,
-			       75, 76, 77, 78, 79, 80, 81, 82,
-			       84, 85};
-std::vector<int> KOBRA::o19 = {102, 103, 104, 105,
-			       107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
-			       121, 122};
-std::vector<int> KOBRA::o20 = {130, 131, 132, 133, 134, 135, 136, 137,
-			       147, 148,
-			       150,
-			       152, 153,
-			       156, 157};
+std::vector<int> KOBRA::o18 = {251, 252, 253, 254};
+std::vector<int> KOBRA::o19 = {259, 260, 261,262, 263, 264, 265, 266, 267,
+271, 272, 273,274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290,
+291, 292, 293, 294, 295, 296, 297, 298, 299 };
 
-std::vector<int> KOBRA::o21 = {170, 171, 172,
-			       180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191};
+std::vector<int> KOBRA::o20 = {304, 304, 306, 307, 308, 309, 310};
 
+std::vector<int> KOBRA::o21 = {316, 
+318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345,
+347};
+
+std::vector<int> KOBRA::o22 = { 223, 224, 225, 226, // Right after the newly adjusted primary beam
+  348, 349, 350, 351, 352,
+361, 362,
+364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376,
+378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400,
+402, 403, 404};
+
+std::vector<int> KOBRA::ne24 = { 410, 411, 412, 413, 415};
+
+std::vector<int> KOBRA::ne25 = {420, 421, 422};
+
+std::vector<int> KOBRA::ne26 = {425, 426, 427, 428, 429, 430, 431,
+433, 434, 435, 436, 437, 438, 439, 440 };
 
 KOBRA::KOBRA()
 {
@@ -99,7 +109,7 @@ KOBRA::~KOBRA()
 void KOBRA::Initilize()
 {
   tree = new TChain("kobra", "kobra");
-  centBrho = 0;
+  centBrho = 1.5065;
   tofOff = 0;
   useF1 = false;
   useF2orF3 = false;
@@ -413,6 +423,7 @@ void KOBRA::AddCut(const char* filename) {
 
   void KOBRA::AddCuts(const char* path) {
 
+    cutgs.clear();
     TSystemDirectory dir(path, path);
 
     TList* filesList = dir.GetListOfFiles();
@@ -430,6 +441,7 @@ void KOBRA::AddCut(const char* filename) {
       }
     }
 
+    SetCutStyle(2,2);
   }
 
 void KOBRA::DrawPID0(const char *cut)
@@ -473,7 +485,7 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
     else
       cuts += Form("&& %s", cut);
   auto c1 = new TCanvas(Form("cpid_r%d",runNs.front()),"PID",1600,1200);
-  tree->Draw(Form("Z:AoQ>>hpidc_r%d(400,2.1,3.1,400,4,14)",runNs.front()), cuts.c_str(), "col");
+  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,1.8,3.2,500,3,14)",runNs.front()), cuts.c_str(), "col");
 
   TH2 *h2 = static_cast<TH2*>(gDirectory->Get(Form("hpidc_r%d",runNs.front())));
 
@@ -631,7 +643,7 @@ void KOBRA::DrawXDist(const char *cut) {
 
 }
 
-void KOBRA::DrawMomDist(const char *cut, Bool_t flagRate) {
+TH1* KOBRA::DrawMomDist(const char *cut, Bool_t flagRate, Bool_t flagDraw, Double_t binSize, Bool_t flagOff) {
   TLatex text;
   text.SetTextFont(62);
   text.SetTextSize(0.03);
@@ -642,11 +654,25 @@ void KOBRA::DrawMomDist(const char *cut, Bool_t flagRate) {
   else cutname = "nocut";
 
   gStyle->SetOptStat(0);
-  auto c1 = new TCanvas(Form("cmd_r%d_%s",runNs.front(),cutname.Data()),
-			"Mom. Distribution",1200,800);
-  tree->Draw(Form("f1x>>hmd_r%d_%s(16,-160,160)",runNs.front(),cutname.Data()),
+
+  Int_t nBin = TMath::Nint(4/binSize)*2;
+  if (flagOff) nBin--;
+
+  Double_t lim = nBin/2*binSize*40;
+  if (flagOff) lim -= 20;
+    
+  TString drawOpt;
+  if (flagDraw) {
+    auto c1 = new TCanvas(Form("cmd_r%d_%s",runNs.front(),cutname.Data()),
+			  "Mom. Distribution",1200,800);
+    drawOpt = "text0";}
+  else drawOpt = "goff";
+  
+  tree->Draw(Form("f1x>>hmd_r%d_%s(%d,%f,%f)",runNs.front(),cutname.Data(),
+		  nBin, -lim, lim),
 	     cut,
-	     "text0");
+	     drawOpt.Data());
+  
   gStyle->SetPaintTextFormat();
   auto h1 = static_cast<TH1*>(gDirectory->Get(Form("hmd_r%d_%s",runNs.front(),cutname.Data())));
   Double_t time = GetElapsedTime();
@@ -663,11 +689,6 @@ void KOBRA::DrawMomDist(const char *cut, Bool_t flagRate) {
   h1->SetTitle(Form("F1 X for %s;F1 X [mm];",runstr.c_str()));
 
   h1->SetMarkerSize(2);
-  gPad->GetCanvas()->Update();
-  auto max = gPad->GetUymax();
-  TGaxis *axis = new TGaxis(-160, max, 160, max, -4, 4, 510, "-L");
-  axis->SetLabelSize(0.03);
-  //  axis->Draw();
 
   std::string timestr;
   Int_t itime = time;
@@ -677,9 +698,32 @@ void KOBRA::DrawMomDist(const char *cut, Bool_t flagRate) {
     timestr = Form("%02d:%02d", itime/60, itime%60);
   else
     timestr = "";
-      
-  text.DrawLatexNDC(0.15,0.92,Form("Brho: %.4f Tm / Time: %.0f sec. or %s",GetBrho(),time, timestr.c_str()));
+
+  if (flagDraw)
+    text.DrawLatexNDC(0.15,0.92,Form("Brho: %.4f Tm / Time: %.0f sec. or %s",GetBrho(),time, timestr.c_str()));
+  return h1;
 }
+
+TGraphErrors* KOBRA::GetMomDistGraph(Double_t center, const char *cut, Double_t binSize, Double_t limit, Bool_t flagOff) {
+  auto h1 = DrawMomDist(cut, true, false, binSize, flagOff);
+
+  TGraphErrors *gr = new TGraphErrors;
+  gr->SetTitle(Form("Momentum Distribution of %s;Momentum Dispersion (%%);Rate per Mom. %% (pps/%%)",cut));
+
+  tree->Draw("f1uppacx@.GetEntriesFast() > 0>>hf1uppacxeff(2,0,2)","f3dpla@.GetEntriesFast() > 0","goff");
+  auto heff = static_cast<TH1*>(gDirectory->Get("hf1uppacxeff"));
+  auto f1ppaceff = heff->GetMean();
+  
+  for (Int_t i = 1 ; i <= h1->GetNbinsX() ; i++) {
+    Double_t curPoint = h1->GetBinCenter(i)/40.;
+    if (TMath::Abs(curPoint) > limit) continue;
+    gr->AddPoint(curPoint+center, h1->GetBinContent(i) / f1ppaceff / binSize);
+    gr->SetPointError(gr->GetN()-1, binSize*0.5, h1->GetBinError(i));
+  }
+  gr->SetMarkerStyle(20);
+  gr->SetMarkerColor(1);
+  gr->SetMarkerSize(2);
+  return gr;}
 
 Double_t KOBRA::GetElapsedTime() {
 

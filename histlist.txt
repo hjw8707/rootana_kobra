@@ -73,3 +73,8 @@
 "f2dppac_eff_ssd" "F2 D PPAC Eff." "f2dppac@.GetEntriesFast() > 0" 2 0 2  "de3 > 0"
 "f3uppac_eff_ssd" "F3 U PPAC Eff." "f3uppac@.GetEntriesFast() > 0" 2 0 2  "de3 > 0"
 "f3dppac_eff_ssd" "F3 D PPAC Eff." "f3dppac@.GetEntriesFast() > 0" 2 0 2   "de3 > 0"
+"f1uppac_eff_pla" "F1 U PPAC Eff." "f1uppac@.GetEntriesFast() > 0" 2 0 2 "de3pla > 0"
+"f1uppacx_eff_pla" "F1 UX PPAC Eff." "f1uppacx@.GetEntriesFast() > 0" 2 0 2 "de3pla > 0"
+"f2dppac_eff_pla" "F2 D PPAC Eff." "f2dppac@.GetEntriesFast() > 0" 2 0 2  "de3pla > 0"
+"f3uppac_eff_pla" "F3 U PPAC Eff." "f3uppac@.GetEntriesFast() > 0" 2 0 2  "de3pla > 0"
+"f3dppac_eff_pla" "F3 D PPAC Eff." "f3dppac@.GetEntriesFast() > 0" 2 0 2   "de3pla > 0"

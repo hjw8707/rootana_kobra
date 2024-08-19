@@ -6,6 +6,7 @@
 #include "TCutG.h"
 #include "TClonesArray.h"
 #include "TGraph.h"
+#include "TGraphErrors.h"
 #include "TPad.h"
 
 
@@ -66,7 +67,8 @@ public:
   inline Bool_t GetUseSSDorPla() { return useSSDorPla; }
 
   inline void SetUseSSD() { SetUseSSDorPla(true); }
-  inline void SetUsePla() { SetUseSSDorPla(false); }
+  inline void SetUsePla() { SetUseSSDorPla(false); AddCuts("./cut_pla"); }
+  //inline void SetUsePla() { SetUseSSDorPla(false); }
   
   inline void SetZ(Double_t a, Double_t b) { tree->SetAlias("Z", Form("%f*z+%f", a, b)); }
   void SetZ(Int_t iz1, Double_t z1, Int_t iz2, Double_t z2);
@@ -82,7 +84,8 @@ public:
   void DrawPIDC(Int_t show = 0, const char *cut = NULL); // show = 0: nothing, 1: count, 2: pps
 
   void DrawXDist(const char *cut = NULL);
-  void DrawMomDist(const char *cut = NULL, Bool_t flagRate = false);
+  TH1* DrawMomDist(const char *cut = NULL, Bool_t flagRate = false, Bool_t flagDraw = true, Double_t binSize = 0.5, Bool_t flagOff = false);
+  TGraphErrors* GetMomDistGraph(Double_t center = 0, const char *cut = NULL, Double_t binSize = 0.5, Double_t limit = 4, Bool_t flagOff = false);
   void DrawPPACEff(const char *cut = NULL);
   void PrintSetting(std::ostream &out = std::cout);
 
@@ -114,7 +117,7 @@ public:
 
   ////////////////////////////////////////////////////////////
   // run group for each isotope (defined at kobra.cxx)
-  static std::vector<int> o18, o19, o20, o21;
+  static std::vector<int> o18, o19, o20, o21, o22, ne24, ne25, ne26;
   ////////////////////////////////////////////////////////////
   
 private:
