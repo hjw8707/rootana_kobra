@@ -171,7 +171,7 @@
   gr_all->Draw("AP");
   TF1 *f1 = new TF1("f1","gaus",-15,15);
   f1->SetParameters(0.526733, -2.17686, 4.67626);
-  for (int i = 0 ; i < 200 ; i++)
+  for (int i = 0 ; i < 100 ; i++)
   gr_all->Fit(f1);
   */
 }
