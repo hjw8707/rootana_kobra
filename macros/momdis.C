@@ -44,6 +44,7 @@
   ko7.SetUsePla();
   ko7.ApplyOffsetToCut(0.04);
   auto gr7 = ko7.GetMomDistGraph(-10, isotope, binSize, 1);
+  
   for (Int_t i = 0 ; i < gr7->GetN() ; i++)
     gr7->GetY()[i] *= 1.735;
 

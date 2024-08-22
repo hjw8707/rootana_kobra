@@ -98,6 +98,14 @@ std::vector<std::string> KOBRA::o22_iso = { // ApplyOffsetToCut(-0.03)
     "na27", "na28",
     "mg29"};
 
+std::vector<std::string> KOBRA::ne24_iso = { // ApplyOffsetToCut(-0.005)
+    "ne24", "na25", "na26", "mg28", "al29", "al30"};
+
+std::vector<std::string> KOBRA::ne25_iso = { // ApplyOffsetToCut(-0.005, -0.1)
+    "ne24", "na25", "na26", "na27", "mg28", "mg29", "al30", "al31"};
+
+std::vector<std::string> KOBRA::ne26_iso = { // ApplyOffsetToCut(-0.005, -0.1)
+    "f22", "f23", "ne24", "na25", "na26", "na27", "mg28", "mg29", "al30", "al31"};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -113,6 +121,17 @@ std::vector<int> KOBRA::mom_04 = {610, 611, 612};                    // ApplyOff
 std::vector<int> KOBRA::mom00 = {601, 602, 603, 604};                // ApplyOffsetToCut(0, 0)
 std::vector<int> KOBRA::mom04 = {605, 606, 607};                     // ApplyOffsetToCut(-0.005,0.1)
 std::vector<int> KOBRA::mom07 = {590, 592, 593, 594, 595, 596, 598}; // ApplyOffsetToCut(-0.01,0.2)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// static variables for mom distribution runs
+std::vector<int> KOBRA::mon_01 = {738, 739, 740};                 // ApplyOffsetToCut(0, 0)
+std::vector<int> KOBRA::mon00 = {706, 707, 708};                 // ApplyOffsetToCut(0, 0)
+std::vector<int> KOBRA::mon01 = {713, 714, 715, 716, 717, 718, 719};  // ApplyOffsetToCut(-0.005)
+std::vector<int> KOBRA::mon02 = {720, 721, 722, 723, 724, 725};            // ApplyOffsetToCut(-0.005)
+std::vector<int> KOBRA::mon04 = {726, 727, 728, 729, 730 };            // ApplyOffsetToCut(-0.005)
+std::vector<int> KOBRA::mon06 = {731, 732, 733 };            // ApplyOffsetToCut(-0.01)
+std::vector<int> KOBRA::mon10 = {734, 735, 736, 737};            // ApplyOffsetToCut(-0.02)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 KOBRA::KOBRA()
@@ -179,7 +198,7 @@ void KOBRA::Initilize()
   gStyle->SetPadGridX(true);
   gStyle->SetPadGridY(true);
 
-  gStyle->SetCanvasDefX(2600);
+  gStyle->SetCanvasDefX(100);
   gStyle->SetCanvasDefY(100);
   //  gStyle->SetPalette(kPastel);
 
@@ -192,6 +211,26 @@ void KOBRA::Initilize()
   Double_t blue[NRGBs] = {0.51, 1.00, 0.12, 0.00, 0.00};
   TColor::CreateGradientColorTable(NRGBs, stops, red, green, blue, NCont);
   gStyle->SetNumberContours(NCont);
+
+  //////////////////////////////////////////////////////////////
+  // F1 Up PPACX Efficiency Table
+  std::map<Int_t, Double_t> eff_b = {{595, 0.59661017}};
+  std::map<Int_t, Double_t> eff_c = {{595, 0.82855191}};
+  std::map<Int_t, Double_t> eff_n = {{550, 0.842323}, {575, 0.92880259}, {585, 0.75492958}, {595, 0.90255720}};
+  std::map<Int_t, Double_t> eff_o = {{550, 0.73289565}, {575, 0.91565041}, {585, 0.85066247}, {595, 0.95522972}};
+  std::map<Int_t, Double_t> eff_f = {{550, 0.56216995}, {575, 0.87934893}, {585, 0.89564770}, {595, 0.95945083}};
+  std::map<Int_t, Double_t> eff_ne = {{550, 0.40854047}, {575, 0.82282681}, {585, 0.93298634}, {595, 0.96422389}};
+  std::map<Int_t, Double_t> eff_na = {{550, 0.25688073}, {575, 0.72759227}, {585, 0.94747082}, {595, 0.96993988}};
+  std::map<Int_t, Double_t> eff_mg = {{550, 0.91540785}};
+  effF1UPPACX["b"] = eff_b;
+  effF1UPPACX["c"] = eff_c;
+  effF1UPPACX["n"] = eff_n;
+  effF1UPPACX["o"] = eff_o;
+  effF1UPPACX["f"] = eff_f;
+  effF1UPPACX["ne"] = eff_ne;
+  effF1UPPACX["na"] = eff_na;
+  effF1UPPACX["mg"] = eff_mg;
+  //////////////////////////////////////////////////////////////
 }
 
 Bool_t KOBRA::LoadTree(const char *filename)
@@ -435,6 +474,15 @@ void KOBRA::SetAlias()
   tree->SetAlias("Z", "21.540118*z+0.444610");
   //    else {
   //      tree->SetAlias("Z","4.8037*z-1.8");}
+
+  ////////////////////////////////////////////
+  // de-tof cut
+  tree->SetAlias("detof", "de-0.12*(tof-230)");
+  tree->SetAlias("detof_f", "abs(detof - 25) < 2.1");
+  tree->SetAlias("detof_o", "abs(detof - 20) < 2.5");
+  tree->SetAlias("detof_n", "abs(detof - 15) < 2.");
+  tree->SetAlias("detof_c", "abs(detof - 11) < 2.");
+  ////////////////////////////////////////////
 }
 
 void KOBRA::AddCut(const char *filename)
@@ -564,7 +612,7 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
     else
       cuts += Form("&& %s", cut);
   auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
-  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,1.8,3.2,500,3,14)", runNs.front()), cuts.c_str(), "col");
+  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,1.8,3.2,500,5,16)", runNs.front()), cuts.c_str(), "col");
 
   TH2 *h2 = static_cast<TH2 *>(gDirectory->Get(Form("hpidc_r%d", runNs.front())));
 
@@ -598,7 +646,7 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
       TString zzz = title(2, title.Length());
       Int_t count = GetEntries(cut->GetName());
       text.SetTextFont(62);
-      text.SetTextColor(12);
+      text.SetTextColor(kRed - 4);
       text.SetTextSize(0.03);
       text.SetTextAlign(22);
       text.DrawLatex(x, y + 0.1, Form("^{%s}%s", aaa.Data(), zzz.Data()));
@@ -842,19 +890,52 @@ TGraphErrors *KOBRA::GetMomDistGraph(Double_t center, const char *cut, Double_t 
   return gr;
 }
 
-std::vector<TGraphErrors *> KOBRA::GetMomDistGraphs(Double_t center, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff)
+std::vector<TGraphErrors *> KOBRA::GetMomDistGraphs(Double_t center, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff, Int_t bias)
 {
   Double_t scale;
-  scale = 1. / (GetPPACEff(1) * GetPPACEff(2) * GetPPACEff(3) * GetLiveTime());
+  scale = 1. / (GetPPACEff(2) * GetPPACEff(3) * GetLiveTime());
 
   std::vector<TGraphErrors *> momgraphs;
   for (const auto it : cutgs)
   {
-    TGraphErrors *gr = GetMomDistGraph(center, it.first.c_str(), binSize, leftLimit, rightLimit, flagOff, scale);
+    std::string cutname = it.first;
+    cutname.erase(std::remove_if(cutname.begin(), cutname.end(), [](char c)
+                                 { return std::isdigit(c); }),
+                  cutname.end());
+    std::cout << cutname << " " << GetPPACEff(1, NULL, true, cutname, bias) << std::endl;
+    // scale *= (1 / GetPPACEff(1, NULL, true, cutname, bias));
+    std::cout << scale << std::endl;
+    TGraphErrors *gr = GetMomDistGraph(center, it.first.c_str(), binSize,
+                                       leftLimit, rightLimit, flagOff,
+                                       scale / GetPPACEff(1, NULL, true, cutname, bias));
     momgraphs.push_back(gr);
   }
   return momgraphs;
 }
+
+
+std::vector<TGraphErrors *> KOBRA::GetMomDistGraphsNe(std::vector<std::string> iso, Double_t center, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff, Int_t bias)
+{
+  Double_t scale;
+  scale = 1. / (GetPPACEff(2) * GetPPACEff(3) * GetLiveTime());
+
+  std::vector<TGraphErrors *> momgraphs;
+  for (const auto it : iso)
+    {
+      std::string cutname = it;
+      cutname.erase(std::remove_if(cutname.begin(), cutname.end(), [](char c)
+								   { return std::isdigit(c); }),
+	cutname.end());
+      // scale *= (1 / GetPPACEff(1, NULL, true, cutname, bias));
+      //      std::cout << scale << std::endl;
+      TGraphErrors *gr = GetMomDistGraph(center, it.c_str(), binSize,
+					 leftLimit, rightLimit, flagOff,
+					 scale / GetPPACEff(1, NULL, true, cutname, bias));
+      momgraphs.push_back(gr);
+    }
+  return momgraphs;
+}
+
 
 Double_t KOBRA::GetElapsedTime()
 {
@@ -1102,8 +1183,14 @@ TCutG *KOBRA::Make2DCut(const char *name, const char *title)
   return cut;
 }
 
-Double_t KOBRA::GetPPACEff(Int_t id, const char *cut)
+Double_t KOBRA::GetPPACEff(Int_t id, const char *cut, bool flagTable, std::string iso, int bias)
 {
+  if (flagTable)
+  {
+    auto eff = effF1UPPACX[iso][bias];
+    if (eff > 0)
+      return eff;
+  }
   TString ccut = "de > 0";
   if (cut)
   {
@@ -1326,18 +1413,15 @@ void KOBRA::PrintCutCoord(TCutG *cut, Double_t xoff, Double_t yoff)
   }
 }
 
-void KOBRA::AnaAtOnceMom(const char *name, Double_t delta)
+void KOBRA::AnaAtOnceMom(const char *name, Double_t delta,  std::vector<std::string> iso)
 {
   Double_t livetime;
   Double_t eff1, eff2, eff3;
 
   std::vector<int> yield;
-
-  std::vector<std::string> iso;
-  for (const auto it : cutgs)
-  {
-    iso.push_back(it.first);
-  }
+  if (iso.empty())
+    for (const auto it : cutgs)
+      iso.push_back(it.first);
 
   //////////////////////////////////////////////////////////////
   // PID plot
@@ -1370,18 +1454,18 @@ void KOBRA::AnaAtOnceMom(const char *name, Double_t delta)
   std::vector<std::vector<Double_t>> allmeans;
   std::vector<std::vector<Double_t>> allsigmas;
   for (const auto &it : iso)
-  {
-    allhists.push_back(DrawXDist(it.c_str(), false));
-    std::vector<Double_t> means;
-    std::vector<Double_t> sigmas;
-    for (const auto &it2 : allhists.back())
     {
-      means.push_back(it2->GetMean());
-      sigmas.push_back(it2->GetStdDev());
+      allhists.push_back(DrawXDist(it.c_str(), false));
+      std::vector<Double_t> means;
+      std::vector<Double_t> sigmas;
+      for (const auto &it2 : allhists.back())
+	{
+	  means.push_back(it2->GetMean());
+	  sigmas.push_back(it2->GetStdDev());
+	}
+      allmeans.push_back(means);
+      allsigmas.push_back(sigmas);
     }
-    allmeans.push_back(means);
-    allsigmas.push_back(sigmas);
-  }
 
   // PDF saving
   TCanvas *cxdist = new TCanvas("cxdist", "X Dist", 1600, 2400);
@@ -1389,19 +1473,19 @@ void KOBRA::AnaAtOnceMom(const char *name, Double_t delta)
 
   int i = 0;
   for (const auto &it : allhists)
-  {
-    for (const auto &itt : it)
     {
-      cxdist->cd((i % 24) + 1);
-      itt->Draw();
-      i++;
+      for (const auto &itt : it)
+	{
+	  cxdist->cd((i % 24) + 1);
+	  itt->Draw();
+	  i++;
+	}
+      if (i % 24 == 0)
+	{
+	  cxdist->Print(Form("analysis/%s/xdist.pdf%s", name, i == 24 ? "(" : ""));
+	  cxdist->Clear("D");
+	}
     }
-    if (i % 24 == 0)
-    {
-      cxdist->Print(Form("analysis/%s/xdist.pdf%s", name, i == 24 ? "(" : ""));
-      cxdist->Clear("D");
-    }
-  }
   cxdist->Print(Form("analysis/%s/xdist.pdf%s", name, i < 24 ? "" : ")"));
   //////////////////////////////////////////////////////////////
 
@@ -1415,14 +1499,14 @@ void KOBRA::AnaAtOnceMom(const char *name, Double_t delta)
   ss << "\n";
   ss << "Isotopes   \t Yield \t F1 Mean \t F1 Sigma \t F2 Mean \t F2 Sigma \t F3 Mean \t F3 Sigma \n";
   for (size_t i = 0; i < iso.size(); i++)
-  {
-    ss << Form("%8s \t", iso[i].c_str());
-    ss << Form("%8lld \t", tree->GetEntries(iso[i].c_str()));
-    ss << Form("%8.5f \t %8.5f \t", allmeans[i][0], allsigmas[i][0]);
-    ss << Form("%8.5f \t %8.5f \t", allmeans[i][1], allsigmas[i][1]);
-    ss << Form("%8.5f \t %8.5f \t", allmeans[i][3], allsigmas[i][3]);
-    ss << "\n";
-  }
+    {
+      ss << Form("%8s \t", iso[i].c_str());
+      ss << Form("%8lld \t", tree->GetEntries(iso[i].c_str()));
+      ss << Form("%8.5f \t %8.5f \t", allmeans[i][0], allsigmas[i][0]);
+      ss << Form("%8.5f \t %8.5f \t", allmeans[i][1], allsigmas[i][1]);
+      ss << Form("%8.5f \t %8.5f \t", allmeans[i][3], allsigmas[i][3]);
+      ss << "\n";
+    }
 
   std::ofstream fout(Form("analysis/%s/result.txt", name));
   std::cout << ss.str();
@@ -1430,6 +1514,7 @@ void KOBRA::AnaAtOnceMom(const char *name, Double_t delta)
   fout.close();
   //////////////////////////////////////////////////////////////
 }
+
 
 void KOBRA::MomDistAnalysis()
 {
@@ -1457,6 +1542,7 @@ void KOBRA::MomDistAnalysis()
       "mom_14", "mom_12", "mom_10",
       "mom_08", "mom_07", "mom_06", "mom_05", "mom_04",
       "mom00", "mom04", "mom07"};
+  std::vector<Int_t> bias = {550, 550, 550, 550, 550, 575, 550, 585, 595, 595, 595};
   std::vector<Double_t>
       xoff = {0.04, 0.04, 0.035, 0.025, 0.025, 0.02, 0.015, 0.015, 0, -0.005, -0.01};
   std::vector<Double_t> yoff = {0, 0, 0, 0, 0, -0.1, -0.1, -0.1, 0, 0.1, 0.2};
@@ -1472,9 +1558,10 @@ void KOBRA::MomDistAnalysis()
     ko = new KOBRA(runs[j]);
     ko->ApplyOffsetToCut(xoff[j], yoff[j]);
     ko->AnaAtOnceMom(runnames[j].c_str(), cens[j]);
-    auto grs = ko->GetMomDistGraphs(cens[j], bins[j], lefts[j], rights[j], offs[j]);
+    auto grs = ko->GetMomDistGraphs(cens[j], bins[j], lefts[j], rights[j], offs[j], bias[j]);
     for (size_t i = 0; i < mgs.size(); i++)
     {
+      // size_t i = 25;
       grs[i]->SetMarkerStyle(20 + j);
       grs[i]->SetMarkerColor(j + 1);
       grs[i]->SetMarkerSize(0.7);
@@ -1553,4 +1640,134 @@ void KOBRA::CrossSectionAnalysis()
     ko->AnaAtOnce(runnames[j].c_str(), isos[j]);
     delete ko;
   }
+}
+
+void KOBRA::PPACEffCurve()
+{
+
+  std::vector<Int_t> runs = {162, 163, 164, 165, 166, 167};
+  std::vector<Double_t> bias = {565, 575, 585, 595, 600, 605};
+  std::vector<Double_t> eff_c, eff_n, eff_o, eff_f;
+
+  for (const auto &it : runs)
+  {
+    KOBRA ko(it);
+    eff_c.push_back(ko.GetPPACEff(1, "detof_c"));
+    eff_n.push_back(ko.GetPPACEff(1, "detof_n"));
+    eff_o.push_back(ko.GetPPACEff(1, "detof_o"));
+    eff_f.push_back(ko.GetPPACEff(1, "detof_f"));
+  }
+
+  TGraph *gr_c = new TGraph(bias.size(), bias.data(), eff_c.data());
+  TGraph *gr_n = new TGraph(bias.size(), bias.data(), eff_n.data());
+  TGraph *gr_o = new TGraph(bias.size(), bias.data(), eff_o.data());
+  TGraph *gr_f = new TGraph(bias.size(), bias.data(), eff_f.data());
+
+  gr_c->SetMarkerColor(1);
+  gr_c->SetMarkerStyle(20);
+  gr_c->SetLineColor(1);
+  gr_n->SetMarkerColor(2);
+  gr_n->SetMarkerStyle(21);
+  gr_n->SetLineColor(2);
+  gr_o->SetMarkerColor(3);
+  gr_o->SetMarkerStyle(22);
+  gr_o->SetLineColor(3);
+  gr_f->SetMarkerColor(4);
+  gr_f->SetMarkerStyle(23);
+  gr_f->SetLineColor(4);
+
+  TMultiGraph *mgr = new TMultiGraph("f1uppac_eff", "F1 Up PPAC Eff.");
+  mgr->Add(gr_c);
+  mgr->Add(gr_n);
+  mgr->Add(gr_o);
+  mgr->Add(gr_f);
+
+  mgr->Draw("APC");
+}
+
+
+void KOBRA::NeMomDistAnalysis(bool flagFast)
+{
+  KOBRA *ko;
+  ///////////////////////////////////////////////////////////////////
+  // TMultiGraphs definitions
+  std::vector<TMultiGraph *> mgs;
+  std::vector<std::string> cutiso = { "o20", "o21","f21", "f22", "f23",
+				      "ne23", "ne24", "ne25", "na25", "na26", "mg27", "mg28"};
+  
+  for (const auto it : cutiso)
+    {
+      auto mg = new TMultiGraph(it.c_str(),
+				Form("Mom. Distribution of %s;Delta [%%];Differental Rate [pps/%%]", it.c_str()));
+      mgs.push_back(mg);
+    }
+  ///////////////////////////////////////////////////////////////////
+
+  ///////////////////////////////////////////////////////////////////
+  // Loop for all settings
+  std::vector<std::vector<int>> runs = {mon_01, mon00, mon01, mon02, mon04, mon06, mon10};
+  std::vector<std::string> runnames = {"mon_01", "mon00", "mon01", "mon02", "mon04", "mon06", "mon10"};
+  std::vector<Int_t> bias = {0, 0, 0, 0, 0, 0, 0}; 
+  std::vector<Double_t>
+    xoff = {0, 0., -0.005, -0.005, -0.005, -0.01, -0.02};
+  std::vector<Double_t> yoff = {0, 0, 0, 0, 0, 0, 0};
+  std::vector<Double_t> brho = {1.2945, 1.3076, 1.3207, 1.3337, 1.3599, 1.3861, 1.4384 };
+  std::vector<Double_t> cens = {-1, 0, 1, 2, 4, 6, 10};
+  std::vector<Double_t> bins = {0.4, 0.5, 0.4, 0.5, 0.5, 0.5, 0.5};
+  std::vector<Double_t> lefts = {-0.4, -0.5, -0.5, -1, -2, -3, -3};
+  std::vector<Double_t> rights = {0.4, 0.5, 0.5, 1, 2, 3, 3};
+  std::vector<bool> offs = {false, false, false, false, false, false, false};
+
+  for (size_t j = 0; j < runs.size(); j++)
+    {
+      ko = new KOBRA(runs[j]);
+      ko->SetBrho(brho[j]);
+      ko->ApplyOffsetToCut(xoff[j], yoff[j]);
+      if (!flagFast)
+	ko->AnaAtOnceMom(runnames[j].c_str(), cens[j], cutiso);
+      auto grs = ko->GetMomDistGraphsNe(cutiso, cens[j], bins[j], lefts[j], rights[j], offs[j], bias[j]);
+      for (size_t i = 0; i < mgs.size(); i++)
+	{
+	  // size_t i = 25;
+	  grs[i]->SetMarkerStyle(20 + j);
+	  grs[i]->SetMarkerColor(j + 1);
+	  grs[i]->SetMarkerSize(0.7);
+	  mgs[i]->Add(grs[i]);
+	}
+      delete ko;
+    }
+  ///////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////////
+  // Drawing
+  // PDF saving
+  TCanvas *cxdist = new TCanvas("cmdist", "Mom Dist", 1200, 1600);
+  cxdist->Divide(3, 4);
+
+  const int nhist = 12;
+  int i = 0;
+  for (const auto &it : mgs)
+    {
+      cxdist->cd((i % nhist) + 1);
+      it->Draw("AP");
+      i++;
+      if (i % nhist == 0)
+	{
+	  //      cxdist->Print(Form("analysis/nemomdist.pdf%s", i == nhist ? "(" : ""));
+	  //cxdist->Clear("D");
+	}
+    }
+  cxdist->Print(Form("analysis/nemomdist.pdf%s", i < nhist ? "" : ")"));
+  /////////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////////
+  // Root file saving
+  TFile *file = new TFile("analysis/nemomdist.root", "RECREATE");
+  for (const auto &it : mgs)
+    {
+      it->Write();
+    }
+  file->Close();
+  delete file;
+  /////////////////////////////////////////////////////////////////////
 }
