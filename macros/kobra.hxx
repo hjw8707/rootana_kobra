@@ -114,14 +114,16 @@ public:
   TH1 *DrawMomDist(const char *cut = NULL, Bool_t flagRate = false, Bool_t flagDraw = true, Double_t binSize = 0.5, Bool_t flagOff = false);
   TGraphErrors *GetMomDistGraph(Double_t center = 0, const char *cut = NULL, Double_t binSize = 0.5,
                                 Double_t leftLimit = -4, Double_t right = 4,
-                                Bool_t flagOff = false, Double_t scale = 1);
+                                Bool_t flagOff = false, Double_t scale = 1,
+				Bool_t flagUsef1 = true);
   std::vector<TGraphErrors *> GetMomDistGraphs(Double_t center, Double_t binSize,
                                                Double_t leftLimit, Double_t rightLimit,
                                                Bool_t flagOff, Int_t bias = 0);
   std::vector<TGraphErrors *> GetMomDistGraphsNe(std::vector<std::string> isos,
 						 Double_t center, Double_t binSize,
 						 Double_t leftLimit, Double_t rightLimit,
-						 Bool_t flagOff, Int_t bias = 0);
+						 Bool_t flagOff, Int_t bias = 0,
+						 Bool_t flagUseF1 = true);
   
   void DrawPPACEff(const char *cut = NULL);
   void PrintSetting(std::ostream &out = std::cout);
@@ -171,7 +173,9 @@ public:
 
   //////////////////////////////////////////////////////////////////////////////
   // run group for each isotope (defined at kobra.cxx)
-  static std::vector<int> mon_01, mon00, mon01, mon02, mon04, mon06, mon10;
+  static std::vector<int> mon_10, monn_08, mon_08, mon_07, mon_06, mon_05,
+    mon_04, monn_04, mon_03, mon_02, mon_01,
+    mon00, mon01, mon02, mon04, mon06, mon10;
   //////////////////////////////////////////////////////////////////////////////
   
   ////////////////////////////////////////////////////////

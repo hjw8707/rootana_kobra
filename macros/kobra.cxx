@@ -125,6 +125,16 @@ std::vector<int> KOBRA::mom07 = {590, 592, 593, 594, 595, 596, 598}; // ApplyOff
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // static variables for mom distribution runs
+std::vector<int> KOBRA::mon_10 = {775, 776, 777, 778, 779 };    // ApplyOffsetToCut(0.05)
+std::vector<int> KOBRA::mon_08 = {770, 771 }; // ppac no
+std::vector<int> KOBRA::monn_08 = {763, 764, 765 };
+std::vector<int> KOBRA::mon_07 = {780, 781 };  // ApplyOffsetToCut(0.032)
+std::vector<int> KOBRA::mon_06 = {754, 755, 756, 757, 758, 759 };
+std::vector<int> KOBRA::mon_05 = {782, 783, 784, 785 };
+std::vector<int> KOBRA::mon_04 = {788, 789, 750, 751, 752};                              // ApplyOffsetToCut(?)
+std::vector<int> KOBRA::monn_04 = {750, 751, 752};                              // ApplyOffsetToCut(?)
+std::vector<int> KOBRA::mon_03 = {786, 787};                              // ApplyOffsetToCut(0.005)
+std::vector<int> KOBRA::mon_02 = {746, 748};                              // ApplyOffsetToCut(0.005)
 std::vector<int> KOBRA::mon_01 = {738, 739, 740};                 // ApplyOffsetToCut(0, 0)
 std::vector<int> KOBRA::mon00 = {706, 707, 708};                 // ApplyOffsetToCut(0, 0)
 std::vector<int> KOBRA::mon01 = {713, 714, 715, 716, 717, 718, 719};  // ApplyOffsetToCut(-0.005)
@@ -464,7 +474,7 @@ void KOBRA::SetAlias()
     tree->SetAlias("aoqp", "brho/(3.1*ppp)");
   }
   else
-    tree->SetAlias("aoq", "1.33/(3.1*pp)");
+    tree->SetAlias("aoq", Form("%f/(3.1*pp)",centBrho));
   tree->SetAlias("AoQ", "0.941841*aoq+0.095597");
   tree->SetAlias("AoQp", "0.941841*aoqp+0.095597");
   tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
@@ -612,7 +622,7 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
     else
       cuts += Form("&& %s", cut);
   auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
-  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,1.8,3.2,500,5,16)", runNs.front()), cuts.c_str(), "col");
+  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,2.15,2.75,500,4,15)", runNs.front()), cuts.c_str(), "col");
 
   TH2 *h2 = static_cast<TH2 *>(gDirectory->Get(Form("hpidc_r%d", runNs.front())));
 
@@ -641,31 +651,34 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
 
       Double_t x = cut->GetMean(1);
       Double_t y = cut->GetMean(2);
+      Double_t xmin, xmax, ymin, ymax;
+      cut->ComputeRange(xmin, ymin, xmax, ymax);
       TString title = cut->GetTitle();
       TString aaa = title(0, 2);
       TString zzz = title(2, title.Length());
       Int_t count = GetEntries(cut->GetName());
       text.SetTextFont(62);
-      text.SetTextColor(kRed - 4);
+      text.SetTextColor(kOrange+7);
       text.SetTextSize(0.03);
       text.SetTextAlign(22);
-      text.DrawLatex(x, y + 0.1, Form("^{%s}%s", aaa.Data(), zzz.Data()));
+      text.DrawLatex(xmax, ymax, Form("^{%s}%s", aaa.Data(), zzz.Data()));
 
       text.SetTextFont(52);
-      text.SetTextColor(kRed - 4);
+      text.SetTextColor(kMagenta +1);
       text.SetTextSize(0.03);
-      text.SetTextAlign(12);
+      text.SetTextAlign(22);
       TString a;
 
       if (show == 1)
         a = Form("%d", count);
       else
-        a = Form("%.4f", float(count / time));
+        a = Form("%.3f", float(count / time));
 
-      text.DrawLatex(x + 0.005, y - 0.3, a.Data());
+      text.DrawLatex(x, y, a.Data());
     }
     std::string timestr;
     Int_t itime = time;
+    text.SetTextAlign(12);
     if (itime > 3600)
       timestr = Form("%02d:%02d:%02d", itime / 3600, (itime % 3600) / 60, itime % 60);
     else if (itime > 60)
@@ -869,20 +882,29 @@ TH1 *KOBRA::DrawMomDist(const char *cut, Bool_t flagRate, Bool_t flagDraw, Doubl
   return h1;
 }
 
-TGraphErrors *KOBRA::GetMomDistGraph(Double_t center, const char *cut, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff, Double_t scale)
+TGraphErrors *KOBRA::GetMomDistGraph(Double_t center, const char *cut, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff, Double_t scale, Bool_t flagUseF1)
 {
   auto h1 = DrawMomDist(cut, true, false, binSize, flagOff);
 
   TGraphErrors *gr = new TGraphErrors;
   gr->SetTitle(Form("Momentum Distribution of %s;Momentum Dispersion (%%);Rate per Mom. %% (pps/%%)", cut));
 
-  for (Int_t i = 1; i <= h1->GetNbinsX(); i++)
-  {
-    Double_t curPoint = h1->GetBinCenter(i) / 40.;
-    if (curPoint < leftLimit || curPoint > rightLimit)
-      continue;
-    gr->AddPoint(curPoint + center, h1->GetBinContent(i) * scale / binSize);
-    gr->SetPointError(gr->GetN() - 1, binSize * 0.5, h1->GetBinError(i));
+  if (flagUseF1) {
+    for (Int_t i = 1; i <= h1->GetNbinsX(); i++)
+      {
+	Double_t curPoint = h1->GetBinCenter(i) / 40.;
+	if (curPoint < leftLimit || curPoint > rightLimit)
+	  continue;
+	//	std::cout << cut << ", " << h1->GetBinContent(i) << " " << scale << " " << binSize <<std::endl;
+	gr->AddPoint(curPoint + center, h1->GetBinContent(i) * scale / binSize);
+	gr->SetPointError(gr->GetN() - 1, binSize * 0.5, h1->GetBinError(i) * scale / binSize);
+      }}
+  else {
+    Double_t time = GetElapsedTime();
+    Int_t event = tree->GetEntries(cut);
+    //    std::cout << cut << ": " << time << " " << event << std::endl;
+    gr->AddPoint(center, event/time * scale / binSize);
+    gr->SetPointError(0, 0.05, TMath::Sqrt(event)/time * scale / binSize); 
   }
   gr->SetMarkerStyle(20);
   gr->SetMarkerColor(1);
@@ -902,9 +924,9 @@ std::vector<TGraphErrors *> KOBRA::GetMomDistGraphs(Double_t center, Double_t bi
     cutname.erase(std::remove_if(cutname.begin(), cutname.end(), [](char c)
                                  { return std::isdigit(c); }),
                   cutname.end());
-    std::cout << cutname << " " << GetPPACEff(1, NULL, true, cutname, bias) << std::endl;
+    //    std::cout << cutname << " " << GetPPACEff(1, NULL, true, cutname, bias) << std::endl;
     // scale *= (1 / GetPPACEff(1, NULL, true, cutname, bias));
-    std::cout << scale << std::endl;
+    //    std::cout << scale << std::endl;
     TGraphErrors *gr = GetMomDistGraph(center, it.first.c_str(), binSize,
                                        leftLimit, rightLimit, flagOff,
                                        scale / GetPPACEff(1, NULL, true, cutname, bias));
@@ -914,7 +936,7 @@ std::vector<TGraphErrors *> KOBRA::GetMomDistGraphs(Double_t center, Double_t bi
 }
 
 
-std::vector<TGraphErrors *> KOBRA::GetMomDistGraphsNe(std::vector<std::string> iso, Double_t center, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff, Int_t bias)
+std::vector<TGraphErrors *> KOBRA::GetMomDistGraphsNe(std::vector<std::string> iso, Double_t center, Double_t binSize, Double_t leftLimit, Double_t rightLimit, Bool_t flagOff, Int_t bias, Bool_t flagUseF1)
 {
   Double_t scale;
   scale = 1. / (GetPPACEff(2) * GetPPACEff(3) * GetLiveTime());
@@ -927,10 +949,17 @@ std::vector<TGraphErrors *> KOBRA::GetMomDistGraphsNe(std::vector<std::string> i
 								   { return std::isdigit(c); }),
 	cutname.end());
       // scale *= (1 / GetPPACEff(1, NULL, true, cutname, bias));
-      //      std::cout << scale << std::endl;
-      TGraphErrors *gr = GetMomDistGraph(center, it.c_str(), binSize,
-					 leftLimit, rightLimit, flagOff,
-					 scale / GetPPACEff(1, NULL, true, cutname, bias));
+      //      std::cout << GetPPACEff(1, NULL, true, cutname, bias) << std::endl;
+      TGraphErrors *gr;
+      if (flagUseF1) 
+	gr = GetMomDistGraph(center, it.c_str(), binSize,
+			     leftLimit, rightLimit, flagOff,
+			     scale / GetPPACEff(1, NULL, true, cutname, bias),
+			     flagUseF1);
+      else
+	gr = GetMomDistGraph(center, it.c_str(), binSize,
+			     leftLimit, rightLimit, flagOff,
+			     scale, flagUseF1);
       momgraphs.push_back(gr);
     }
   return momgraphs;
@@ -1705,27 +1734,35 @@ void KOBRA::NeMomDistAnalysis(bool flagFast)
 
   ///////////////////////////////////////////////////////////////////
   // Loop for all settings
-  std::vector<std::vector<int>> runs = {mon_01, mon00, mon01, mon02, mon04, mon06, mon10};
-  std::vector<std::string> runnames = {"mon_01", "mon00", "mon01", "mon02", "mon04", "mon06", "mon10"};
-  std::vector<Int_t> bias = {0, 0, 0, 0, 0, 0, 0}; 
+  std::vector<std::vector<int>> runs = {mon_10, monn_08, mon_07, mon_06, mon_05,
+					mon_04, mon_03, mon_02, mon_01,
+					mon00, mon01, mon02, mon04, mon06, mon10};
+								  
+  std::vector<std::string> runnames = {"mon_10", "monn_08", "mon_07", "mon_06", "mon_05",
+				       "mon_04","mon_03", "mon_02", "mon_01",
+				       "mon00", "mon01", "mon02", "mon04", "mon06", "mon10"};
+  std::vector<Int_t> bias = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}; 
   std::vector<Double_t>
-    xoff = {0, 0., -0.005, -0.005, -0.005, -0.01, -0.02};
-  std::vector<Double_t> yoff = {0, 0, 0, 0, 0, 0, 0};
-  std::vector<Double_t> brho = {1.2945, 1.3076, 1.3207, 1.3337, 1.3599, 1.3861, 1.4384 };
-  std::vector<Double_t> cens = {-1, 0, 1, 2, 4, 6, 10};
-  std::vector<Double_t> bins = {0.4, 0.5, 0.4, 0.5, 0.5, 0.5, 0.5};
-  std::vector<Double_t> lefts = {-0.4, -0.5, -0.5, -1, -2, -3, -3};
-  std::vector<Double_t> rights = {0.4, 0.5, 0.5, 1, 2, 3, 3};
-  std::vector<bool> offs = {false, false, false, false, false, false, false};
+    xoff = {0.050, 0.037, 0.032,  0.027, 0.025, 0.025, 0.012, 0.005, 0, 0., -0.005, -0.005, -0.005, -0.01, -0.02};
+  std::vector<Double_t> yoff = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+  std::vector<Double_t> brho = {1.1768, 1.2030, 1.2161, 1.2291, 1.2422, 1.2553, 1.2684, 1.2814, 1.2945, 1.3076, 1.3207, 1.3337, 1.3599, 1.3861, 1.4384 };
+  std::vector<Double_t> cens = {-10, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 4, 6, 10};
+  std::vector<Double_t> bins = {0.025, 0.05, 0.1, 0.1, 0.15, 0.2, 0.2, 0.4, 0.4, 0.5, 0.4, 0.5, 0.5, 0.5, 0.5};
+  std::vector<Double_t> lefts = {-0.005, -0.01, -0.04, -0.04, -0.1, -0.1,  -0.1, -0.2, -0.4, -0.5, -0.5, -1, -2, -3, -3};
+  std::vector<Double_t> rights = {0.02, 0.04, 0.04, 0.04, 0.1, 0.1, 0.1, 0.2, 0.4, 0.5, 0.5, 1, 2, 3, 3};
+  std::vector<bool> offs = {false, false, true, true, true, true, true, true, false, false, false, false, false, false, false};
+  //  std::vector<bool> usef1 = {true, true, true, true,true,true,true,true,true,true,true,true,true };
 
   for (size_t j = 0; j < runs.size(); j++)
     {
+      //      if (j == 2) continue;
       ko = new KOBRA(runs[j]);
       ko->SetBrho(brho[j]);
+      ko->SetUseF1(true);
       ko->ApplyOffsetToCut(xoff[j], yoff[j]);
       if (!flagFast)
 	ko->AnaAtOnceMom(runnames[j].c_str(), cens[j], cutiso);
-      auto grs = ko->GetMomDistGraphsNe(cutiso, cens[j], bins[j], lefts[j], rights[j], offs[j], bias[j]);
+      auto grs = ko->GetMomDistGraphsNe(cutiso, cens[j], bins[j], lefts[j], rights[j], offs[j], bias[j], true);
       for (size_t i = 0; i < mgs.size(); i++)
 	{
 	  // size_t i = 25;
