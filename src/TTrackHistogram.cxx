@@ -37,14 +37,14 @@ void TTrackHistograms::CreateHistograms()
     float upp[n] = {100, 100};
     for (int i = 0; i < n; i++)
     {
-        sprintf(na, "%s_%s", name.c_str(), items1d[i]);
+      snprintf(na, sizeof(na), "%s_%s", name.c_str(), items1d[i]);
         // Delete old histograms, if we already have them
         TH1D *old = (TH1D *)gDirectory->Get(na);
         if (old)
             delete old;
 
         // Create new histograms
-        sprintf(title, "%s histogram for %s", name.c_str(), items1d[i]);
+        snprintf(title, sizeof(title), "%s histogram for %s", name.c_str(), items1d[i]);
 
         TH1D *tmp = new TH1D(na, title, nbins[i], low[i], upp[i]);
         tmp->SetXTitle(items1d[i]);
@@ -52,11 +52,11 @@ void TTrackHistograms::CreateHistograms()
         push_back(tmp);
     }
 
-    sprintf(na, "%s_ab", name.c_str());
+    snprintf(na, sizeof(na), "%s_ab", name.c_str());
     TH2D *old = (TH2D *)gDirectory->Get(na);
     if (old)
         delete old;
-    sprintf(title, "%s B vs A", name.c_str());
+    snprintf(title, sizeof(title), "%s B vs A", name.c_str());
     TH2D *tmp = new TH2D(na, title, 100, -100, 100, 100, -100, 100);
     tmp->SetXTitle("A [mrad]");
     tmp->SetYTitle("B [mrad]");
@@ -64,28 +64,28 @@ void TTrackHistograms::CreateHistograms()
 
     /////////////////////////////////////////////////////////////////////
     // eff
-    sprintf(na, "%s_%s", name.c_str(), "effup");
+    snprintf(na, sizeof(na), "%s_%s", name.c_str(), "effup");
     // Delete old histograms, if we already have them
     TH1D* old1 = (TH1D *)gDirectory->Get(na);
     if (old1)
         delete old1;
 
     // Create new histograms
-    sprintf(title, "%s histogram for %s", name.c_str(), "effup");
+    snprintf(title, sizeof(title), "%s histogram for %s", name.c_str(), "effup");
 
     TH1D* tmp1 = new TH1D(na, title, 2, 0, 2);
     tmp1->SetXTitle("Detected or Not");
     tmp1->SetYTitle("Number of Entries");
     push_back(tmp1);
 
-    sprintf(na, "%s_%s", name.c_str(), "effdn");
+    snprintf(na, sizeof(na), "%s_%s", name.c_str(), "effdn");
     // Delete old histograms, if we already have them
     old1 = (TH1D *)gDirectory->Get(na);
     if (old1)
         delete old1;
 
     // Create new histograms
-    sprintf(title, "%s histogram for %s", name.c_str(), "effdn");
+    snprintf(title, sizeof(title), "%s histogram for %s", name.c_str(), "effdn");
 
     tmp1 = new TH1D(na, title, 2, 0, 2);
     tmp1->SetXTitle("Detected or Not");

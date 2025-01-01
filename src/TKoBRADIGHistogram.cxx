@@ -29,7 +29,7 @@ void TKoBRADIGHistograms::CreateHistograms()
 
         char name[100];
         char title[100];
-        sprintf(name, "%s_%i_t", bankname.c_str(), i);
+        snprintf(name, sizeof(name), "%s_%i_t", bankname.c_str(), i);
 
         // Delete old histograms, if we already have them
         TH1D *old = (TH1D *)gDirectory->Get(name);
@@ -37,14 +37,14 @@ void TKoBRADIGHistograms::CreateHistograms()
             delete old;
 
         // Create new histograms
-        sprintf(title, "%s Time histogram for channel=%i", bankname.c_str(), i);
+        snprintf(title, sizeof(title), "%s Time histogram for channel=%i", bankname.c_str(), i);
 
         TH1D *tmp = new TH1D(name, title, 5000, 0, 50000000);
         tmp->SetXTitle("Time value");
         tmp->SetYTitle("Number of Entries");
         push_back(tmp);
 
-        sprintf(name, "%s_%i_a", bankname.c_str(), i);
+        snprintf(name, sizeof(name), "%s_%i_a", bankname.c_str(), i);
 
         // Delete old histograms, if we already have them
         old = (TH1D *)gDirectory->Get(name);
@@ -52,7 +52,7 @@ void TKoBRADIGHistograms::CreateHistograms()
             delete old;
 
         // Create new histograms
-        sprintf(title, "%s ADC histogram for channel=%i", bankname.c_str(), i);
+        snprintf(title, sizeof(title), "%s ADC histogram for channel=%i", bankname.c_str(), i);
 
         tmp = new TH1D(name, title, 5000, 0, 50000);
         tmp->SetXTitle("ADC value");
@@ -62,21 +62,21 @@ void TKoBRADIGHistograms::CreateHistograms()
 
     char name[100];
     char title[100];
-    sprintf(name, "%s_tall", bankname.c_str());
+    snprintf(name, sizeof(name), "%s_tall", bankname.c_str());
     TH2D *old = (TH2D *)gDirectory->Get(name);
     if (old)
         delete old;
-    sprintf(title, "%s time histogram for all", bankname.c_str());
+    snprintf(title, sizeof(title), "%s time histogram for all", bankname.c_str());
     TH2D *tmp = new TH2D(name, title, Nchannels, 0, Nchannels, 5000, 0, 50000000);
     tmp->SetXTitle("Channel");
     tmp->SetYTitle("Time value");
     push_back(tmp);
 
-    sprintf(name, "%s_aall", bankname.c_str());
+    snprintf(name, sizeof(name), "%s_aall", bankname.c_str());
     old = (TH2D *)gDirectory->Get(name);
     if (old)
         delete old;
-    sprintf(title, "%s ADC histogram for all", bankname.c_str());
+    snprintf(title, sizeof(title), "%s ADC histogram for all", bankname.c_str());
     tmp = new TH2D(name, title, Nchannels, 0, Nchannels, 5000, 0, 50000);
     tmp->SetXTitle("Channel");
     tmp->SetYTitle("ADC value");

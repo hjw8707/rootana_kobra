@@ -193,7 +193,7 @@ void TPlasticAna::PrintParameters()
 void TPlasticAna::PrintData()
 {
     std::cout << "TPlasticAna: " << name << std::endl;
-    const char *label[n] = {"Left", "Right"};
+    const char *label[2] = {"Left", "Right"};
     for (int j = 0; j < n; j++)
     {
         std::cout << " " << label[j] << ": ";

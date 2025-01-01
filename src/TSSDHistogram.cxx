@@ -34,14 +34,14 @@ void TSSDHistograms::CreateHistograms()
     float upp[4] = {32, 10000, 10000, 10000};
     for (int i = 0; i < 4; i++)
     {
-        sprintf(na, "%s_%s", name.c_str(), items1d[i]);
+      snprintf(na, sizeof(na), "%s_%s", name.c_str(), items1d[i]);
         // Delete old histograms, if we already have them
         TH1D *old = (TH1D *)gDirectory->Get(na);
         if (old)
             delete old;
 
         // Create new histograms
-        sprintf(title, "%s histogram for %s", name.c_str(), items1d[i]);
+        snprintf(title, sizeof(title), "%s histogram for %s", name.c_str(), items1d[i]);
 
         TH1D *tmp = new TH1D(na, title, nbins[i], low[i], upp[i]);
         tmp->SetXTitle(items1d[i]);
@@ -49,21 +49,21 @@ void TSSDHistograms::CreateHistograms()
         push_back(tmp);
     }
 
-    sprintf(na, "%s_chadc", name.c_str());
+    snprintf(na, sizeof(na), "%s_chadc", name.c_str());
     TH2D *old = (TH2D *)gDirectory->Get(na);
     if (old)
         delete old;
-    sprintf(title, "%s histogram for chadc", name.c_str());
+    snprintf(title, sizeof(title), "%s histogram for chadc", name.c_str());
     TH2D *tmp = new TH2D(na, title, 32, 0, 32, 1000, 0, 10000);
     tmp->SetXTitle("ch");
     tmp->SetYTitle("adc");
     push_back(tmp);
 
-    sprintf(na, "%s_chacal", name.c_str());
+    snprintf(na, sizeof(na), "%s_chacal", name.c_str());
     old = (TH2D *)gDirectory->Get(na);
     if (old)
         delete old;
-    sprintf(title, "%s histogram for chacal", name.c_str());
+    snprintf(title, sizeof(title), "%s histogram for chacal", name.c_str());
     tmp = new TH2D(na, title, 32, 0, 32, 1000, 0, 100);
     tmp->SetXTitle("ch");
     tmp->SetYTitle("acal");

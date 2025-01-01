@@ -32,14 +32,14 @@ void TPlasticHistograms::CreateHistograms()
     float upp[6] = {500000, 500000, 50000, 50000, 500000, 500000};
     for (int i = 0; i < 6; i++)
     {
-        sprintf(na, "%s_%s", name.c_str(), items1d[i]);
+      snprintf(na, sizeof(na), "%s_%s", name.c_str(), items1d[i]);
         // Delete old histograms, if we already have them
         TH1D *old = (TH1D *)gDirectory->Get(na);
         if (old)
             delete old;
 
         // Create new histograms
-        sprintf(title, "%s histogram for %s", name.c_str(), items1d[i]);
+        snprintf(title, sizeof(title), "%s histogram for %s", name.c_str(), items1d[i]);
 
         TH1D *tmp = new TH1D(na, title, nbins[i], low[i], upp[i]);
         tmp->SetXTitle(items1d[i]);
@@ -47,21 +47,21 @@ void TPlasticHistograms::CreateHistograms()
         push_back(tmp);
     }
 
-    sprintf(na, "%s_tlr", name.c_str());
+    snprintf(na, sizeof(na), "%s_tlr", name.c_str());
     TH2D *old = (TH2D *)gDirectory->Get(na);
     if (old)
         delete old;
-    sprintf(title, "%s histogram for tlr", name.c_str());
+    snprintf(title, sizeof(title), "%s histogram for tlr", name.c_str());
     TH2D *tmp = new TH2D(na, title, 1000, 0, 500000, 1000, 0, 500000);
     tmp->SetXTitle("tl");
     tmp->SetYTitle("tr");
     push_back(tmp);
 
-    sprintf(na, "%s_alr", name.c_str());
+    snprintf(na, sizeof(na), "%s_alr", name.c_str());
     old = (TH2D *)gDirectory->Get(na);
     if (old)
         delete old;
-    sprintf(title, "%s histogram for alr", name.c_str());
+    snprintf(title, sizeof(title), "%s histogram for alr", name.c_str());
     tmp = new TH2D(na, title, 1000, 0, 50000, 1000, 0, 50000);
     tmp->SetXTitle("al");
     tmp->SetYTitle("ar");
