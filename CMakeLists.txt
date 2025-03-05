@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10...3.20)
 project(kobra_ana)
 
 find_package(ROOT COMPONENTS Gui RHTTP XMLIO XMLParser)
 
+list(APPEND CMAKE_MODULE_PATH $ENV{ROOTSYS}/etc/cmake)
 include(${ROOT_USE_FILE})
 
 link_directories(./ $ENV{ROOTANASYS}/lib $ENV{MIDASSYS}/lib)
@@ -14,10 +15,10 @@ file(GLOB SOURCES "src/*.cxx")
 #list(APPEND SOURCES macros/kobra.cxx)
 list(APPEND SOURCES KoBRA_Dict.cxx)
 
-set(INC 
-./ 
-./include 
-./macros 
+set(INC
+./
+./include
+./macros
 $ENV{ROOTANASYS}/include
 )
 
@@ -25,7 +26,7 @@ set(DICTHDRS
   "include/THeader.hxx"
   "include/TPPACData.hxx"
     "include/TLPPACData.hxx"
-    "include/TPlasticData.hxx" 
+    "include/TPlasticData.hxx"
     "include/TSSDData.hxx"
     "include/TScalerData.hxx"
     "include/TKoBRASniffer.hxx"
@@ -36,7 +37,7 @@ set(DICTSRCSONLY
     "src/TLPPACData.cxx"
     "src/TPlasticData.cxx"
     "src/TSSDData.cxx"
-    "src/TScalerData.cxx"    
+    "src/TScalerData.cxx"
     "macros/kobra.cxx"
     "macros/curry.cxx"
 )
@@ -60,12 +61,13 @@ target_include_directories(anadict PUBLIC ./ ./include ./macros )
 target_link_libraries(anadict ${ROOT_LIBRARIES})
 add_library(kobra SHARED ${SOURCES})
 target_include_directories(kobra PUBLIC ${INC})
+target_link_libraries(kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES})
 
 add_executable(rakobra rakobra.cxx)
-target_link_libraries(rakobra kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
+target_link_libraries(rakobra kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES} -lThread -lutil)
 
 add_executable(rakobra_server rakobra_server.cxx)
-target_link_libraries(rakobra_server kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
+target_link_libraries(rakobra_server kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES} -lThread -lutil)
 
 add_executable(midcheck midcheck.cxx)
-target_link_libraries(midcheck kobra rootana -lm -lz -lpthread -lssl -lmidas ${ROOT_LIBRARIES} -lThread -lrt -lutil)
+target_link_libraries(midcheck kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES} -lThread -lutil)

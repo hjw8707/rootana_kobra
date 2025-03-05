@@ -1,20 +1,18 @@
 #include "TPPACHistogram.hxx"
 
-#include "TPPACData.hxx"
 #include "TDirectory.h"
 #include "TH2.h"
+#include "TPPACData.hxx"
 
 /// Reset the histograms for this canvas
-TPPACHistograms::TPPACHistograms(const char *_name, TClonesArray *_data)
-{
+TPPACHistograms::TPPACHistograms(const char *_name, TClonesArray *_data) {
     name = _name;
     data = _data;
     SetSubTabName(_name);
     CreateHistograms();
 }
 
-void TPPACHistograms::CreateHistograms()
-{
+void TPPACHistograms::CreateHistograms() {
     // Otherwise make histograms
     clear();
 
@@ -30,16 +28,14 @@ void TPPACHistograms::CreateHistograms()
     int nbins[9] = {1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000};
     float low[9] = {0, 0, 0, 0, 0, 0, 0, -100, -100};
     float upp[9] = {50000, 50000, 50000, 50000, 50000, 50000, 50000, 100, 100};
-    for (int i = 0; i < 9; i++)
-    {
-        sprintf(na, "%s_%s", name.c_str(), items1d[i]);
+    for (int i = 0; i < 9; i++) {
+        snprintf(na, sizeof(na), "%s_%s", name.c_str(), items1d[i]);
         // Delete old histograms, if we already have them
         TH1D *old = (TH1D *)gDirectory->Get(na);
-        if (old)
-            delete old;
+        if (old) delete old;
 
         // Create new histograms
-        sprintf(title, "%s histogram for %s", name.c_str(), items1d[i]);
+        snprintf(title, sizeof(title), "%s histogram for %s", name.c_str(), items1d[i]);
 
         TH1D *tmp = new TH1D(na, title, nbins[i], low[i], upp[i]);
         tmp->SetXTitle(items1d[i]);
@@ -47,11 +43,10 @@ void TPPACHistograms::CreateHistograms()
         push_back(tmp);
     }
 
-    sprintf(na, "%s_xy", name.c_str());
+    snprintf(na, sizeof(na), "%s_xy", name.c_str());
     TH2D *old = (TH2D *)gDirectory->Get(na);
-    if (old)
-        delete old;
-    sprintf(title, "%s histogram for xy", name.c_str());
+    if (old) delete old;
+    snprintf(title, sizeof(title), "%s histogram for xy", name.c_str());
     TH2D *tmp = new TH2D(na, title, 1000, -100, 100, 1000, -100, 100);
     tmp->SetXTitle("x");
     tmp->SetYTitle("y");
@@ -61,11 +56,10 @@ void TPPACHistograms::CreateHistograms()
 }
 
 /// Update the histograms for this canvas.
-void TPPACHistograms::UpdateHistograms(TDataContainer &)
-{
+void TPPACHistograms::UpdateHistograms(TDataContainer &) {
     if (!data) return;
-    for (int i = 0 ; i < data->GetEntriesFast() ; i++) {
-        TPPACData* d = static_cast<TPPACData*>((*data)[i]);
+    for (int i = 0; i < data->GetEntriesFast(); i++) {
+        TPPACData *d = static_cast<TPPACData *>((*data)[i]);
         GetHistogram(0)->Fill(d->tx1);
         GetHistogram(1)->Fill(d->tx2);
         GetHistogram(2)->Fill(d->ty1);
@@ -80,12 +74,7 @@ void TPPACHistograms::UpdateHistograms(TDataContainer &)
 }
 
 /// Take actions at begin run
-void TPPACHistograms::BeginRun(int transition, int run, int time)
-{
-    CreateHistograms();
-}
+void TPPACHistograms::BeginRun(int transition, int run, int time) { CreateHistograms(); }
 
 /// Take actions at end run
-void TPPACHistograms::EndRun(int transition, int run, int time)
-{
-}
+void TPPACHistograms::EndRun(int transition, int run, int time) {}
