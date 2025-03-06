@@ -116,35 +116,35 @@ std::vector<int> KOBRA::mon06 = {731, 732, 733};                      // ApplyOf
 std::vector<int> KOBRA::mon10 = {734, 735, 736, 737};                 // ApplyOffsetToCut(-0.02)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-KOBRA::KOBRA() { Initilize(); }
+KOBRA::KOBRA(Expt expt) : expt(expt) { Initilize(); }
 
-KOBRA::KOBRA(const char *file) {
+KOBRA::KOBRA(Expt expt, const char *file) : expt(expt) {
     Initilize();
     LoadTree(file);
 }
-KOBRA::KOBRA(std::string file) {
+KOBRA::KOBRA(Expt expt, std::string file) : expt(expt) {
     Initilize();
     LoadTree(file);
 }
-KOBRA::KOBRA(std::vector<std::string> files) {
+KOBRA::KOBRA(Expt expt, std::vector<std::string> files) : expt(expt) {
     Initilize();
     LoadTree(files);
 }
-KOBRA::KOBRA(int run) {
+KOBRA::KOBRA(Expt expt, int run) : expt(expt) {
     Initilize();
-    LoadTree(run);
+    LoadTree(expt, run);
     runNs.push_back(run);
     RunSetting(run);
 }
-KOBRA::KOBRA(std::vector<int> runs) {
+KOBRA::KOBRA(Expt expt, std::vector<int> runs) : expt(expt) {
     Initilize();
-    LoadTree(runs);
+    LoadTree(expt, runs);
     for (const auto &it : runs) runNs.push_back(it);
     RunSetting(runs[0]);
 }
-KOBRA::KOBRA(int runb, int rune) {
+KOBRA::KOBRA(Expt expt, int runb, int rune) : expt(expt) {
     Initilize();
-    LoadTree(runb, rune);
+    LoadTree(expt, runb, rune);
     for (int i = runb; i <= rune; i++) runNs.push_back(i);
     RunSetting(runb);
 }
@@ -247,22 +247,29 @@ Bool_t KOBRA::LoadTree(std::vector<std::string> files) {
     return result;
 }
 
-Bool_t KOBRA::LoadTree(int run) { return LoadTree(Form("root/output%08d.root", run)); }
+Bool_t KOBRA::LoadTree(Expt expt, int run) {
+    switch (expt) {
+        case Expt::Comm:
+            return LoadTree(Form("root/comm/output%08d.root", run));
+        case Expt::Phys:
+            return LoadTree(Form("root/phys/output%08d.root", run));
+    }
+}
 
-Bool_t KOBRA::LoadTree(std::vector<int> runs) {
+Bool_t KOBRA::LoadTree(Expt expt, std::vector<int> runs) {
     Bool_t result = true;
     for (const auto &it : runs) {
-        result = result && LoadTree(it);
+        result = result && LoadTree(expt, it);
     }
     return result;
 }
 
-Bool_t KOBRA::LoadTree(int runb, int rune) {
+Bool_t KOBRA::LoadTree(Expt expt, int runb, int rune) {
     if (rune < runb) return false;
 
     Bool_t result = true;
     for (int run = runb; run <= rune; run++) {
-        result = result && LoadTree(run);
+        result = result && LoadTree(expt, run);
     }
     return result;
 }
@@ -1318,7 +1325,7 @@ void KOBRA::MomDistAnalysis() {
     ///////////////////////////////////////////////////////////////////
     // TMultiGraphs definitions
     std::vector<TMultiGraph *> mgs;
-    ko = new KOBRA(KOBRA::mom00);
+    ko = new KOBRA(Expt::Phys, KOBRA::mom00);
     for (const auto it : ko->cutgs) {
         auto mg = new TMultiGraph(it.first.c_str(), Form("Mom. Distribution of %s;Delta [%%];Differental Rate [pps/%%]",
                                                          it.second->GetTitle()));
@@ -1344,7 +1351,7 @@ void KOBRA::MomDistAnalysis() {
     std::vector<bool> offs = {false, true, true, false, false, false, false, false, false, false, false};
 
     for (size_t j = 0; j < runs.size(); j++) {
-        ko = new KOBRA(runs[j]);
+        ko = new KOBRA(Expt::Phys, runs[j]);
         ko->ApplyOffsetToCut(xoff[j], yoff[j]);
         ko->AnaAtOnceMom(runnames[j].c_str(), cens[j]);
         auto grs = ko->GetMomDistGraphs(cens[j], bins[j], lefts[j], rights[j], offs[j], bias[j]);
@@ -1361,7 +1368,7 @@ void KOBRA::MomDistAnalysis() {
 
     ///////////////////////////////////////////////////////////////////
     // Artifically add
-    ko = new KOBRA(o19);
+    ko = new KOBRA(Expt::Phys, o19);
     Double_t scale;
     scale = ko->GetPPACEff(1) * ko->GetPPACEff(2) * ko->GetPPACEff(3) * ko->GetLiveTime();
     auto gr = ko->GetMomDistGraph(-4, "o19", 0.5, -4, 4, false, 200 / scale);
@@ -1414,7 +1421,7 @@ void KOBRA::CrossSectionAnalysis() {
 
     KOBRA *ko;
     for (size_t j = 0; j < runs.size(); j++) {
-        ko = new KOBRA(runs[j]);
+        ko = new KOBRA(Expt::Phys, runs[j]);
         ko->ApplyOffsetToCut(xoff[j], yoff[j]);
         ko->AnaAtOnce(runnames[j].c_str(), isos[j]);
         delete ko;
@@ -1427,7 +1434,7 @@ void KOBRA::PPACEffCurve() {
     std::vector<Double_t> eff_c, eff_n, eff_o, eff_f;
 
     for (const auto &it : runs) {
-        KOBRA ko(it);
+        KOBRA ko(Expt::Phys, it);
         eff_c.push_back(ko.GetPPACEff(1, "detof_c"));
         eff_n.push_back(ko.GetPPACEff(1, "detof_n"));
         eff_o.push_back(ko.GetPPACEff(1, "detof_o"));
@@ -1501,7 +1508,7 @@ void KOBRA::NeMomDistAnalysis(bool flagFast) {
 
     for (size_t j = 0; j < runs.size(); j++) {
         //      if (j == 2) continue;
-        ko = new KOBRA(runs[j]);
+        ko = new KOBRA(Expt::Phys, runs[j]);
         ko->SetBrho(brho[j]);
         ko->SetUseF1(true);
         ko->ApplyOffsetToCut(xoff[j], yoff[j]);

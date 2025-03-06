@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10...3.20)
+cmake_minimum_required(VERSION 3.10)
 project(kobra_ana)
 
 find_package(ROOT COMPONENTS Gui RHTTP XMLIO XMLParser)
@@ -16,10 +16,10 @@ file(GLOB SOURCES "src/*.cxx")
 list(APPEND SOURCES KoBRA_Dict.cxx)
 
 set(INC
-./
-./include
-./macros
-$ENV{ROOTANASYS}/include
+    ./                # 현재 디렉토리
+    ./include        # include 디렉토리
+    ./macros         # macros 디렉토리
+    $ENV{ROOTANASYS}/include
 )
 
 set(DICTHDRS
@@ -60,8 +60,8 @@ add_library(anadict SHARED KoBRA_DictOnly.cxx ${DICTSRCSONLY})
 target_include_directories(anadict PUBLIC ./ ./include ./macros )
 target_link_libraries(anadict ${ROOT_LIBRARIES})
 add_library(kobra SHARED ${SOURCES})
-target_include_directories(kobra PUBLIC ${INC})
-target_link_libraries(kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES})
+target_include_directories(kobra PUBLIC ${INC} ./ ./include ./macros)
+target_link_libraries(kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES} -lThread -lutil -lcling)
 
 add_executable(rakobra rakobra.cxx)
 target_link_libraries(rakobra kobra rootana -lm -lz -lpthread -lmidas ${ROOT_LIBRARIES} -lThread -lutil)

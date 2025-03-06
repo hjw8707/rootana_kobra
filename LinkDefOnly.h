@@ -11,3 +11,4 @@
 
 #pragma link C++ class KOBRA;
 #pragma link C++ class CURRY;
+#pragma link C++ enum KOBRA::Expt;
