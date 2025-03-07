@@ -14,3 +14,7 @@ figs
 *Dict*
 root
 analysis*
+.vscode
+build
+rawdata
+.DS_Store
