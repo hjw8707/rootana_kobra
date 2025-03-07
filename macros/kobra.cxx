@@ -494,7 +494,8 @@ void KOBRA::DrawPID0(const char *cut) {
     tree->Draw("de:tof>>hpid0(400,150,350,400,0,150)", cuts.c_str(), "col");
 }
 
-void KOBRA::DrawPID(const char *cut) {
+void KOBRA::DrawPID(Int_t show, const char *cut) {
+    if (show < 0 || show > 2) return;
     if (!tree) return;
 
     std::string cuts = gcut;
@@ -505,7 +506,70 @@ void KOBRA::DrawPID(const char *cut) {
             cuts += Form("&& %s", cut);
         }
     }
-    tree->Draw("z:aoq>>hpid(400,1.5,3,400,0,1)", cuts.c_str(), "col");
+    auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
+    tree->Draw(Form("Z:aoq>>hpid_r%d(500,2.0,3.2,500,4,15)", runNs.front()), cuts.c_str(), "col");
+
+    std::string runstr;
+    if (runNs.size() > 1)
+        runstr = Form("Run %d-%d", runNs.front(), runNs.back());
+    else
+        runstr = Form("Run %d", runNs.front());
+
+    const char *showcase[3] = {"", ": Count", ": Rate [pps]"};
+    auto h2 = static_cast<TH2 *>(gDirectory->Get(Form("hpid_r%d", runNs.front())));
+    h2->SetTitle(Form("PID for %s%s;A/Q;Z", runstr.c_str(), showcase[show]));
+
+    if (show > 0) {
+        TLatex text;
+        text.SetTextFont(62);
+        text.SetTextSize(0.03);
+        text.SetTextColor();
+        Double_t time;
+        time = GetElapsedTime();
+        for (const auto &it : cutgs) {
+            TCutG *cut = it.second;
+            // cut->SetLineStyle(2);
+            cut->Draw("SAME");
+
+            Double_t x = cut->GetMean(1);
+            Double_t y = cut->GetMean(2);
+            Double_t xmin, xmax, ymin, ymax;
+            cut->ComputeRange(xmin, ymin, xmax, ymax);
+            TString title = cut->GetTitle();
+            TString aaa = title(0, 2);
+            TString zzz = title(2, title.Length());
+            Int_t count = GetEntries(cut->GetName());
+            text.SetTextFont(62);
+            text.SetTextColor(kOrange + 7);
+            text.SetTextSize(0.03);
+            text.SetTextAlign(22);
+            text.DrawLatex(xmax, ymax, Form("^{%s}%s", aaa.Data(), zzz.Data()));
+
+            text.SetTextFont(52);
+            text.SetTextColor(kMagenta + 1);
+            text.SetTextSize(0.03);
+            text.SetTextAlign(22);
+            TString a;
+
+            if (show == 1)
+                a = Form("%d", count);
+            else
+                a = Form("%.3f", float(count / time));
+
+            text.DrawLatex(x, y, a.Data());
+        }
+        std::string timestr;
+        Int_t itime = time;
+        text.SetTextAlign(12);
+        if (itime > 3600)
+            timestr = Form("%02d:%02d:%02d", itime / 3600, (itime % 3600) / 60, itime % 60);
+        else if (itime > 60)
+            timestr = Form("%02d:%02d", itime / 60, itime % 60);
+        else
+            timestr = "";
+
+        text.DrawLatexNDC(0.15, 0.92, Form("Brho: %.4f Tm / Time: %.0f sec. or %s", GetBrho(), time, timestr.c_str()));
+    }
 }
 
 void KOBRA::DrawPIDC(Int_t show, const char *cut) {
@@ -521,7 +585,7 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut) {
         }
     }
     auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
-    tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,2.15,2.75,500,4,15)", runNs.front()), cuts.c_str(), "col");
+    tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,2.0,3.2,500,4,15)", runNs.front()), cuts.c_str(), "col");
 
     TH2 *h2 = static_cast<TH2 *>(gDirectory->Get(Form("hpidc_r%d", runNs.front())));
 

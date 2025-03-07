@@ -101,7 +101,7 @@ class KOBRA : public TObject {
     inline const char *GetGCut() { return gcut.c_str(); }
 
     void DrawPID0(const char *cut = NULL);
-    void DrawPID(const char *cut = NULL);
+    void DrawPID(Int_t show = 0, const char *cut = NULL);   // show = 0: nothing, 1: count, 2: pps
     void DrawPIDC(Int_t show = 0, const char *cut = NULL);  // show = 0: nothing, 1: count, 2: pps
 
     std::vector<TH1 *> DrawXDist(const char *cut = NULL, bool flagDraw = true);
