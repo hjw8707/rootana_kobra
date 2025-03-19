@@ -150,6 +150,10 @@ class KOBRA : public TObject {
     void AnaAtOnce(const char *name, std::vector<std::string> iso);
     void AnaAtOnceMom(const char *name, Double_t delta, std::vector<std::string> iso = {});
 
+    // ... existing code ...
+    void FitPIDLocus(const char *name, int nbinsX = 1000, int nbinsY = 1000);
+    void Fit2DGaussian(TH2 *hist);
+
     TChain *tree;
     std::map<Int_t, Double_t> brhoMap;
     std::map<Int_t, Double_t> f1slitMap;

@@ -12,6 +12,7 @@
 #include "TChainElement.h"
 #include "TColor.h"
 #include "TCutG.h"
+#include "TF2.h"
 #include "TFile.h"
 #include "TGaxis.h"
 #include "TH2.h"
@@ -1618,4 +1619,52 @@ void KOBRA::NeMomDistAnalysis(bool flagFast) {
     file->Close();
     delete file;
     /////////////////////////////////////////////////////////////////////
+}
+
+void KOBRA::FitPIDLocus(const char *name, int nbinsX, int nbinsY) {
+    tree->Draw(Form("Z:aoq>>hpidlocus(%d,1.5,3,%d,0,20)", nbinsX, nbinsY), name);
+    TH2 *h2 = static_cast<TH2 *>(gDirectory->Get("hpidlocus"));
+    Fit2DGaussian(h2);
+}
+
+void KOBRA::Fit2DGaussian(TH2 *hist) {
+    // Create 1D projections of the histogram
+    TH1D *projX = hist->ProjectionX("projX");
+    TH1D *projY = hist->ProjectionY("projY");
+
+    projX->Fit("gaus");
+    TF1 *f1 = projX->GetFunction("gaus");
+    // Get the initial parameters from the 1D fits
+    Double_t meanX = f1->GetParameter(1);
+    Double_t sigmaX = f1->GetParameter(2);
+
+    projY->Fit("gaus");
+    f1 = projY->GetFunction("gaus");
+    Double_t meanY = f1->GetParameter(1);
+    Double_t sigmaY = f1->GetParameter(2);
+
+    // Clean up
+    delete projX;
+    delete projY;
+
+    // Create a 2D Gaussian function
+    TF2 *gaussian =
+        new TF2("gaussian", "[0]*exp(-0.5*((x-[1])/[2])**2)*exp(-0.5*((y-[3])/[4])**2)", hist->GetXaxis()->GetXmin(),
+                hist->GetXaxis()->GetXmax(), hist->GetYaxis()->GetXmin(), hist->GetYaxis()->GetXmax());
+
+    // Set initial parameters for the Gaussian
+    gaussian->SetParameters(1, meanX, sigmaX, meanY, sigmaY);
+
+    // Fit the histogram with the Gaussian function
+    hist->Fit(gaussian, "R");
+
+    // Optionally, draw the fitted function on the histogram
+    gaussian->Draw("SAME");
+
+    std::cout << "Fitted Gaussian parameters:" << std::endl;
+    std::cout << "Amplitude: " << gaussian->GetParameter(0) << std::endl;
+    std::cout << "Mean X: " << gaussian->GetParameter(1) << std::endl;
+    std::cout << "Sigma X: " << gaussian->GetParameter(2) << std::endl;
+    std::cout << "Mean Y: " << gaussian->GetParameter(3) << std::endl;
+    std::cout << "Sigma Y: " << gaussian->GetParameter(4) << std::endl;
 }
