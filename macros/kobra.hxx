@@ -125,6 +125,7 @@ class KOBRA : public TObject {
     void AddCut(const char *filename);
     void AddCuts(const char *path);
 
+    void DrawCut(const char *cut);
     void DrawAllCut();
 
     void PrintCutCoord(TCutG *cut, Double_t xoff = 0, Double_t yoff = 0);
@@ -153,6 +154,12 @@ class KOBRA : public TObject {
     // ... existing code ...
     void FitPIDLocus(const char *name, int nbinsX = 1000, int nbinsY = 1000);
     void Fit2DGaussian(TH2 *hist);
+
+    ////////////////////////////////////////////////////////
+    // SSD calibration
+    void F3SSDPedestal(const char *cut, int low = 0, int high = 200);
+    void F3SSDPeak(const char *cut, int low = 200, int high = 2000);
+    ////////////////////////////////////////////////////////
 
     TChain *tree;
     std::map<Int_t, Double_t> brhoMap;

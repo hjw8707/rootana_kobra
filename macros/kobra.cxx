@@ -714,6 +714,12 @@ void KOBRA::RateIsotopes() {
     ////////////////////////////////////////////////////////////
 }
 
+void KOBRA::DrawCut(const char *cut) {
+    TCutG *cutg = cutgs[cut];
+    if (!cutg) return;
+    cutg->Draw("SAME");
+}
+
 void KOBRA::DrawAllCut() {
     for (const auto &it : cutgs) {
         it.second->Draw("SAME");

@@ -1,3 +1,9 @@
+#ifndef __CLING__
+#include "TCanvas.h"
+#include "TH2.h"
+#include "kobra.hxx"
+#endif
+
 void pid_o() {
     KOBRA ko_o18(KOBRA::Expt::Phys, KOBRA::o18);
     ko_o18.SetBrho(1.2959);
@@ -32,4 +38,11 @@ void pid_o() {
 
     h_sum->SetTitle("Summed PID for O18-O22;A/Q;Z");
     h_sum->Draw("colz");
+
+    ko_o22.DrawCut("o17");
+    ko_o22.DrawCut("o18");
+    ko_o22.DrawCut("o19");
+    ko_o22.DrawCut("o20");
+    ko_o22.DrawCut("o21");
+    ko_o22.DrawCut("o22");
 }
