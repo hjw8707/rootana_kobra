@@ -125,8 +125,8 @@ class KOBRA : public TObject {
     void AddCut(const char *filename);
     void AddCuts(const char *path);
 
-    void DrawCut(const char *cut);
-    void DrawAllCut();
+    void DrawCut(const char *cut, bool flagName = false);
+    void DrawAllCuts(bool flagName = false);
 
     void PrintCutCoord(TCutG *cut, Double_t xoff = 0, Double_t yoff = 0);
 

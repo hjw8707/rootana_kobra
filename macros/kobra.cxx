@@ -714,15 +714,22 @@ void KOBRA::RateIsotopes() {
     ////////////////////////////////////////////////////////////
 }
 
-void KOBRA::DrawCut(const char *cut) {
+void KOBRA::DrawCut(const char *cut, bool flagName) {
     TCutG *cutg = cutgs[cut];
     if (!cutg) return;
     cutg->Draw("SAME");
+    if (flagName) {
+        TLatex text;
+        text.SetTextFont(62);
+        text.SetTextSize(0.02);
+        text.SetTextColor(kViolet);
+        text.DrawLatex(cutg->GetMean(1), cutg->GetMean(2), cutg->GetTitle());
+    }
 }
 
-void KOBRA::DrawAllCut() {
+void KOBRA::DrawAllCuts(bool flagName) {
     for (const auto &it : cutgs) {
-        it.second->Draw("SAME");
+        DrawCut(it.second->GetName(), flagName);
     }
 }
 

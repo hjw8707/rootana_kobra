@@ -39,10 +39,5 @@ void pid_o() {
     h_sum->SetTitle("Summed PID for O18-O22;A/Q;Z");
     h_sum->Draw("colz");
 
-    ko_o22.DrawCut("o17");
-    ko_o22.DrawCut("o18");
-    ko_o22.DrawCut("o19");
-    ko_o22.DrawCut("o20");
-    ko_o22.DrawCut("o21");
-    ko_o22.DrawCut("o22");
+    ko_o22.DrawAllCuts(true);
 }
