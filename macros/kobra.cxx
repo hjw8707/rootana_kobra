@@ -370,14 +370,14 @@ void KOBRA::SetAlias() {
     tree->SetAlias("tofp", Form("(f3pla.GetTAve() - f2dppt.tsum) + 103.8 - 6.62 + %f", tofOff));
     //  tree->SetAlias("de", "Max$(f2ssd.acal)");
     tree->SetAlias("ycor", "(-0.00245304*f3uppac.y^2-0.034376*f3uppac.y+19.8065)/20");
-
+    tree->SetAlias("ycord", "(-0.743174*f3uppac.y^2+5.14862*f3uppac.y+3216.66)/3000");
     if (useSSDorPla) {
         if (useF2orF3)
             tree->SetAlias("de", "Max$(f2ssd.acal)");
         else
             tree->SetAlias("de", "Max$(f3ssd.acal)/ycor");
     } else {
-        tree->SetAlias("de", "sqrt(f3dpla.al*f3dpla.ar)*0.0075");
+        tree->SetAlias("de", "sqrt(f3dpla.al*f3dpla.ar)*0.0075/ycord");
         // tree->SetAlias("de", "sqrt(f3dpla.al*f3dpla.ar)");
     }
     tree->SetAlias("brho", Form("(1+db/4100)*%f", centBrho));
@@ -1680,4 +1680,19 @@ void KOBRA::Fit2DGaussian(TH2 *hist) {
     std::cout << "Sigma X: " << gaussian->GetParameter(2) << std::endl;
     std::cout << "Mean Y: " << gaussian->GetParameter(3) << std::endl;
     std::cout << "Sigma Y: " << gaussian->GetParameter(4) << std::endl;
+}
+
+void Fit2DGaussian(TH2 *hist, const char *cut) {
+    // Create a 2D Gaussian function
+    TF2 *gaussian = new TF2("gaussian", "gaus(0)*gaus(2)", hist->GetXaxis()->GetXmin(), hist->GetXaxis()->GetXmax(),
+                            hist->GetYaxis()->GetXmin(), hist->GetYaxis()->GetXmax());
+
+    // Set initial parameters for the Gaussian
+    gaussian->SetParameters(1, hist->GetMean(1), hist->GetMean(2), hist->GetRMS(1), hist->GetRMS(2));
+
+    // Fit the histogram with the Gaussian function
+    hist->Fit(gaussian, "R", cut);
+
+    // Optionally, draw the fitted function on the histogram
+    gaussian->Draw("SAME");
 }

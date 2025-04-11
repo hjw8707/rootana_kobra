@@ -87,7 +87,8 @@ class KOBRA : public TObject {
     }
     inline void SetUsePla() {
         SetUseSSDorPla(false);
-        AddCuts("./cut_pla");
+        AddCuts("./cut");
+        // AddCuts("./cut_pla");
     }
     // inline void SetUsePla() { SetUseSSDorPla(false); }
 
