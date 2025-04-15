@@ -18,3 +18,5 @@ analysis*
 build
 rawdata
 .DS_Store
+misc
+*.pkl

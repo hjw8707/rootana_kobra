@@ -101,6 +101,9 @@ class KOBRA : public TObject {
     inline void SetGCut(const char *_c) { gcut = _c; }
     inline const char *GetGCut() { return gcut.c_str(); }
 
+    void SetPathLength(Double_t len = -1);
+    inline Double_t GetPathLength() { return pathLength; }
+
     void DrawPID0(const char *cut = NULL);
     void DrawPID(Int_t show = 0, const char *cut = NULL);   // show = 0: nothing, 1: count, 2: pps
     void DrawPIDC(Int_t show = 0, const char *cut = NULL);  // show = 0: nothing, 1: count, 2: pps
@@ -122,6 +125,8 @@ class KOBRA : public TObject {
 
     void CountIsotopes();
     void RateIsotopes();
+
+    void CountIsotopesRunByRun();
 
     void AddCut(const char *filename);
     void AddCuts(const char *path);
@@ -199,6 +204,7 @@ class KOBRA : public TObject {
 
     Double_t centBrho;
     Double_t tofOff;
+    Double_t pathLength;
 
     Bool_t useF1;
     Bool_t useF2orF3;    // true = F2, false = F3

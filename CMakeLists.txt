@@ -6,6 +6,7 @@ find_package(ROOT COMPONENTS Gui RHTTP XMLIO XMLParser)
 list(APPEND CMAKE_MODULE_PATH $ENV{ROOTSYS}/etc/cmake)
 include(${ROOT_USE_FILE})
 
+include_directories(./include $ENV{ROOTANASYS}/include $ENV{MIDASSYS}/include)
 link_directories(./ $ENV{ROOTANASYS}/lib $ENV{MIDASSYS}/lib)
 
 set(HAVE_ROOT_HTTP 1)

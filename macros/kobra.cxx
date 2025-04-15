@@ -12,6 +12,7 @@
 #include "TChainElement.h"
 #include "TColor.h"
 #include "TCutG.h"
+#include "TEventList.h"
 #include "TF2.h"
 #include "TFile.h"
 #include "TGaxis.h"
@@ -158,6 +159,7 @@ void KOBRA::Initilize() {
     tree = new TChain("kobra", "kobra");
     centBrho = 1.5065;
     tofOff = 0;
+    pathLength = 12398.5;
     useF1 = false;
     useF2orF3 = false;
     useSSDorPla = true;
@@ -347,6 +349,16 @@ void KOBRA::RunSetting(int run) {
     tree->SetBranchAddress("scaler", &ca);
 }
 
+void KOBRA::SetPathLength(Double_t len) {
+    if (len > 0) {
+        tree->SetAlias("beta", Form("%f/tof/299.", len));
+        pathLength = len;
+    } else {
+        tree->SetAlias("beta", Form("12398.5/tof/299."));
+        pathLength = 12398.5;
+    }
+}
+
 void KOBRA::SetAlias() {
     if (!tree) return;
 
@@ -447,7 +459,7 @@ void KOBRA::AddCut(const char *filename) {
         linen++;
     }
     if (cut) {
-        cut->SetVarX("AoQ");
+        cut->SetVarX("aoq");
         cut->SetVarY("Z");
         cut->SetFillStyle(1000);
         cut->SetLineStyle(2);
@@ -711,6 +723,40 @@ void KOBRA::RateIsotopes() {
         std::cout << std::endl;
     }
     std::cout << "=========================================" << std::endl;
+    ////////////////////////////////////////////////////////////
+}
+
+void KOBRA::CountIsotopesRunByRun() {
+    ////////////////////////////////////////////////////////////
+    // Counting
+    std::cout << "====================================================================================================="
+                 "======================"
+              << std::endl;
+    std::cout << "   Counts of Isotopes Run by Run" << std::endl;
+    std::cout << "====================================================================================================="
+                 "======================"
+              << std::endl;
+    std::cout << "Run | ";
+    for (const auto &it : cutgs) {
+        std::cout << it.second->GetTitle();
+        std::cout << " | ";
+    }
+    std::cout << std::endl;
+    for (const auto &run : runNs) {
+        std::cout << run << " | ";
+        tree->SetEventList(nullptr);
+        tree->Draw(Form(">>elist_%d", run), Form("runN==%d", run));
+        auto elist = static_cast<TEventList *>(gDirectory->Get(Form("elist_%d", run)));
+        tree->SetEventList(elist);
+        for (const auto &it : cutgs) {
+            std::cout << tree->GetEntries(it.second->GetName()) << " | ";
+        }
+        std::cout << std::endl;
+        delete elist;
+    }
+    std::cout << "====================================================================================================="
+                 "======================"
+              << std::endl;
     ////////////////////////////////////////////////////////////
 }
 
