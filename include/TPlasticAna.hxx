@@ -3,16 +3,14 @@
 
 #include <string>
 
-#include "TKoBRATDCData.hxx"
 #include "TClonesArray.h"
-
 #include "TDetectorAna.hxx"
+#include "TKoBRATDCData.hxx"
 #include "TPlasticData.hxx"
 #include "TTreeManager.hxx"
 
-class TPlasticAna : public TDetectorAna
-{
-public:
+class TPlasticAna : public TDetectorAna {
+   public:
     TPlasticAna(const char *name, const char *_parfile, int _n = 2);
     ~TPlasticAna();
 
@@ -20,8 +18,8 @@ public:
 
     void SetParameters(const char *file);
 
-    //void SetData(std::vector<KoBRATDCMeasurement> &_data);
-    void SetData(TGenericData* data);        
+    // void SetData(std::vector<KoBRATDCMeasurement> &_data);
+    void SetData(TGenericData *data);
     void Analysis();
     TPlasticData *Processing(uint32_t tl, uint32_t tr);
 
@@ -31,18 +29,17 @@ public:
     void PrintOutdata();
 
     inline const TPlasticData *GetData(int i) { return static_cast<TPlasticData *>((*outdata)[i]); }
-    inline TClonesArray* GetDataArray() { return outdata; }
+    inline TClonesArray *GetDataArray() { return outdata; }
 
     void SetTree();
 
-private:
+   private:
     int n;
 
     std::string name;
-    std::vector<uint32_t> data[2]; // data for each XUP, XDN, YUP, YDN, Anode channels
+    std::vector<uint32_t> data[2];  // data for each XUP, XDN, YUP, YDN, Anode channels
 
-    TClonesArray *outdata;
-    ; // processed data
+    TClonesArray *outdata;  // processed data
 
     bool flagSet;
     bool flagData;
@@ -54,6 +51,7 @@ private:
     std::vector<float> offset;
     std::vector<float> factor;
     float tdc_cut[2];
+    float tdiff_cut[2];
     ///////////////////////////////////////////////////////
 };
 
