@@ -556,7 +556,7 @@ void KOBRA::DrawPID(Int_t show, const char *cut) {
             text.SetTextColor(kOrange + 7);
             text.SetTextSize(0.03);
             text.SetTextAlign(22);
-            text.DrawLatex(xmax, ymax, Form("^{%s}%s", aaa.Data(), zzz.Data()));
+            text.DrawLatex(x, ymax, Form("^{%s}%s", aaa.Data(), zzz.Data()));
 
             text.SetTextFont(52);
             text.SetTextColor(kMagenta + 1);

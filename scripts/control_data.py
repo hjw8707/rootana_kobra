@@ -60,19 +60,24 @@ def plotting_control_data(start_date, end_date = None, time_cut = False):
     plt.show()
 
 
-def plot_multiple_dates(dates, time_cut=False, ncol = 6):
+def plot_multiple_dates(dates, cols = [1, 2, 4, 5], save_name = None, time_cut=False, show_plot = True, ncol = 6):
     df_all = pd.read_pickle('merged_df_indexed.pkl')
 
     if time_cut:
         df_all = df_all.between_time('08:00', '20:00')
 
     nrows = (len(dates) + ncol - 1) // ncol  # 필요한 행 수 계산
-    fig, axs = plt.subplots(nrows, ncol, figsize=(20, 5 * nrows), squeeze=False)
+    # 전체 그림의 사이즈를 픽셀 단위로 지정 (예: 2000x1000 픽셀)
+    dpi = 100  # 해상도 설정 (예: 100dpi)
+    width_px = 2000
+    height_px = 200 * nrows  # 각 행마다 300픽셀 할당 (필요에 따라 조정)
+    figsize = (width_px / dpi, height_px / dpi)
+    fig, axs = plt.subplots(nrows, ncol, figsize=figsize, dpi=dpi, squeeze=False)
 
     # 첫 번째 날짜의 데이터로 범례를 설정
     first_date = pd.to_datetime(dates[0])
     df_first = df_all[df_all[df_all.columns[0]].dt.date == first_date.date()]
-    columns = [df_first.columns[1], df_first.columns[2], df_first.columns[4], df_first.columns[5]]
+    columns = [df_first.columns[col] for col in cols]
     colors = plt.cm.tab10(np.linspace(0, 1, len(columns)))  # 색상 설정
 
     # 범례를 위한 빈 플롯
@@ -117,10 +122,19 @@ def plot_multiple_dates(dates, time_cut=False, ncol = 6):
 
     fig.autofmt_xdate()
     plt.tight_layout()
-    plt.show()
+    if save_name is not None: plt.savefig(save_name)
+    if show_plot: plt.show()
 
 if __name__ == '__main__':
     df = pd.read_pickle('merged_df_indexed.pkl')
     dates = pd.to_datetime(df[df.columns[0]].dt.date.unique()).strftime('%Y-%m-%d')
-    plot_multiple_dates(dates, True)
+    # 파일로 저장하려면, plot_multiple_dates 함수 내에서 plt.savefig('파일이름.png')를 plt.show() 전에 추가하면 됩니다.
+    # 예시:
+    # plot_multiple_dates(dates, cols = [1, 2, 4, 5, 7, 8], time_cut=True)
+    # plt.savefig('multiple_dates_plot.png')
+    # plt.show()
+    #plot_multiple_dates(dates, cols = [1, 2, 4, 5, 7, 8], time_cut=True, save_name = 'multiple_dates_plot.png')
+    plot_multiple_dates(dates, cols = [1, 2], time_cut=True, save_name = 'D1_plot.png', show_plot = False)
+    plot_multiple_dates(dates, cols = [4, 5], time_cut=True, save_name = 'D2_plot.png', show_plot = False)
+    plot_multiple_dates(dates, cols = [7, 8], time_cut=True, save_name = 'Swinger_plot.png', show_plot = False)
     #plotting_control_data('2024-06-19', None, True)
