@@ -3,17 +3,14 @@
 
 #include <string>
 
-#include "TKoBRATDCData.hxx"
 #include "TClonesArray.h"
-
 #include "TDetectorAna.hxx"
+#include "TKoBRATDCData.hxx"
 #include "TPPACData.hxx"
-
 #include "TTreeManager.hxx"
 
-class TLPPACAna : public TDetectorAna
-{
-public:
+class TLPPACAna : public TDetectorAna {
+   public:
     TLPPACAna(const char *name, const char *_parfile);
     ~TLPPACAna();
 
@@ -21,12 +18,10 @@ public:
 
     void SetParameters(const char *file);
 
-    //void SetData(std::vector<KoBRATDCMeasurement> &_data);
-    void SetData(TGenericData* data);    
+    // void SetData(std::vector<KoBRATDCMeasurement> &_data);
+    void SetData(TGenericData *data);
     void Analysis();
-    TPPACData *Processing(uint32_t tx1, uint32_t tx2,
-                          uint32_t ty1, uint32_t ty2,
-                          uint32_t ta, int lcr);
+    TPPACData *Processing(uint32_t tx1, uint32_t tx2, uint32_t ty1, uint32_t ty2, uint32_t ta, int lcr);
 
     void PrintParameters();
     void PrintData();
@@ -34,18 +29,17 @@ public:
     void PrintOutdata();
 
     inline const TPPACData *GetData(int i) { return static_cast<TPPACData *>((*outdata)[i]); }
-    inline TClonesArray* GetDataArray() { return outdata; }
+    inline TClonesArray *GetDataArray() { return outdata; }
 
     void SetTree();
 
-private:
+   private:
     static const int n = 9;
 
     std::string name;
-    std::vector<uint32_t> data[n]; // data for each XUP, XDN, YUP, YDN, Anode channels
+    std::vector<uint32_t> data[n];  // data for each XUP, XDN, YUP, YDN, Anode channels
 
-    TClonesArray *outdata;
-    ; // processed data
+    TClonesArray *outdata;  // processed data
 
     bool flagSet;
     bool flagData;
@@ -56,7 +50,10 @@ private:
     // parameters: [0,1,2,3] = [xl, xc, xr, y]
     std::vector<float> offset;
     std::vector<float> factor;
+
+    float txsum_offset[3];  // [left, center, right]
     float tdc_cut[2];
+    float tsum_cut[2][2];  // [0] x, [1] y
     ///////////////////////////////////////////////////////
 };
 
