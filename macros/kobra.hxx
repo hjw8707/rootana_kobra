@@ -150,8 +150,6 @@ class KOBRA : public TObject {
     void ApplyOffsetToCut(Double_t xoff, Double_t yoff = 0, Double_t xscale = -1, Double_t yscale = -1);
     void SetCutStyle(Int_t color = 1, Int_t width = 1, Int_t style = 2);
 
-    TCutG *Make2DCut(const char *name, const char *title);
-
     inline THeader *GetHeader(int i) { return headers[i]; }
 
     void AnaAtOnce(const char *name, std::vector<std::string> iso);
@@ -174,6 +172,7 @@ class KOBRA : public TObject {
     //////////////////////////////////////////////////////////////////////////////
     // run group for each isotope (defined at kobra.cxx)
     static std::vector<int> o18, o19, o20, o21, o22, ne24, ne25, ne26;
+    static std::vector<int> o22bl, o21bl, o20bl, totbl;
     static std::vector<std::string> o18_iso, o19_iso, o20_iso, o21_iso, o22_iso, ne24_iso, ne25_iso, ne26_iso;
     static std::vector<int> mom_14, mom_12, mom_10, mom_08, mom_07, mom_06, mom_05, mom_04;
     static std::vector<int> mom00, mom04, mom07;

@@ -1,9 +1,9 @@
 {
 #ifdef _WIN32_
-    gSystem->Load("libanadict.dll");
+    gSystem->Load("libkobra.dll");
 #elif __APPLE__
-    gSystem->Load("libanadict.dylib");
+    gSystem->Load("libkobra.dylib");
 #else
-    gSystem->Load("libanadict.so");
+    gSystem->Load("libkobra.so");
 #endif
 }

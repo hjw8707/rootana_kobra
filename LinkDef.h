@@ -9,5 +9,7 @@
 #pragma link C++ class TPlasticData;
 #pragma link C++ class TScalerData;
 
-#pragma link C++ class TKoBRASniffer+;
+#pragma link C++ class TKoBRASniffer + ;
 
+#pragma link C++ class KOBRA;
+#pragma link C++ enum KOBRA::Expt;

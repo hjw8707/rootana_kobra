@@ -27,7 +27,6 @@
 #include "TStyle.h"
 #include "TSystem.h"
 #include "TSystemDirectory.h"
-#include "curry.hxx"
 
 ClassImp(KOBRA);
 
@@ -53,6 +52,11 @@ std::vector<int> KOBRA::ne24 = {410, 411, 412, 413, 415};
 std::vector<int> KOBRA::ne25 = {420, 421, 422};
 
 std::vector<int> KOBRA::ne26 = {425, 426, 427, 428, 429, 430, 431, 433, 434, 435, 436, 437, 438, 439, 440};
+
+std::vector<int> KOBRA::o22bl = {527, 528, 529, 530, 531, 532, 533};
+std::vector<int> KOBRA::o21bl = {537, 538, 539, 540, 542};
+std::vector<int> KOBRA::o20bl = {546, 547, 548, 549, 550, 551};
+std::vector<int> KOBRA::totbl = {553, 554, 555, 556};
 
 std::vector<std::string> KOBRA::o18_iso = {"c13", "c14", "c15", "n15", "n16", "n17",  "o17",
                                            "o18", "o19", "f19", "f20", "f21", "ne21", "ne22"};
@@ -1127,29 +1131,6 @@ void KOBRA::SetCutStyle(Int_t color, Int_t width, Int_t style) {
         cut->SetLineWidth(width);
         cut->SetLineStyle(style);
     }
-}
-
-TCutG *KOBRA::Make2DCut(const char *name, const char *title) {
-    std::cout << " Make a 2D cut with the name of " << name << std::endl;
-    std::cout << " Please click points on the plot. " << std::endl;
-
-    Double_t x, y, xl, yl;
-    Bool_t end;
-
-    TCutG *cut = new TCutG(name);
-    cut->SetTitle(title);
-    cut->SetVarX("AoQ");
-    cut->SetVarY("Z");
-    while (true) {
-        xl = x;
-        yl = y;
-        CURRY::GetInstance()->Run(&x, &y, &end);
-        cut->AddPoint(x, y);
-        if (end) break;
-    }
-    cut->SetLineStyle(2);
-    cut->Draw("SAME");
-    return cut;
 }
 
 Double_t KOBRA::GetPPACEff(Int_t id, const char *cut, bool flagTable, std::string iso, int bias) {
