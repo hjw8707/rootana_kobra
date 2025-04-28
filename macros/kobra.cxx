@@ -58,6 +58,11 @@ std::vector<int> KOBRA::o21bl = {537, 538, 539, 540, 542};
 std::vector<int> KOBRA::o20bl = {546, 547, 548, 549, 550, 551};
 std::vector<int> KOBRA::totbl = {553, 554, 555, 556};
 
+std::map<std::string, float> KOBRA::brhoValue = {
+    {"o18", 1.2959}, {"o19", 1.3198},  {"o20", 1.3734},  {"o21", 1.3954},
+    {"o22", 1.4174}, {"ne24", 1.4394}, {"ne25", 1.4614}, {"ne26", 1.4834},
+};
+
 std::vector<std::string> KOBRA::o18_iso = {"c13", "c14", "c15", "n15", "n16", "n17",  "o17",
                                            "o18", "o19", "f19", "f20", "f21", "ne21", "ne22"};
 std::vector<std::string> KOBRA::o19_iso = {  // ApplyOffsetToCut(-0.005)
@@ -147,6 +152,13 @@ KOBRA::KOBRA(Expt expt, std::vector<int> runs) : expt(expt) {
     LoadTree(expt, runs);
     for (const auto &it : runs) runNs.push_back(it);
     RunSetting(runs[0]);
+}
+KOBRA::KOBRA(Expt expt, std::vector<int> runs, float brho) : expt(expt) {
+    Initilize();
+    LoadTree(expt, runs);
+    for (const auto &it : runs) runNs.push_back(it);
+    RunSetting(runs[0]);
+    SetBrho(brho);
 }
 KOBRA::KOBRA(Expt expt, int runb, int rune) : expt(expt) {
     Initilize();

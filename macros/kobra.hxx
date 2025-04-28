@@ -26,6 +26,7 @@ class KOBRA : public TObject {
     KOBRA(Expt expt, std::vector<std::string> files);
     KOBRA(Expt expt, int run);
     KOBRA(Expt expt, std::vector<int> runs);
+    KOBRA(Expt expt, std::vector<int> runs, float brho);
     KOBRA(Expt expt, int runb, int rune);
 
     virtual ~KOBRA();
@@ -182,6 +183,10 @@ class KOBRA : public TObject {
     // run group for each isotope (defined at kobra.cxx)
     static std::vector<int> mon_10, monn_08, mon_08, mon_07, mon_06, mon_05, mon_04, monn_04, mon_03, mon_02, mon_01,
         mon00, mon01, mon02, mon04, mon06, mon10;
+    //////////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////  ////////
+    static std::map<std::string, float> brhoValue;
     //////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////
