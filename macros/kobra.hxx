@@ -7,6 +7,7 @@
 
 #include "TChain.h"
 #include "TClonesArray.h"
+#include "TCut.h"
 #include "TCutG.h"
 #include "TGraph.h"
 #include "TGraphErrors.h"
@@ -200,6 +201,7 @@ class KOBRA : public TObject {
 
     std::map<std::string, TCutG *> cutgs;
     std::map<std::string, std::map<Int_t, Double_t>> effF1UPPACX;
+    std::string allcut;
 
    private:
     Expt expt;

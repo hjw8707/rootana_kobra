@@ -59,8 +59,8 @@ std::vector<int> KOBRA::o20bl = {546, 547, 548, 549, 550, 551};
 std::vector<int> KOBRA::totbl = {553, 554, 555, 556};
 
 std::map<std::string, float> KOBRA::brhoValue = {
-    {"o18", 1.2959}, {"o19", 1.3198},  {"o20", 1.3734},  {"o21", 1.3954},
-    {"o22", 1.4174}, {"ne24", 1.4394}, {"ne25", 1.4614}, {"ne26", 1.4834},
+    {"o18", 1.2959}, {"o19", 1.3198},     {"o20", 1.3734},     {"o21", 1.3879},
+    {"o22", 1.4600}, {"ne24", 1.2646443}, {"ne25", 1.3201144}, {"ne26", 1.3741834},
 };
 
 std::vector<std::string> KOBRA::o18_iso = {"c13", "c14", "c15", "n15", "n16", "n17",  "o17",
@@ -181,6 +181,8 @@ void KOBRA::Initilize() {
     useSSDorPla = true;
     // gcut = "f3ssd@.GetEntriesFast() > 0 && f3ssd@.GetEntriesFast() < 3";
     gcut = "";
+    allcut = "";
+
     LoadDB("macros/runlog.txt");
     gStyle->SetPadGridX(true);
     gStyle->SetPadGridY(true);
@@ -390,8 +392,12 @@ void KOBRA::SetAlias() {
     tree->SetAlias("f2y", "f2dppac.y");
     tree->SetAlias("f2x", "f2dppac.x");
     tree->SetAlias("f2y", "f2dppac.y");
-    tree->SetAlias("f3x", "760.*tan(f3a/1000.)+f3dppac.x");
-    tree->SetAlias("f3y", "760.*tan(f3b/1000.)+f3dppac.y");
+    tree->SetAlias("f3x", "760.*(f3a/1000.)+f3dppac.x");
+    tree->SetAlias("f3y", "760.*(f3b/1000.)+f3dppac.y");
+    tree->SetAlias("f3ssdx", "160.*(f3a/1000.)+f3uppac.x");
+    tree->SetAlias("f3ssdy", "160.*(f3b/1000.)+f3uppac.y");
+    tree->SetAlias("f3plax", "310.*(f3a/1000.)+f3uppac.x");
+    tree->SetAlias("f3play", "310.*(f3b/1000.)+f3uppac.y");
 
     tree->SetAlias("db", "f1uppacx.x");
     tree->SetAlias("tof", Form("(f3uppt.tsum - f2dppt.tsum) + 103.8 + %f", tofOff));
@@ -399,15 +405,12 @@ void KOBRA::SetAlias() {
     //  tree->SetAlias("de", "Max$(f2ssd.acal)");
     tree->SetAlias("ycor", "(-0.00245304*f3uppac.y^2-0.034376*f3uppac.y+19.8065)/20");
     tree->SetAlias("ycord", "(-0.743174*f3uppac.y^2+5.14862*f3uppac.y+3216.66)/3000");
-    if (useSSDorPla) {
-        if (useF2orF3)
-            tree->SetAlias("de", "Max$(f2ssd.acal)");
-        else
-            tree->SetAlias("de", "Max$(f3ssd.acal)/ycor");
-    } else {
-        tree->SetAlias("de", "sqrt(f3dpla.al*f3dpla.ar)*0.0075/ycord");
-        // tree->SetAlias("de", "sqrt(f3dpla.al*f3dpla.ar)");
-    }
+    // de
+    tree->SetAlias("depla", "sqrt(f3dpla.al*f3dpla.ar)*0.0075/ycord");
+    tree->SetAlias("dessd2", "Max$(f2ssd.acal)");
+    tree->SetAlias("dessd3", "Max$(f3ssd.acal)/ycor");
+    tree->SetAlias("de", useSSDorPla ? (useF2orF3 ? "dessd2" : "dessd3") : "depla");
+
     tree->SetAlias("brho", Form("(1+db/4100)*%f", centBrho));
 
     tree->SetAlias("beta", "12398.5/tof/299.");  // F2 DPPAC - F3 UPPAC
@@ -418,20 +421,24 @@ void KOBRA::SetAlias() {
     tree->SetAlias("gammap", "1/sqrt(1-betap*betap)");
     tree->SetAlias("ppp", "gammap*betap");
 
-    if (useF1) {
-        tree->SetAlias("aoq", "brho/(3.1*pp)");
-        tree->SetAlias("aoqp", "brho/(3.1*ppp)");
-    } else
-        tree->SetAlias("aoq", Form("%f/(3.1*pp)", centBrho));
+    tree->SetAlias("aoq", useF1 ? "brho/(3.1*pp)" : Form("%f/(3.1*pp)", centBrho));
+    tree->SetAlias("aoqp", useF1 ? "brho/(3.1*ppp)" : Form("%f/(3.1*ppp)", centBrho));
+
     tree->SetAlias("AoQ", "0.941841*aoq+0.095597");
     tree->SetAlias("AoQp", "0.941841*aoqp+0.095597");
-    tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
-    tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
 
-    //  if (useSSDorPla) {
+    tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
+
+    tree->SetAlias("z_ssd3", "sqrt(dessd3)*beta/sqrt(corfac)");
+    tree->SetAlias("z_ssd2", "sqrt(dessd2)*beta/sqrt(corfac)");
+    tree->SetAlias("z_pla", "sqrt(depla)*beta/sqrt(corfac)");
+
+    tree->SetAlias("Z_ssd3", "21.540118*z_ssd3+0.444610");
+    tree->SetAlias("Z_ssd2", "21.540118*z_ssd2+0.444610");
+    tree->SetAlias("Z_pla", "21.540118*z_pla+0.444610");
+
+    tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
     tree->SetAlias("Z", "21.540118*z+0.444610");
-    //    else {
-    //      tree->SetAlias("Z","4.8037*z-1.8");}
 
     ////////////////////////////////////////////
     // de-tof cut
@@ -507,6 +514,17 @@ void KOBRA::AddCuts(const char *path) {
     }
 
     SetCutStyle(2, 2);
+
+    ////////////////////////////////////////////////////////////
+    // add a cut for all isotopes
+    for (const auto &it : cutgs) {
+        if (!allcut.empty()) {
+            allcut += "||";
+        }
+        allcut += it.second->GetName();
+    }
+    ////////////////////////////////////////////////////////////
+    std::cout << "allcut: " << allcut << std::endl;
 }
 
 void KOBRA::DrawPID0(const char *cut) {
