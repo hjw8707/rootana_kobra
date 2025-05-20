@@ -48,6 +48,8 @@ class KOBRA : public TObject {
 
     Bool_t LoadDB(const char *file);
 
+    std::vector<Int_t> GetRunNs() { return runNs; }
+
     void SetAlias();
 
     inline void SetBrho(Double_t br) {
@@ -122,6 +124,8 @@ class KOBRA : public TObject {
                                                    Double_t leftLimit, Double_t rightLimit, Bool_t flagOff,
                                                    Int_t bias = 0, Bool_t flagUseF1 = true);
 
+    void DrawPPACTimings(bool flagLog = false, const char *cut = NULL);
+
     void DrawPPACEff(const char *cut = NULL);
     void PrintSetting(std::ostream &out = std::cout);
 
@@ -167,6 +171,8 @@ class KOBRA : public TObject {
     void F3SSDPeak(const char *cut, int low = 200, int high = 2000);
     ////////////////////////////////////////////////////////
 
+    void ExtractScalerInfo(bool flagPrint = false, const char *filename = nullptr);
+
     TChain *tree;
     std::map<Int_t, Double_t> brhoMap;
     std::map<Int_t, Double_t> f1slitMap;
@@ -178,13 +184,26 @@ class KOBRA : public TObject {
     static std::vector<std::string> o18_iso, o19_iso, o20_iso, o21_iso, o22_iso, ne24_iso, ne25_iso, ne26_iso;
     static std::vector<int> mom_14, mom_12, mom_10, mom_08, mom_07, mom_06, mom_05, mom_04;
     static std::vector<int> mom00, mom04, mom07;
+
+    static std::map<std::string, std::vector<int>> csruns;
+    static std::map<std::string, std::vector<std::string>> csiso;
     /////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////////////
     // run group for each isotope (defined at kobra.cxx)
     static std::vector<int> mon_10, monn_08, mon_08, mon_07, mon_06, mon_05, mon_04, monn_04, mon_03, mon_02, mon_01,
         mon00, mon01, mon02, mon04, mon06, mon10;
-    //////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // run groups for momentum distribution runs
+    //
+    // isotopes, (center momentum in %, [runset1, 2, ...])
+    // isotopes, (center momentum in %, [(left limit, right limit) in mm, ...])
+    // isotopes, (center momentum in %, [F1UP PPAC HV, ...])
+    static std::map<std::string, std::map<int, std::vector<std::vector<int>>>> mruns;
+    static std::map<std::string, std::map<int, std::vector<std::pair<double, double>>>> mruns_disp;
+    static std::map<std::string, std::map<int, std::vector<int>>> mruns_hv;
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////  ////////
     static std::map<std::string, float> brhoValue;
@@ -220,7 +239,11 @@ class KOBRA : public TObject {
 
     std::vector<std::string> split(const std::string &s, char delimiter, bool flagEmpty = true);
 
-    TClonesArray *ca;
+    ////////////////////////////////////////////////////////
+    // tree branches
+    int runN;
+    TClonesArray *scaler;
+    ////////////////////////////////////////////////////////
 
     ClassDef(KOBRA, 1)
 };

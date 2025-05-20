@@ -27,7 +27,7 @@
 #include "TStyle.h"
 #include "TSystem.h"
 #include "TSystemDirectory.h"
-
+#include "TVirtualPad.h"
 ClassImp(KOBRA);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,9 +43,9 @@ std::vector<int> KOBRA::o21 = {316, 318, 319, 320, 321, 322, 323, 324, 325, 326,
                                332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 347};
 
 std::vector<int> KOBRA::o22 = {223, 224, 225, 226,  // Right after the newly adjusted primary beam
-                               348, 349, 350, 351, 352, 361, 362, 364, 365, 366, 367, 368, 369, 370, 371, 372,
-                               373, 374, 375, 376, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387, 388, 389,
-                               390, 391, 392, 393, 394, 395, 396, 397, 398, 399, 400, 402, 403, 404};
+                               348, 349, 350, 351, 352, 361, 362, 364, 365, 366, 367, 368, 369, 370, 371,
+                               372, 373, 374, 375, 376, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387,
+                               388, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399, 400, 402, 403, 404};
 
 std::vector<int> KOBRA::ne24 = {410, 411, 412, 413, 415};
 
@@ -58,10 +58,14 @@ std::vector<int> KOBRA::o21bl = {537, 538, 539, 540, 542};
 std::vector<int> KOBRA::o20bl = {546, 547, 548, 549, 550, 551};
 std::vector<int> KOBRA::totbl = {553, 554, 555, 556};
 
-std::map<std::string, float> KOBRA::brhoValue = {
-    {"o18", 1.2959}, {"o19", 1.3198},     {"o20", 1.3734},     {"o21", 1.3879},
-    {"o22", 1.4600}, {"ne24", 1.2646443}, {"ne25", 1.3201144}, {"ne26", 1.3741834},
-};
+std::map<std::string, std::vector<int>> KOBRA::csruns = {
+    {"o18", o18},   {"o19", o19},   {"o20", o20},     {"o21", o21},     {"o22", o22},     {"ne24", ne24},
+    {"ne25", ne25}, {"ne26", ne26}, {"o22bl", o22bl}, {"o21bl", o21bl}, {"o20bl", o20bl}, {"totbl", totbl}};
+
+std::map<std::string, float> KOBRA::brhoValue = {{"o18", 1.2959},     {"o19", 1.3198},     {"o20", 1.3734},
+                                                 {"o21", 1.3879},     {"o22", 1.4600},     {"ne24", 1.2646443},
+                                                 {"ne25", 1.3201144}, {"ne26", 1.3741834}, {"o22bl", 1.4600},
+                                                 {"o21bl", 1.3879},   {"o20bl", 1.3734},   {"totbl", 1.3734}};
 
 std::vector<std::string> KOBRA::o18_iso = {"c13", "c14", "c15", "n15", "n16", "n17",  "o17",
                                            "o18", "o19", "f19", "f20", "f21", "ne21", "ne22"};
@@ -89,8 +93,108 @@ std::vector<std::string> KOBRA::ne25_iso = {  // ApplyOffsetToCut(-0.005, -0.1)
 
 std::vector<std::string> KOBRA::ne26_iso = {  // ApplyOffsetToCut(-0.005, -0.1)
     "f22", "f23", "ne24", "na25", "na26", "na27", "mg28", "mg29", "al30", "al31"};
+
+std::map<std::string, std::vector<std::string>> KOBRA::csiso = {
+    {"o18", o18_iso}, {"o19", o19_iso},   {"o20", o20_iso},   {"o21", o21_iso},
+    {"o22", o22_iso}, {"ne24", ne24_iso}, {"ne25", ne25_iso}, {"ne26", ne26_iso}};
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// static variables for mom distribution runs
+//
+// isotopes, (momentum dispersion in %, F1 opening in %, single side), runs
+//
+// clang-format off
+std::map<std::string, std::map<int, std::vector<std::vector<int>>>> KOBRA::mruns = {
+    {"o20",{
+            {-14, {{656, 657}}},
+            {-12, {{643, 644, 645, 646, 647, 648}}},
+            {-10, {{639, 640, 641, 642}}},
+            { -8, {{620, 621, 622, 623, 625}}},
+            { -7, {{651, 652, 653, 655}}},
+            { -6, {{615, 616, 617}}},
+            { -5, {{660, 661}}},
+            { -4, {{610, 611, 612}}},
+            {  0, {{601, 602, 603, 604}, {632, 636}, {637, 638}}}, // normal, w/o BD, with BD
+            {  4, {{605, 606, 607}}},
+            {  7, {{590, 592, 593, 594, 595, 596, 598}}}}},
+    {"ne24",{
+            {-10, {{775, 776, 777, 778, 779}, {773, 774}}},
+            { -8, {{763, 764, 765}, {767, 769}, {770, 771}}},
+            { -7, {{780, 781}}},
+            { -6, {{754, 755, 756, 757, 758, 759}}},
+            { -5, {{782, 783, 784, 785}}},
+            { -4, {{750, 751, 752}, {788, 789}}},
+            { -3, {{786, 787}}},
+            { -2, {{746, 748}}},
+            { -1, {{738, 739, 740}}},
+            {  0, {{706, 707, 708}}},
+            {  1, {{713, 714, 715, 716, 717, 718, 719}}},
+            {  2, {{720, 721, 722, 723, 724, 725}}},
+            {  4, {{726, 727, 728, 729, 730}}},
+            {  6, {{731, 732, 733}}},
+            { 10, {{734, 735, 736, 737}}}}}};
+
+std::map<std::string, std::map<int, std::vector<std::pair<double, double>>>> KOBRA::mruns_disp = {
+    {"o20", {
+            {-14, {{-2, 0}}},
+            {-12, {{-5, 1}}},
+            {-10, {{-6.5, 2.5}}},
+            { -8, {{-23, 19}}},
+            { -7, {{-35, 31}}},
+            { -6, {{-25, 21}}},
+            { -5, {{-55, 51}}},
+            { -4, {{-45, 41}}},
+            {  0, {{-190, 190}, {-190, 190}, {-190, 190}}},
+            {  4, {{-190, 190}}},
+            {  7, {{-190, 190}}}}},
+    {"ne24", {
+            {-10, {{-1, 0}, {-6.1, 2.1}}},
+            { -8, {{-2, 0}, {2, 0}, {-6.1, 2.1}}},
+            { -7, {{-4, 0}}},
+            { -6, {{-4.5, 0.5}}},
+            { -5, {{-5.5, 1.5}}},
+            { -4, {{-6.2, 2.2}, {-6.2, 2.2}}},
+            { -3, {{-7, 3}}},
+            { -2, {{-11, 7}}},
+            { -1, {{-19, 15}}},
+            {  0, {{-25, 21}}},
+            {  1, {{-37, 33}}},
+            {  2, {{-49, 45}}},
+            {  4, {{-86, 82}}},
+            {  6, {{-128, 124}}},
+            { 10, {{-128, 124}}}}}};
+
+std::map<std::string, std::map<int, std::vector<int>>> KOBRA::mruns_hv = {
+    {"o20", {
+            {-14, {550}},
+            {-12, {550}},
+            {-10, {550}},
+            { -8, {550}},
+            { -7, {550}},
+            { -6, {575}},
+            { -5, {550}},
+            { -4, {585}},
+            {  0, {595, 595, 595}},
+            {  4, {595}},
+            {  7, {595}}}},
+    {"ne24", {
+            {-10, {550, 0}},
+            { -8, {550, 0, 0}},
+            { -7, {550}},
+            { -6, {550}},
+            { -5, {550}},
+            { -4, {550, 550}},
+            { -3, {550}},
+            { -2, {550}},
+            { -1, {550}},
+            {  0, {550}},
+            {  1, {550}},
+            {  2, {550}},
+            {  4, {550}},
+            {  6, {550}},
+            { 10, {550}}}}};
+// clang-format on
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // static variables for mom distribution runs
 std::vector<int> KOBRA::mom_14 = {656, 657};                          // ApplyOffsetToCut(0.04)
@@ -363,8 +467,9 @@ void KOBRA::RunSetting(int run) {
     else
         SetUseSSD();
 
-    ca = NULL;
-    tree->SetBranchAddress("scaler", &ca);
+    scaler = NULL;
+    tree->SetBranchAddress("scaler", &scaler);
+    tree->SetBranchAddress("runN", &runN);
 }
 
 void KOBRA::SetPathLength(Double_t len) {
@@ -1004,30 +1109,30 @@ Double_t KOBRA::GetElapsedTime() {
         if (it == nSum.begin()) {
             for (int i = 0; i <= tree->GetEntries(); i++) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n0 = static_cast<TScalerData *>(ca->At(0))->reft;
+                if (scaler->GetEntriesFast() > 0) {
+                    n0 = static_cast<TScalerData *>(scaler->At(0))->reft;
                     break;
                 }
             }
             for (int i = *it - 1; i >= 0; i--) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n1 = static_cast<TScalerData *>(ca->At(0))->reft;
+                if (scaler->GetEntriesFast() > 0) {
+                    n1 = static_cast<TScalerData *>(scaler->At(0))->reft;
                     break;
                 }
             }
         } else {
             for (int i = *(it - 1); i <= tree->GetEntries(); i++) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n0 = static_cast<TScalerData *>(ca->At(0))->reft;
+                if (scaler->GetEntriesFast() > 0) {
+                    n0 = static_cast<TScalerData *>(scaler->At(0))->reft;
                     break;
                 }
             }
             for (int i = *it - 1; i >= 0; i--) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n1 = static_cast<TScalerData *>(ca->At(0))->reft;
+                if (scaler->GetEntriesFast() > 0) {
+                    n1 = static_cast<TScalerData *>(scaler->At(0))->reft;
                     break;
                 }
             }
@@ -1044,6 +1149,31 @@ Long64_t KOBRA::GetEntries(const char *selection) {
     Long64_t res = s->GetSelectedRows();
     delete s;
     return res;
+}
+
+void KOBRA::DrawPPACTimings(bool flagLog, const char *cut) {
+    auto c1 = new TCanvas(Form("cptim_r%d", runNs.front()), "PPAC Timings", 1200, 800);
+
+    const int nppacs = 4;
+    const int nquants = 5;
+
+    c1->Divide(nquants, nppacs);
+
+    const char *ppacs[nppacs] = {"f1uppacx", "f2dppac", "f3uppac", "f3dppac"};
+    const char *quants[nquants] = {"tx1", "tx2", "ty1", "ty2", "ta"};
+
+    TH1 *h1;
+    for (Int_t i = 0; i < nppacs; i++) {
+        for (Int_t j = 0; j < nquants; j++) {
+            TVirtualPad *vpad = c1->cd(i * nquants + j + 1);
+            tree->Draw(
+                Form("%s.%s>>h%s_%s_r%d(1000,0,100000)", ppacs[i], quants[j], ppacs[i], quants[j], runNs.front()), cut);
+            vpad->SetLogy(flagLog);
+            auto h1 = static_cast<TH1 *>(gDirectory->Get(Form("h%s_%s_r%d", ppacs[i], quants[j], runNs.front())));
+            h1->GetXaxis()->SetRange(h1->FindFirstBinAbove(0), h1->FindLastBinAbove(0));
+            h1->Draw();
+        }
+    }
 }
 
 void KOBRA::DrawPPACEff(const char *cut) {
@@ -1084,18 +1214,18 @@ TGraph *KOBRA::PPACRate() {
     Double_t lastppac = -1;
     for (Int_t i = 0; i < tree->GetEntries(); i += 10) {
         tree->GetEntry(i);
-        if (!ca || ca->GetEntriesFast() == 0) continue;
+        if (!scaler || scaler->GetEntriesFast() == 0) continue;
         time_t start_ts = GetHeader(tree->GetTreeNumber())->GetStartTimeStamp();
         time_t day0 = start_ts - (start_ts % 86400) - 9 * 3600;  // 00:00:00 of the day
         if (i > 1) {
-            Double_t dt = (double)(static_cast<TScalerData *>(ca->At(0))->ts - lastts);
-            Double_t dppac = (double)(static_cast<TScalerData *>(ca->At(0))->ppac - lastppac);
+            Double_t dt = (double)(static_cast<TScalerData *>(scaler->At(0))->ts - lastts);
+            Double_t dppac = (double)(static_cast<TScalerData *>(scaler->At(0))->ppac - lastppac);
             if (dt != 0) {
-                gr->AddPoint(day0 + static_cast<TScalerData *>(ca->At(0))->reft, dppac / (dt * 1.E-8));
+                gr->AddPoint(day0 + static_cast<TScalerData *>(scaler->At(0))->reft, dppac / (dt * 1.E-8));
             }
         }
-        lastts = (double)(static_cast<TScalerData *>(ca->At(0))->ts);
-        lastppac = (double)(static_cast<TScalerData *>(ca->At(0))->ppac);
+        lastts = (double)(static_cast<TScalerData *>(scaler->At(0))->ts);
+        lastppac = (double)(static_cast<TScalerData *>(scaler->At(0))->ppac);
     }
 
     gr->GetXaxis()->SetTimeDisplay(1);
@@ -1114,18 +1244,18 @@ TGraph *KOBRA::TriggerRate() {
     Double_t lasttrig = -1;
     for (Int_t i = 0; i < tree->GetEntries(); i += 10) {
         tree->GetEntry(i);
-        if (!ca || ca->GetEntriesFast() == 0) continue;
+        if (!scaler || scaler->GetEntriesFast() == 0) continue;
         time_t start_ts = GetHeader(tree->GetTreeNumber())->GetStartTimeStamp();
         time_t day0 = start_ts - (start_ts % 86400) - 9 * 3600;  // 00:00:00 of the day
         if (i > 1) {
-            Double_t dt = (double)(static_cast<TScalerData *>(ca->At(0))->ts - lastts);
-            Double_t dtrig = (double)(static_cast<TScalerData *>(ca->At(0))->hwtriga - lasttrig);
+            Double_t dt = (double)(static_cast<TScalerData *>(scaler->At(0))->ts - lastts);
+            Double_t dtrig = (double)(static_cast<TScalerData *>(scaler->At(0))->hwtriga - lasttrig);
             if (dt != 0) {
-                gr->AddPoint(day0 + static_cast<TScalerData *>(ca->At(0))->reft, dtrig / (dt * 1.E-8));
+                gr->AddPoint(day0 + static_cast<TScalerData *>(scaler->At(0))->reft, dtrig / (dt * 1.E-8));
             }
         }
-        lastts = (double)(static_cast<TScalerData *>(ca->At(0))->ts);
-        lasttrig = (double)(static_cast<TScalerData *>(ca->At(0))->hwtriga);
+        lastts = (double)(static_cast<TScalerData *>(scaler->At(0))->ts);
+        lasttrig = (double)(static_cast<TScalerData *>(scaler->At(0))->hwtriga);
     }
 
     gr->GetXaxis()->SetTimeDisplay(1);
@@ -1220,34 +1350,34 @@ Double_t KOBRA::GetLiveTime() {
         if (it == nSum.begin()) {
             for (int i = 0; i <= tree->GetEntries(); i++) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n0un = static_cast<TScalerData *>(ca->At(0))->hwtrigb;
-                    n0ga = static_cast<TScalerData *>(ca->At(0))->hwtriga;
+                if (scaler->GetEntriesFast() > 0) {
+                    n0un = static_cast<TScalerData *>(scaler->At(0))->hwtrigb;
+                    n0ga = static_cast<TScalerData *>(scaler->At(0))->hwtriga;
                     break;
                 }
             }
             for (int i = *it - 1; i >= 0; i--) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n1un = static_cast<TScalerData *>(ca->At(0))->hwtrigb;
-                    n1ga = static_cast<TScalerData *>(ca->At(0))->hwtriga;
+                if (scaler->GetEntriesFast() > 0) {
+                    n1un = static_cast<TScalerData *>(scaler->At(0))->hwtrigb;
+                    n1ga = static_cast<TScalerData *>(scaler->At(0))->hwtriga;
                     break;
                 }
             }
         } else {
             for (int i = *(it - 1); i <= tree->GetEntries(); i++) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n0un = static_cast<TScalerData *>(ca->At(0))->hwtrigb;
-                    n0ga = static_cast<TScalerData *>(ca->At(0))->hwtriga;
+                if (scaler->GetEntriesFast() > 0) {
+                    n0un = static_cast<TScalerData *>(scaler->At(0))->hwtrigb;
+                    n0ga = static_cast<TScalerData *>(scaler->At(0))->hwtriga;
                     break;
                 }
             }
             for (int i = *it - 1; i >= 0; i--) {
                 tree->GetEntry(i);
-                if (ca->GetEntriesFast() > 0) {
-                    n1un = static_cast<TScalerData *>(ca->At(0))->hwtrigb;
-                    n1ga = static_cast<TScalerData *>(ca->At(0))->hwtriga;
+                if (scaler->GetEntriesFast() > 0) {
+                    n1un = static_cast<TScalerData *>(scaler->At(0))->hwtrigb;
+                    n1ga = static_cast<TScalerData *>(scaler->At(0))->hwtriga;
                     break;
                 }
             }
@@ -1737,6 +1867,25 @@ void KOBRA::Fit2DGaussian(TH2 *hist) {
     std::cout << "Sigma X: " << gaussian->GetParameter(2) << std::endl;
     std::cout << "Mean Y: " << gaussian->GetParameter(3) << std::endl;
     std::cout << "Sigma Y: " << gaussian->GetParameter(4) << std::endl;
+}
+
+void KOBRA::ExtractScalerInfo(bool flagPrint, const char *filename) {
+    std::stringstream ss;
+    ss << "run, ts, ppac, f2pl, f3pl, hwtriga, hwtrigb, refp, reft" << std::endl;
+    for (int i = 0; i <= tree->GetEntries(); i++) {
+        tree->GetEntry(i);
+        if (scaler->GetEntriesFast() > 0) {
+            ss << runN << ", ";
+            static_cast<TScalerData *>(scaler->At(0))->PrintSingleLine(ss);
+            ss << std::endl;
+        }
+    }
+    if (flagPrint) std::cout << ss.str();
+    if (filename) {
+        std::ofstream fout(filename);
+        fout << ss.str();
+        fout.close();
+    }
 }
 
 void Fit2DGaussian(TH2 *hist, const char *cut) {

@@ -11,7 +11,7 @@ fi
 
 echo "Analyzing $1 runs from $2 to $3"
 
-if [ "$2" = "all" ]; then
+if [ "$2" = "all_cs" ]; then
     if [ "$1" = "comm" ]; then
         echo "No comm runs"
         exit 0
@@ -33,6 +33,51 @@ if [ "$2" = "all" ]; then
         $0 phys 420 422
         $0 phys 425 431
         $0 phys 433 440
+        exit 0
+    fi
+fi
+
+if [ "$2" = "all_bls" ]; then
+    if [ "$1" = "comm" ]; then
+        echo "No comm runs"
+        exit 0
+    elif [ "$1" = "phys" ]; then
+        $0 phys 527 533
+        $0 phys 537 540
+        $0 phys 542 542
+        $0 phys 546 551
+        $0 phys 553 556
+        exit 0
+    fi
+fi
+
+if [ "$2" = "all_mdis" ]; then
+    if [ "$1" = "comm" ]; then
+        echo "No comm runs"
+        exit 0
+    elif [ "$1" = "phys" ]; then
+        $0 phys 590 590
+        $0 phys 592 596
+        $0 phys 598 598
+        $0 phys 601 607
+        $0 phys 610 612
+        $0 phys 615 617
+        $0 phys 620 623
+        $0 phys 625 625
+        $0 phys 627 630
+        $0 phys 632 632
+        $0 phys 636 648
+        $0 phys 651 653
+        $0 phys 655 657
+        $0 phys 660 661
+        $0 phys 706 708
+        $0 phys 713 740
+        $0 phys 746 746
+        $0 phys 748 748
+        $0 phys 750 752
+        $0 phys 754 759
+        $0 phys 763 765
+        $0 phys 775 789
         exit 0
     fi
 fi
