@@ -194,6 +194,37 @@ std::map<std::string, std::map<int, std::vector<int>>> KOBRA::mruns_hv = {
             {  4, {550}},
             {  6, {550}},
             { 10, {550}}}}};
+
+std::map<std::string, std::map<int, std::vector<double>>> KOBRA::mruns_brho = {
+    {"o20", {
+            {-14, {1.2064 * 0.9600000}},
+            {-12, {1.2384 * 0.9590333}},
+            {-10, {1.2666 * 0.9632790}},
+            { -8, {1.2947 * 0.9665260}},
+            { -7, {1.3088 * 0.9671648}},
+            { -6, {1.3299 * 0.9642969}},
+            { -5, {1.3369 * 0.9701535}},
+            { -4, {1.3510 * 0.9702033}},
+            {  0, {1.4073 * 0.9758002, 1.4087 * 0.975682, 1.4087 * 0.975409}},
+            {  4, {1.4636 * 0.9795254}},
+            {  7, {1.5065 * 0.9816280}}}},
+    {"ne24", {
+            {-10, {1.1768, 1.1768}},
+            { -8, {1.2030, 1.2030, 1.2030}},
+            { -7, {1.2161}},
+            { -6, {1.2291}},
+            { -5, {1.2422}},
+            { -4, {1.2553, 1.2553}},
+            { -3, {1.2684}},
+            { -2, {1.2814}},
+            { -1, {1.2945}},
+            {  0, {1.3076}},
+            {  1, {1.3207}},
+            {  2, {1.3337}},
+            {  4, {1.3599}},
+            {  6, {1.3861}},
+            { 10, {1.4384}}}}};
+
 // clang-format on
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // static variables for mom distribution runs
@@ -269,6 +300,21 @@ KOBRA::KOBRA(Expt expt, int runb, int rune) : expt(expt) {
     LoadTree(expt, runb, rune);
     for (int i = runb; i <= rune; i++) runNs.push_back(i);
     RunSetting(runb);
+}
+
+KOBRA::KOBRA(Expt expt, std::map<int, std::vector<std::vector<int>>> runmap) : expt(expt) {
+    Initilize();
+    std::vector<int> runs;
+    for (const auto &it : runmap) {
+        for (const auto &rung : it.second) {
+            for (const auto &run : rung) {
+                runs.push_back(run);
+            }
+        }
+    }
+    LoadTree(expt, runs);
+    for (const auto &it : runs) runNs.push_back(it);
+    RunSetting(runs.front());
 }
 
 KOBRA::~KOBRA() {
@@ -485,7 +531,6 @@ void KOBRA::SetPathLength(Double_t len) {
 void KOBRA::SetAlias() {
     if (!tree) return;
 
-    std::cout << "Set Alias" << std::endl;
     tree->SetAlias("f1a", "(f1dppac.x - f1uppac.x)/527*1000.");
     tree->SetAlias("f1b", "(f1dppac.y - f1uppac.y)/527*1000.");
     tree->SetAlias("f2a", "(f2dppac.x - f2uppac.x)/480*1000.");
@@ -543,7 +588,7 @@ void KOBRA::SetAlias() {
     tree->SetAlias("Z_pla", "21.540118*z_pla+0.444610");
 
     tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
-    tree->SetAlias("Z", "21.540118*z+0.444610");
+    tree->SetAlias("Z", "21.540118*z+0.644610");
 
     ////////////////////////////////////////////
     // de-tof cut
@@ -629,7 +674,6 @@ void KOBRA::AddCuts(const char *path) {
         allcut += it.second->GetName();
     }
     ////////////////////////////////////////////////////////////
-    std::cout << "allcut: " << allcut << std::endl;
 }
 
 void KOBRA::DrawPID0(const char *cut) {
@@ -1832,13 +1876,13 @@ void KOBRA::Fit2DGaussian(TH2 *hist) {
     TH1D *projX = hist->ProjectionX("projX");
     TH1D *projY = hist->ProjectionY("projY");
 
-    projX->Fit("gaus");
+    projX->Fit("gaus", "Q0");
     TF1 *f1 = projX->GetFunction("gaus");
     // Get the initial parameters from the 1D fits
     Double_t meanX = f1->GetParameter(1);
     Double_t sigmaX = f1->GetParameter(2);
 
-    projY->Fit("gaus");
+    projY->Fit("gaus", "Q0");
     f1 = projY->GetFunction("gaus");
     Double_t meanY = f1->GetParameter(1);
     Double_t sigmaY = f1->GetParameter(2);
@@ -1856,17 +1900,17 @@ void KOBRA::Fit2DGaussian(TH2 *hist) {
     gaussian->SetParameters(1, meanX, sigmaX, meanY, sigmaY);
 
     // Fit the histogram with the Gaussian function
-    hist->Fit(gaussian, "R");
+    hist->Fit(gaussian, "Q0");
 
     // Optionally, draw the fitted function on the histogram
     gaussian->Draw("SAME");
 
-    std::cout << "Fitted Gaussian parameters:" << std::endl;
-    std::cout << "Amplitude: " << gaussian->GetParameter(0) << std::endl;
-    std::cout << "Mean X: " << gaussian->GetParameter(1) << std::endl;
-    std::cout << "Sigma X: " << gaussian->GetParameter(2) << std::endl;
-    std::cout << "Mean Y: " << gaussian->GetParameter(3) << std::endl;
-    std::cout << "Sigma Y: " << gaussian->GetParameter(4) << std::endl;
+    std::cout << "Fitted Gaussian parameters: ";
+    std::cout << "Amplitude = " << gaussian->GetParameter(0) << ", ";
+    std::cout << "Mean X = " << gaussian->GetParameter(1) << ", ";
+    std::cout << "Sigma X = " << gaussian->GetParameter(2) << ", ";
+    std::cout << "Mean Y = " << gaussian->GetParameter(3) << ", ";
+    std::cout << "Sigma Y = " << gaussian->GetParameter(4) << std::endl;
 }
 
 void KOBRA::ExtractScalerInfo(bool flagPrint, const char *filename) {
@@ -1897,7 +1941,7 @@ void Fit2DGaussian(TH2 *hist, const char *cut) {
     gaussian->SetParameters(1, hist->GetMean(1), hist->GetMean(2), hist->GetRMS(1), hist->GetRMS(2));
 
     // Fit the histogram with the Gaussian function
-    hist->Fit(gaussian, "R", cut);
+    hist->Fit(gaussian, "RQ0");
 
     // Optionally, draw the fitted function on the histogram
     gaussian->Draw("SAME");

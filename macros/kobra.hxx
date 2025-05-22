@@ -30,6 +30,9 @@ class KOBRA : public TObject {
     KOBRA(Expt expt, std::vector<int> runs, float brho);
     KOBRA(Expt expt, int runb, int rune);
 
+    // constructor for mdis runs
+    KOBRA(Expt expt, std::map<int, std::vector<std::vector<int>>> runmap);
+
     virtual ~KOBRA();
 
     void Initilize();
@@ -203,6 +206,7 @@ class KOBRA : public TObject {
     static std::map<std::string, std::map<int, std::vector<std::vector<int>>>> mruns;
     static std::map<std::string, std::map<int, std::vector<std::pair<double, double>>>> mruns_disp;
     static std::map<std::string, std::map<int, std::vector<int>>> mruns_hv;
+    static std::map<std::string, std::map<int, std::vector<double>>> mruns_brho;
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     //////////////////////////////////////////////////////////////////////  ////////

@@ -77,7 +77,9 @@ if [ "$2" = "all_mdis" ]; then
         $0 phys 750 752
         $0 phys 754 759
         $0 phys 763 765
-        $0 phys 775 789
+        $0 phys 767 767
+        $0 phys 769 771
+        $0 phys 773 789
         exit 0
     fi
 fi
