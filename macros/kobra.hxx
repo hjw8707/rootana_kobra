@@ -55,6 +55,8 @@ class KOBRA : public TObject {
 
     void SetAlias();
 
+    void SetStyleAhn();
+
     inline void SetBrho(Double_t br) {
         centBrho = br;
         SetAlias();
@@ -111,9 +113,9 @@ class KOBRA : public TObject {
     void SetPathLength(Double_t len = -1);
     inline Double_t GetPathLength() { return pathLength; }
 
-    void DrawPID0(const char *cut = NULL);
-    void DrawPID(Int_t show = 0, const char *cut = NULL);   // show = 0: nothing, 1: count, 2: pps
-    void DrawPIDC(Int_t show = 0, const char *cut = NULL);  // show = 0: nothing, 1: count, 2: pps
+    TH2 *DrawPID0(const char *cut = NULL);
+    TH2 *DrawPID(Int_t show = 0, const char *cut = NULL);   // show = 0: nothing, 1: count, 2: pps
+    TH2 *DrawPIDC(Int_t show = 0, const char *cut = NULL);  // show = 0: nothing, 1: count, 2: pps
 
     std::vector<TH1 *> DrawXDist(const char *cut = NULL, bool flagDraw = true);
     TH1 *DrawMomDist(const char *cut = NULL, Bool_t flagRate = false, Bool_t flagDraw = true, Double_t binSize = 0.5,

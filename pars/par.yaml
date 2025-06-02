@@ -1,0 +1,9 @@
+#
+# par.yaml
+#
+# 파라미터 파일
+#
+- set1
+  run_name: "phys" # phys or comm
+  run_nums: [150, 500] # run number range
+  ppac

@@ -528,6 +528,13 @@ void KOBRA::SetPathLength(Double_t len) {
     }
 }
 
+void KOBRA::SetStyleAhn() {
+    gStyle->SetOptStat(0);
+    gStyle->SetOptFit(0);
+    gStyle->SetPadGridX(false);
+    gStyle->SetPadGridY(false);
+}
+
 void KOBRA::SetAlias() {
     if (!tree) return;
 
@@ -556,7 +563,7 @@ void KOBRA::SetAlias() {
     tree->SetAlias("ycor", "(-0.00245304*f3uppac.y^2-0.034376*f3uppac.y+19.8065)/20");
     tree->SetAlias("ycord", "(-0.743174*f3uppac.y^2+5.14862*f3uppac.y+3216.66)/3000");
     // de
-    tree->SetAlias("depla", "sqrt(f3dpla.al*f3dpla.ar)*0.0075/ycord");
+    tree->SetAlias("depla", "sqrt(f3dpla.al*f3dpla.ar)/ycord");
     tree->SetAlias("dessd2", "Max$(f2ssd.acal)");
     tree->SetAlias("dessd3", "Max$(f3ssd.acal)/ycor");
     tree->SetAlias("de", useSSDorPla ? (useF2orF3 ? "dessd2" : "dessd3") : "depla");
@@ -578,17 +585,18 @@ void KOBRA::SetAlias() {
     tree->SetAlias("AoQp", "0.941841*aoqp+0.095597");
 
     tree->SetAlias("corfac", "log(2*511./0.173*beta*beta/gamma/gamma) - beta*beta");
+    tree->SetAlias("corfac_pla", "log(2*511./0.0647*beta*beta/gamma/gamma) - beta*beta");
 
     tree->SetAlias("z_ssd3", "sqrt(dessd3)*beta/sqrt(corfac)");
     tree->SetAlias("z_ssd2", "sqrt(dessd2)*beta/sqrt(corfac)");
-    tree->SetAlias("z_pla", "sqrt(depla)*beta/sqrt(corfac)");
+    tree->SetAlias("z_pla", "sqrt(depla)*beta/sqrt(corfac_pla)");
 
     tree->SetAlias("Z_ssd3", "21.540118*z_ssd3+0.444610");
     tree->SetAlias("Z_ssd2", "21.540118*z_ssd2+0.444610");
-    tree->SetAlias("Z_pla", "21.540118*z_pla+0.444610");
+    tree->SetAlias("Z_pla", "40.1885*z_pla-1.51331");
 
-    tree->SetAlias("z", "sqrt(de)*beta/sqrt(corfac)");
-    tree->SetAlias("Z", "21.540118*z+0.644610");
+    tree->SetAlias("z", useSSDorPla ? (useF2orF3 ? "z_ssd2" : "z_ssd3") : "z_pla");
+    tree->SetAlias("Z", useSSDorPla ? (useF2orF3 ? "Z_ssd2" : "Z_ssd3") : "Z_pla");
 
     ////////////////////////////////////////////
     // de-tof cut
@@ -676,8 +684,8 @@ void KOBRA::AddCuts(const char *path) {
     ////////////////////////////////////////////////////////////
 }
 
-void KOBRA::DrawPID0(const char *cut) {
-    if (!tree) return;
+TH2 *KOBRA::DrawPID0(const char *cut) {
+    if (!tree) return nullptr;
 
     std::string cuts = gcut;
     if (cut) {
@@ -688,11 +696,12 @@ void KOBRA::DrawPID0(const char *cut) {
         }
     }
     tree->Draw("de:tof>>hpid0(400,150,350,400,0,150)", cuts.c_str(), "col");
+    return static_cast<TH2 *>(gDirectory->Get("hpid0"));
 }
 
-void KOBRA::DrawPID(Int_t show, const char *cut) {
-    if (show < 0 || show > 2) return;
-    if (!tree) return;
+TH2 *KOBRA::DrawPID(Int_t show, const char *cut) {
+    if (show < 0 || show > 2) return nullptr;
+    if (!tree) return nullptr;
 
     std::string cuts = gcut;
     if (cut) {
@@ -766,11 +775,12 @@ void KOBRA::DrawPID(Int_t show, const char *cut) {
 
         text.DrawLatexNDC(0.15, 0.92, Form("Brho: %.4f Tm / Time: %.0f sec. or %s", GetBrho(), time, timestr.c_str()));
     }
+    return h2;
 }
 
-void KOBRA::DrawPIDC(Int_t show, const char *cut) {
-    if (show < 0 || show > 2) return;
-    if (!tree) return;
+TH2 *KOBRA::DrawPIDC(Int_t show, const char *cut) {
+    if (show < 0 || show > 2) return nullptr;
+    if (!tree) return nullptr;
 
     std::string cuts = gcut;
     if (cut) {
@@ -845,6 +855,7 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut) {
 
         text.DrawLatexNDC(0.15, 0.92, Form("Brho: %.4f Tm / Time: %.0f sec. or %s", GetBrho(), time, timestr.c_str()));
     }
+    return h2;
 }
 
 void KOBRA::SetZ(Int_t iz1, Double_t z1, Int_t iz2, Double_t z2) {

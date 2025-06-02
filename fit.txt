@@ -1,0 +1,175 @@
+   ------------------------------------------------------------------
+  | Welcome to ROOT 6.35.01                        https://root.cern |
+  | (c) 1995-2024, The ROOT Team; conception: R. Brun, F. Rademakers |
+  | Built for macosxarm64 on Apr 11 2025, 00:43:20                   |
+  | From heads/master@v6-35-01-2034-g4d8ee6e450                      |
+  | With Apple clang version 17.0.0 (clang-1700.0.13.3)              |
+  | Try '.help'/'.?', '.demo', '.license', '.credits', '.quit'/'.q'  |
+   ------------------------------------------------------------------
+
+
+Processing macros/pid_mdis.C...
+1.2064
+TTree kobra from file root/phys/output00000656.root added to TChain.
+TTree kobra from file root/phys/output00000657.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 1.00896, Mean X = 2.50926, Sigma X = 0.0510043, Mean Y = 7.69044, Sigma Y = 1.44408
+1.2384
+TTree kobra from file root/phys/output00000643.root added to TChain.
+TTree kobra from file root/phys/output00000644.root added to TChain.
+TTree kobra from file root/phys/output00000645.root added to TChain.
+TTree kobra from file root/phys/output00000646.root added to TChain.
+TTree kobra from file root/phys/output00000647.root added to TChain.
+TTree kobra from file root/phys/output00000648.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 2.12008, Mean X = 4.0667, Sigma X = 1.32946, Mean Y = 12.9409, Sigma Y = 21.8209
+1.2666
+TTree kobra from file root/phys/output00000639.root added to TChain.
+TTree kobra from file root/phys/output00000640.root added to TChain.
+TTree kobra from file root/phys/output00000641.root added to TChain.
+TTree kobra from file root/phys/output00000642.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 1.15633, Mean X = 2.50529, Sigma X = 0.0215113, Mean Y = 7.90315, Sigma Y = 1.0639
+1.2947
+TTree kobra from file root/phys/output00000620.root added to TChain.
+TTree kobra from file root/phys/output00000621.root added to TChain.
+TTree kobra from file root/phys/output00000622.root added to TChain.
+TTree kobra from file root/phys/output00000623.root added to TChain.
+TTree kobra from file root/phys/output00000625.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 1.46754, Mean X = 2.4948, Sigma X = 0.02388, Mean Y = 7.92912, Sigma Y = 0.760898
+1.3088
+TTree kobra from file root/phys/output00000651.root added to TChain.
+TTree kobra from file root/phys/output00000652.root added to TChain.
+TTree kobra from file root/phys/output00000653.root added to TChain.
+TTree kobra from file root/phys/output00000655.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 1.25497, Mean X = 2.49203, Sigma X = 0.0402231, Mean Y = 7.91368, Sigma Y = 1.01644
+1.3299
+TTree kobra from file root/phys/output00000615.root added to TChain.
+TTree kobra from file root/phys/output00000616.root added to TChain.
+TTree kobra from file root/phys/output00000617.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 1.74643, Mean X = 2.50082, Sigma X = 0.0177948, Mean Y = 7.98255, Sigma Y = 0.592451
+1.3369
+TTree kobra from file root/phys/output00000660.root added to TChain.
+TTree kobra from file root/phys/output00000661.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 1.21137, Mean X = 2.48672, Sigma X = 0.0445055, Mean Y = 7.97893, Sigma Y = 1.06985
+1.351
+TTree kobra from file root/phys/output00000610.root added to TChain.
+TTree kobra from file root/phys/output00000611.root added to TChain.
+TTree kobra from file root/phys/output00000612.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 2.56361, Mean X = 2.48136, Sigma X = 0.0125363, Mean Y = 8.01237, Sigma Y = 0.489713
+1.4073
+TTree kobra from file root/phys/output00000601.root added to TChain.
+TTree kobra from file root/phys/output00000602.root added to TChain.
+TTree kobra from file root/phys/output00000603.root added to TChain.
+TTree kobra from file root/phys/output00000604.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 15.2687, Mean X = 2.47127, Sigma X = 0.00598148, Mean Y = 7.96566, Sigma Y = 0.247742
+1.37444
+TTree kobra from file root/phys/output00000632.root added to TChain.
+TTree kobra from file root/phys/output00000636.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 30.7935, Mean X = 2.54016, Sigma X = 0.538594, Mean Y = -17.3846, Sigma Y = 9.72901
+1.37406
+TTree kobra from file root/phys/output00000637.root added to TChain.
+TTree kobra from file root/phys/output00000638.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 30.0914, Mean X = 2.48675, Sigma X = 0.0538974, Mean Y = -18.0038, Sigma Y = 10.1106
+1.4636
+TTree kobra from file root/phys/output00000605.root added to TChain.
+TTree kobra from file root/phys/output00000606.root added to TChain.
+TTree kobra from file root/phys/output00000607.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 7.10102, Mean X = 2.46375, Sigma X = 0.00504749, Mean Y = 8.04583, Sigma Y = 0.300848
+1.5065
+TTree kobra from file root/phys/output00000590.root added to TChain.
+TTree kobra from file root/phys/output00000592.root added to TChain.
+TTree kobra from file root/phys/output00000593.root added to TChain.
+TTree kobra from file root/phys/output00000594.root added to TChain.
+TTree kobra from file root/phys/output00000595.root added to TChain.
+TTree kobra from file root/phys/output00000596.root added to TChain.
+TTree kobra from file root/phys/output00000598.root added to TChain.
+Set Alias
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Set Alias
+Set Alias
+allcut: al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22||al29||al30||al31||c13||c14||c15||c16||c17||f19||f20||f21||f22||f23||f24||mg26||mg27||mg28||mg29||mg30||n15||n16||n17||n18||n19||n20||na23||na24||na25||na26||na27||na28||ne21||ne22||ne23||ne24||ne25||ne26||o17||o18||o19||o20||o21||o22
+Fitted Gaussian parameters: Amplitude = 3.12229, Mean X = 2.46098, Sigma X = 0.00656911, Mean Y = 8.10459, Sigma Y = 0.343163
