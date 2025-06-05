@@ -11,6 +11,7 @@
 #include "TCutG.h"
 #include "TGraph.h"
 #include "TGraphErrors.h"
+#include "TH2.h"
 #include "TObject.h"
 #include "TPad.h"
 
@@ -52,6 +53,7 @@ class KOBRA : public TObject {
     Bool_t LoadDB(const char *file);
 
     std::vector<Int_t> GetRunNs() { return runNs; }
+    std::vector<std::string> GetCuts();
 
     void SetAlias();
 
@@ -96,8 +98,8 @@ class KOBRA : public TObject {
     }
     inline void SetUsePla() {
         SetUseSSDorPla(false);
-        AddCuts("./cut");
-        // AddCuts("./cut_pla");
+        // AddCuts("./cut");
+        AddCuts("./cut_pla");
     }
     // inline void SetUsePla() { SetUseSSDorPla(false); }
 
@@ -118,29 +120,28 @@ class KOBRA : public TObject {
     TH2 *DrawPIDC(Int_t show = 0, const char *cut = NULL);  // show = 0: nothing, 1: count, 2: pps
 
     std::vector<TH1 *> DrawXDist(const char *cut = NULL, bool flagDraw = true);
-    TH1 *DrawMomDist(const char *cut = NULL, Bool_t flagRate = false, Bool_t flagDraw = true, Double_t binSize = 0.5,
-                     Bool_t flagOff = false);
-    TGraphErrors *GetMomDistGraph(Double_t center = 0, const char *cut = NULL, Double_t binSize = 0.5,
-                                  Double_t leftLimit = -4, Double_t right = 4, Bool_t flagOff = false,
-                                  Double_t scale = 1, Bool_t flagUsef1 = true);
-    std::vector<TGraphErrors *> GetMomDistGraphs(Double_t center, Double_t binSize, Double_t leftLimit,
-                                                 Double_t rightLimit, Bool_t flagOff, Int_t bias = 0);
-    std::vector<TGraphErrors *> GetMomDistGraphsNe(std::vector<std::string> isos, Double_t center, Double_t binSize,
-                                                   Double_t leftLimit, Double_t rightLimit, Bool_t flagOff,
-                                                   Int_t bias = 0, Bool_t flagUseF1 = true);
+    TH1 *DrawMomDist(const char *cut = NULL, Bool_t flagRate = false, Bool_t flagDraw = true, Int_t nBin = 32,
+                     Double_t lowLim = -160, Double_t highLim = 160);
+    TGraphErrors *GetMomDistGraph(Double_t center = 0, const char *cut = NULL, Double_t momBinSize = 0.5,
+                                  Double_t momLowLim = -4, Double_t momUppLim = 4, Double_t scale = 1,
+                                  Bool_t flagUsef1 = true);
+    std::map<std::string, TGraphErrors *> GetMomDistGraphs(std::vector<std::string> iso, Double_t center,
+                                                           Double_t f1SlitLowLim, Double_t f1SlitUppLim, Int_t bias = 0,
+                                                           Bool_t flagUseF1 = true);
 
     void DrawPPACTimings(bool flagLog = false, const char *cut = NULL);
 
     void DrawPPACEff(const char *cut = NULL);
     void PrintSetting(std::ostream &out = std::cout);
 
-    void CountIsotopes();
-    void RateIsotopes();
-
-    void CountIsotopesRunByRun();
+    void CountIsotopes(std::ostream &out = std::cout, bool flagTitle = true);
+    void RateIsotopes(std::ostream &out = std::cout, bool flagTitle = true);
+    void CountIsotopesRunByRun(std::ostream &out = std::cout, bool flagTitle = true, bool flagHeader = true);
 
     void AddCut(const char *filename);
     void AddCuts(const char *path);
+
+    Long64_t Draw(const char *name, const char *cut = NULL, const char *option = "");
 
     void DrawCut(const char *cut, bool flagName = false);
     void DrawAllCuts(bool flagName = false);
@@ -177,6 +178,8 @@ class KOBRA : public TObject {
     ////////////////////////////////////////////////////////
 
     void ExtractScalerInfo(bool flagPrint = false, const char *filename = nullptr);
+
+    void DrawBrhoTimeInfo(TVirtualPad *pad, Double_t brho, Double_t time);
 
     TChain *tree;
     std::map<Int_t, Double_t> brhoMap;
@@ -220,6 +223,9 @@ class KOBRA : public TObject {
     static void MomDistAnalysis();
     static void NeMomDistAnalysis(bool flagFast = true);
     static void CrossSectionAnalysis();
+    ////////////////////////////////////////////////////////
+    // new mom dist. analysis functions
+    static void MomDistAnalysis(std::string iso);
     ////////////////////////////////////////////////////////
 
     static void PPACEffCurve();

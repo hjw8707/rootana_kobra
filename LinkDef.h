@@ -13,3 +13,4 @@
 
 #pragma link C++ class KOBRA;
 #pragma link C++ enum KOBRA::Expt;
+#pragma link C++ class KOBRAScaler;

@@ -1,4 +1,6 @@
 #ifndef __CLING__
+#include <fstream>
+
 #include "TCanvas.h"
 #include "TH2.h"
 #include "kobra.hxx"
@@ -14,6 +16,8 @@ void pid_mdis() {
 
     KOBRA* ko;
     TH2* pid_sum = nullptr;
+
+    std::ofstream fout("pid_mdis_counts.txt");
     for (const auto& pair_key_rungroups : runmap) {
         int key = pair_key_rungroups.first;
         const std::vector<std::vector<int>>& run_groups = pair_key_rungroups.second;
@@ -32,11 +36,15 @@ void pid_mdis() {
             } else {
                 pid_sum->Add(h2);
             }
-            // gPad->GetCanvas()->Print(
-            //     Form("figs/pid_mdis_%s_%c%d_%zu.png", iso.c_str(), key > 0 ? 'p' : 'n', std::abs(key), i));
-            // ko->CountIsotopesRunByRun();
+            gPad->GetCanvas()->Print(
+                Form("figs/pid_mdis_%s_%c%d_%zu.png", iso.c_str(), key > 0 ? 'p' : 'n', std::abs(key), i));
+            ko->CountIsotopesRunByRun(fout, false, false);
+            delete gPad->GetCanvas();
             delete ko;
         }
     }
-    pid_sum->Draw("col");
+    // pid_sum->Draw("col");
+    // KOBRA ko2(KOBRA::Expt::Phys, KOBRA::mruns["o20"][0][0], KOBRA::mruns_brho["o20"][0][0]);
+    // ko2.DrawAllCuts(true);
+    fout.close();
 }
