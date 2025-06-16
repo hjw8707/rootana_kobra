@@ -177,6 +177,12 @@ class KOBRA : public TObject {
     void F3SSDPeak(const char *cut, int low = 200, int high = 2000);
     ////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////
+    // SSD, Pla check
+    TH1 *F3PlaAccHis(const char *hname, const char *cut = NULL, bool flagDraw = true);
+    TH1 *F3SSDAccHis(const char *hname, const char *cut = NULL, bool flagDraw = true);
+    ////////////////////////////////////////////////////////
+
     void ExtractScalerInfo(bool flagPrint = false, const char *filename = nullptr);
 
     void DrawBrhoTimeInfo(TVirtualPad *pad, Double_t brho, Double_t time);
@@ -226,6 +232,7 @@ class KOBRA : public TObject {
     ////////////////////////////////////////////////////////
     // new mom dist. analysis functions
     static void MomDistAnalysis(std::string iso);
+    static void LoadMomDistAnalysis(std::string iso);
     ////////////////////////////////////////////////////////
 
     static void PPACEffCurve();

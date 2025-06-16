@@ -558,6 +558,11 @@ void KOBRA::SetAlias() {
     tree->SetAlias("f3plax", "310.*(f3a/1000.)+f3uppac.x");
     tree->SetAlias("f3play", "310.*(f3b/1000.)+f3uppac.y");
 
+    tree->SetAlias("f2t_raw", "f2dppt.tl");
+    tree->SetAlias("f2t", "f2dppt.tsum");
+    tree->SetAlias("f3t_raw", "f3uppt.tl");
+    tree->SetAlias("f3t", "f3uppt.tsum");
+
     tree->SetAlias("db", "f1uppacx.x");
     tree->SetAlias("tof", Form("(f3uppt.tsum - f2dppt.tsum) + 103.8 + %f", tofOff));
     tree->SetAlias("tofp", Form("(f3pla.GetTAve() - f2dppt.tsum) + 103.8 - 6.62 + %f", tofOff));
@@ -1127,8 +1132,8 @@ std::map<std::string, TGraphErrors *> KOBRA::GetMomDistGraphs(std::vector<std::s
     Double_t momUppLim =
         std::floor((f1SlitUppLim - momCenter) / momDispersion / (0.5 * momBinSize)) * (0.5 * momBinSize);
     // The maximum and minimum limits for the momentum distribution
-    if (momLowLim < -4) momLowLim = -4;  // -166 mm
-    if (momUppLim > 4) momUppLim = 4;    // +162 mm
+    if (momLowLim < -3) momLowLim = -3;  // -166 mm -> -125 mm
+    if (momUppLim > 3) momUppLim = 3;    // +162 mm -> +121 mm
     // if the slit is narrower than 0.5%, we need to set the bin size and the range for DrawMomDist
     if (momLowLim > -0.25) {
         // try 0.1 bin size
@@ -1654,96 +1659,6 @@ void KOBRA::AnaAtOnceMom(const char *name, Double_t delta, std::vector<std::stri
     //////////////////////////////////////////////////////////////
 }
 
-void KOBRA::MomDistAnalysis() {
-    KOBRA *ko;
-    ///////////////////////////////////////////////////////////////////
-    // TMultiGraphs definitions
-    std::vector<TMultiGraph *> mgs;
-    ko = new KOBRA(Expt::Phys, KOBRA::mom00);
-    for (const auto it : ko->cutgs) {
-        auto mg = new TMultiGraph(it.first.c_str(), Form("Mom. Distribution of %s;Delta [%%];Differental Rate [pps/%%]",
-                                                         it.second->GetTitle()));
-        mgs.push_back(mg);
-    }
-    delete ko;
-    ///////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////
-    // Loop for all settings
-    std::vector<std::vector<int>> runs = {mom_14, mom_12, mom_10, mom_08, mom_07, mom_06,
-                                          mom_05, mom_04, mom00,  mom04,  mom07};
-    std::vector<std::string> runnames = {"mom_14", "mom_12", "mom_10", "mom_08", "mom_07", "mom_06",
-                                         "mom_05", "mom_04", "mom00",  "mom04",  "mom07"};
-    std::vector<Int_t> bias = {550, 550, 550, 550, 550, 575, 550, 585, 595, 595, 595};
-    std::vector<Double_t> xoff = {0.04, 0.04, 0.035, 0.025, 0.025, 0.02, 0.015, 0.015, 0, -0.005, -0.01};
-    std::vector<Double_t> yoff = {0, 0, 0, 0, 0, -0.1, -0.1, -0.1, 0, 0.1, 0.2};
-
-    std::vector<Double_t> cens = {-14, -12, -10, -8, -7, -6, -5, -4, 0, 4, 7};
-    std::vector<Double_t> bins = {0.1, 0.15, 0.2, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5};
-    std::vector<Double_t> lefts = {0, -0.05, -0.1, -0.5, -0.5, -0.5, -0.5, -1, -4, -4, -4};
-    std::vector<Double_t> rights = {0.1, 0.05, 0.1, 0.5, 0.5, 0.5, 0.5, 1, 4, 4, 4};
-    std::vector<bool> offs = {false, true, true, false, false, false, false, false, false, false, false};
-
-    for (size_t j = 0; j < runs.size(); j++) {
-        ko = new KOBRA(Expt::Phys, runs[j]);
-        ko->ApplyOffsetToCut(xoff[j], yoff[j]);
-        ko->AnaAtOnceMom(runnames[j].c_str(), cens[j]);
-        // auto grs = ko->GetMomDistGraphs(cens[j], bins[j], lefts[j], rights[j], offs[j], bias[j]);
-        // for (size_t i = 0; i < mgs.size(); i++) {
-        //     // size_t i = 25;
-        //     grs[i]->SetMarkerStyle(20 + j);
-        //     grs[i]->SetMarkerColor(j + 1);
-        //     grs[i]->SetMarkerSize(0.7);
-        //     mgs[i]->Add(grs[i]);
-        // }
-        delete ko;
-    }
-    ///////////////////////////////////////////////////////////////////
-
-    ///////////////////////////////////////////////////////////////////
-    // Artifically add
-    // ko = new KOBRA(Expt::Phys, o19);
-    // Double_t scale;
-    // scale = ko->GetPPACEff(1) * ko->GetPPACEff(2) * ko->GetPPACEff(3) * ko->GetLiveTime();
-    // auto gr = ko->GetMomDistGraph(-4, "o19", 0.5, -4, 4, false, 200 / scale);
-    // gr->SetMarkerStyle(20);
-    // gr->SetMarkerColor(1);
-    // gr->SetMarkerSize(0.7);
-    // mgs[18]->Add(gr);  // 19O at -4%
-    // delete ko;
-    ///////////////////////////////////////////////////////////////////
-
-    /////////////////////////////////////////////////////////////////////
-    // Drawing
-    // PDF saving
-    TCanvas *cxdist = new TCanvas("cmdist", "Mom Dist", 1200, 1600);
-    cxdist->Divide(3, 4);
-
-    const int nhist = 12;
-    int i = 0;
-    for (const auto &it : mgs) {
-        cxdist->cd((i % nhist) + 1);
-        it->Draw("AP");
-        i++;
-        if (i % nhist == 0) {
-            cxdist->Print(Form("analysis/momdist.pdf%s", i == nhist ? "(" : ""));
-            cxdist->Clear("D");
-        }
-    }
-    cxdist->Print(Form("analysis/momdist.pdf%s", i < nhist ? "" : ")"));
-    /////////////////////////////////////////////////////////////////////
-
-    /////////////////////////////////////////////////////////////////////
-    // Root file saving
-    TFile *file = new TFile("analysis/momdist.root", "RECREATE");
-    for (const auto &it : mgs) {
-        it->Write();
-    }
-    file->Close();
-    delete file;
-    /////////////////////////////////////////////////////////////////////
-}
-
 void KOBRA::CrossSectionAnalysis() {
     std::vector<std::vector<int>> runs = {o18, o19, o20, o21, o22};
     std::vector<std::string> runnames = {"o18", "o19", "o20", "o21", "o22"};
@@ -2006,6 +1921,7 @@ void KOBRA::MomDistAnalysis(std::string iso) {
                 grs[it]->SetMarkerStyle(20 + counter);
                 grs[it]->SetMarkerColor(counter + 1);
                 grs[it]->SetMarkerSize(0.7);
+                grs[it]->SetName(Form("momdist_%s_%d_%zu", iso.c_str(), mom_center, i));
                 mgs[it]->Add(grs[it]);
             }
             delete ko;
@@ -2051,4 +1967,101 @@ std::vector<std::string> KOBRA::GetCuts() {
         cuts.push_back(it.first);
     }
     return cuts;
+}
+
+void KOBRA::LoadMomDistAnalysis(std::string iso) {
+    TFile *file = new TFile(Form("analysis/momdist_%s.root", iso.c_str()), "READ");
+    std::map<std::string, TMultiGraph *> mgs;
+
+    TList *list = file->GetListOfKeys();
+    for (int i = 0; i < list->GetEntries(); i++) {
+        std::string key = list->At(i)->GetName();
+        mgs[key] = static_cast<TMultiGraph *>(file->Get(key.c_str()));
+    }
+
+    std::string selection = "o20";
+    TCanvas *cxdist = new TCanvas("cmdist", "Mom Dist", 800, 800);
+    auto mg = mgs[selection];
+
+    TList *list2 = mg->GetListOfGraphs();
+    for (int i = 0; i < list2->GetEntries(); i++) {
+        auto gr = static_cast<TGraph *>(list2->At(i));
+        std::string name = gr->GetName();
+        if (name[name.size() - 1] == '0') {
+            gr->Draw("AP");
+        }
+    }
+
+    file->Close();
+    delete file;
+}
+
+TH1 *KOBRA::F3PlaAccHis(const char *hname, const char *cut, bool flagDraw) {
+    Int_t plax[2] = {-50, 50};
+    Int_t play[2] = {-50, 50};
+
+    tree->Draw(Form("f3play:f3plax>>%s(200,-100,100,200,-100,100)", hname), cut, "goff");
+    TH1 *h = static_cast<TH1 *>(gDirectory->Get(hname));
+    if (flagDraw) {
+        h->Draw();
+        gPad->SetLogz();
+        // Draw the acceptance region of the plastic
+        TBox *box = new TBox(plax[0], play[0], plax[1], play[1]);
+        box->SetLineColor(kRed);  // 빨간색 테두리
+        box->SetLineWidth(2);     // 테두리 두께
+        box->SetFillStyle(0);     // 내부 채우기 없음
+        box->Draw();
+    }
+    // 사각형 내부의 이벤트 수를 계산합니다.
+    int nInside = 0;
+    if (h) {
+        // x, y축의 bin 범위 계산
+        int xBinMin = h->GetXaxis()->FindBin(plax[0]);
+        int xBinMax = h->GetXaxis()->FindBin(plax[1]);
+        int yBinMin = h->GetYaxis()->FindBin(play[0]);
+        int yBinMax = h->GetYaxis()->FindBin(play[1]);
+
+        for (int x = xBinMin; x <= xBinMax; ++x) {
+            for (int y = yBinMin; y <= yBinMax; ++y) {
+                nInside += h->GetBinContent(x, y);
+            }
+        }
+    }
+    printf("Plastic acceptance: %f\n", static_cast<double>(nInside) / h->Integral());
+    return h;
+}
+
+TH1 *KOBRA::F3SSDAccHis(const char *hname, const char *cut, bool flagDraw) {
+    Int_t ssdx[2] = {-25, 25};
+    Int_t ssdy[2] = {-25, 25};
+
+    tree->Draw(Form("f3ssdy:f3ssdx>>%s(200,-100,100,200,-100,100)", hname), cut, "goff");
+    TH1 *h = static_cast<TH1 *>(gDirectory->Get(hname));
+    if (flagDraw) {
+        h->Draw();
+        gPad->SetLogz();
+        // Draw the acceptance region of the SSD
+        TBox *box = new TBox(ssdx[0], ssdy[0], ssdx[1], ssdy[1]);
+        box->SetLineColor(kRed);  // 빨간색 테두리
+        box->SetLineWidth(2);     // 테두리 두께
+        box->SetFillStyle(0);     // 내부 채우기 없음
+        box->Draw();
+    }
+    // 사각형 내부의 이벤트 수를 계산합니다.
+    int nInside = 0;
+    if (h) {
+        // x, y축의 bin 범위 계산
+        int xBinMin = h->GetXaxis()->FindBin(ssdx[0]);
+        int xBinMax = h->GetXaxis()->FindBin(ssdx[1]);
+        int yBinMin = h->GetYaxis()->FindBin(ssdy[0]);
+        int yBinMax = h->GetYaxis()->FindBin(ssdy[1]);
+
+        for (int x = xBinMin; x <= xBinMax; ++x) {
+            for (int y = yBinMin; y <= yBinMax; ++y) {
+                nInside += h->GetBinContent(x, y);
+            }
+        }
+    }
+    printf("SSD acceptance: %f\n", static_cast<double>(nInside) / h->Integral());
+    return h;
 }

@@ -11,7 +11,9 @@ import os
 ppac_list = [ "pars/PAR_F1UPPACX.txt",
               "pars/PAR_F2DPPAC.txt",
               "pars/PAR_F3UPPAC.txt",
-              "pars/PAR_F3DPPAC.txt"]
+              "pars/PAR_F3DPPAC.txt",
+              "pars/PAR_F2PPTD.txt",
+              "pars/PAR_F3PPTU.txt"]
 
 def set_ppac_timing_cut(filename, low = 0, high = 500000):
     # 파일을 읽어서 줄 단위로 리스트에 저장
@@ -26,6 +28,7 @@ def set_ppac_timing_cut(filename, low = 0, high = 500000):
     # 파일을 다시 씀
     with open(filename, 'w') as f:
         f.writelines(lines)
+    print(f"Set PPAC timing cut to {low} {high} for {filename}")
 
 def set_all_ppac_no_timing_cut():
     for filename in ppac_list:
@@ -37,11 +40,15 @@ def set_all_ppac_timing_cut(set = "phys_pid"):
         set_ppac_timing_cut(ppac_list[1], 50000, 57000)
         set_ppac_timing_cut(ppac_list[2], 50000, 70000)
         set_ppac_timing_cut(ppac_list[3], 50000, 70000)
+        set_ppac_timing_cut(ppac_list[4], 53000, 56000)
+        set_ppac_timing_cut(ppac_list[5], 57000, 62000)
     elif set == "phys_mdis":
         set_ppac_timing_cut(ppac_list[0], 35000, 50000)
         set_ppac_timing_cut(ppac_list[1], 44000, 54000)
         set_ppac_timing_cut(ppac_list[2], 52000, 58000)
         set_ppac_timing_cut(ppac_list[3], 53000, 58000)
+        set_ppac_timing_cut(ppac_list[4], 40000, 52000)
+        set_ppac_timing_cut(ppac_list[5], 51500, 55000)
 
 
 if __name__ == "__main__":
