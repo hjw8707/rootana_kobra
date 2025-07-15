@@ -6,7 +6,7 @@ import re
 
 MIDCHECK_EXEC = './midcheck'
 DATA_DIR = 'rawdata/KO_24_30'
-CSV_FILE = 'midcheck_summary.csv'
+CSV_FILE = 'misc/midcheck_summary.csv'
 
 def parse_output(output):
     lines = output.strip().split('\n')

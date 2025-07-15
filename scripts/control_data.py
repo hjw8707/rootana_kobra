@@ -7,8 +7,8 @@ import matplotlib.dates as mdates
 
 class ControlData:
     def __init__(self):
-        if os.path.exists('scripts/merged_df_indexed.pkl'):
-            self.df = pd.read_pickle('scripts/merged_df_indexed.pkl')
+        if os.path.exists('misc/merged_df_indexed.pkl'):
+            self.df = pd.read_pickle('misc/merged_df_indexed.pkl')
         else:
             print('merged_df_indexed.pkl does not exist')
             print('Please run merging_excel_files() and re_indexing_control_data() first')

@@ -16,7 +16,7 @@
 
 class KOBRAScaler : public TObject {
    public:
-    KOBRAScaler(const char *file = "scaler/scaler.csv");
+    KOBRAScaler(const char *file = "misc/scaler.csv");
     virtual ~KOBRAScaler();
 
     void LoadCSV(const char *file);
@@ -28,7 +28,7 @@ class KOBRAScaler : public TObject {
     double GetTotalTime(int run);
     double GetTotalTime(std::vector<int> runs);  // average of runs
 
-    static KOBRAScaler *GetInstance(const char *file = "scaler/scaler.csv");
+    static KOBRAScaler *GetInstance(const char *file = "misc/scaler.csv");
 
    private:
     static KOBRAScaler *instance;

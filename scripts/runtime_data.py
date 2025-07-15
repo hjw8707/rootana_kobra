@@ -46,7 +46,7 @@ class RunTimeData:
 
 
 if __name__ == "__main__":
-    runtime_data = RunTimeData('scripts/midcheck_summary.csv')
+    runtime_data = RunTimeData('misc/midcheck_summary.csv')
     df = runtime_data.get_dataframe()
     print(df.head())
 

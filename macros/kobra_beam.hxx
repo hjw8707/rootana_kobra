@@ -16,7 +16,7 @@
 
 class KOBRABeam : public TObject {
    public:
-    KOBRABeam(const char *file = "scripts/beam_time.csv");
+    KOBRABeam(const char *file = "misc/beam_time.csv");
     virtual ~KOBRABeam();
 
     void LoadCSV(const char *file);
@@ -30,7 +30,7 @@ class KOBRABeam : public TObject {
     double GetMeanBeamIntensity(int run);
     double GetIntegralBeamIntensity(int run);
 
-    static KOBRABeam *GetInstance(const char *file = "scripts/beam_time.csv");
+    static KOBRABeam *GetInstance(const char *file = "misc/beam_time.csv");
 
    private:
     static KOBRABeam *instance;

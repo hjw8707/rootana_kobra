@@ -20,3 +20,4 @@ rawdata
 .DS_Store
 misc
 *.pkl
+*__pycache__

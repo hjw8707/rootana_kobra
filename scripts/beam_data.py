@@ -10,8 +10,8 @@ from runtime_data import RunTimeData
 
 class BeamData:
     def __init__(self):
-        if os.path.exists('scripts/beam_data_merged.pkl'):
-            self.df = pd.read_pickle('scripts/beam_data_merged.pkl')
+        if os.path.exists('misc/beam_data_merged.pkl'):
+            self.df = pd.read_pickle('misc/beam_data_merged.pkl')
         else:
             print('beam_data_merged.pkl does not exist')
             print('Please run merging_dataframes() first')
@@ -78,7 +78,7 @@ class BeamData:
             # 완벽하게 겹치는 row 삭제
             total_merged_df.drop_duplicates(inplace=True)
             total_merged_df.reset_index(drop=True, inplace=True)
-            total_merged_df.to_pickle('scripts/beam_data_merged.pkl')
+            total_merged_df.to_pickle('misc/beam_data_merged.pkl')
             print("병합된 데이터가 'beam_data_merged.pkl'로 저장되었습니다.")
             return total_merged_df
         else:
@@ -301,15 +301,15 @@ class BeamData:
 
     def plot_fc_all_days(self):
         fig = self.plot_data_lists_all_days(['FC1_1M', 'FC2_1M'], y_min=-5e-7, y_max=2e-6)
-        fig.savefig('scripts/FC_plot.pdf', bbox_inches='tight')
+        fig.savefig('misc/FC_plot.pdf', bbox_inches='tight')
         return fig
 
     def plot_beam_all_days(self):
         fig = self.plot_data_lists_all_days(['LEBT', 'P2DT'], y_min=-3e-6, y_max=5e-5)
-        fig.savefig('scripts/beam_plot.pdf', bbox_inches='tight')
+        fig.savefig('misc/beam_plot.pdf', bbox_inches='tight')
         return fig
 
-    def get_beam_average_by_run(self, run_number, sort, runtime_csv_path='scripts/midcheck_summary.csv'):
+    def get_beam_average_by_run(self, run_number, sort, runtime_csv_path='misc/midcheck_summary.csv'):
         """
         RunTimeData 클래스를 이용하여 특정 run의 시작/끝 시간을 얻고,
         해당 구간의 beam 평균값을 계산합니다.
@@ -350,7 +350,7 @@ class BeamData:
         return mean_val, integral_val
 
 
-    def get_beam_average_csv(self, runtime_csv_path='scripts/midcheck_summary.csv'):
+    def get_beam_average_csv(self, runtime_csv_path='misc/midcheck_summary.csv'):
         """
         RunTimeData 클래스를 이용하여 특정 run의 시작/끝 시간을 얻고,
         해당 구간의 beam 평균값을 계산합니다.
@@ -379,7 +379,7 @@ class BeamData:
             integral_val = mean_val * (stop_time - start_time).total_seconds()
             print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 LEBT 평균, 적분값: {mean_val}, {integral_val}")
             df_result = pd.concat([df_result, pd.DataFrame({'run_number': [run_number], 'start_time': [start_time], 'stop_time': [stop_time], 'LEBT_mean': [mean_val], 'LEBT_integral': [integral_val]})], ignore_index=True)
-        df_result.to_csv('scripts/beam_time.csv', index=False)
+        df_result.to_csv('misc/beam_time.csv', index=False)
         return df_result
 
 if __name__ == '__main__':
