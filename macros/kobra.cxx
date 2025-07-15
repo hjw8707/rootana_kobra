@@ -29,6 +29,7 @@
 #include "TSystem.h"
 #include "TSystemDirectory.h"
 #include "TVirtualPad.h"
+#include "kobra_beam.hxx"
 #include "kobra_scaler.hxx"
 ClassImp(KOBRA);
 
