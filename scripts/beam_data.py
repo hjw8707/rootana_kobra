@@ -382,6 +382,27 @@ class BeamData:
         df_result.to_csv('misc/beam_time.csv', index=False)
         return df_result
 
+    def get_beam_ratio(self, date_start, time_start, time_end, date_end=None):
+        lebt_mean = self.get_weighted_mean_by_time('LEBT', date_start, time_start, time_end, date_end)
+        p2dt_mean = self.get_weighted_mean_by_time('P2DT', date_start, time_start, time_end, date_end)
+        if lebt_mean is None or p2dt_mean is None:
+            return None
+        return p2dt_mean/lebt_mean
+
+    def get_beam_mean_ratio(self):
+        ratio_list = []
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '13:32:20', '13:35:00'))
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '13:52:00', '13:59:50'))
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '14:18:50', '14:20:20'))
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '14:57:00', '15:06:00'))
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '15:22:00', '15:29:30'))
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '16:06:15', '16:06:55'))
+        ratio_list.append(self.get_beam_ratio('2024-07-15', '16:36:30', '16:43:00'))
+        mean_ratio = np.mean(ratio_list)
+        std_ratio = np.std(ratio_list)
+        return mean_ratio, std_ratio
+
+
 if __name__ == '__main__':
     beam_data = BeamData()
     # print(beam_data.df.head())
@@ -400,4 +421,9 @@ if __name__ == '__main__':
     #print(beam_data.get_data_mean('LEBT', '2024-07-10', '10:00:00', '11:00:00'))
     #print(beam_data.get_weighted_mean_by_time('LEBT', '2024-07-10', '10:00:00', '11:00:00'))
     #print(beam_data.get_beam_average_by_run(166, 'LEBT '))
-    beam_data.get_beam_average_csv()
+    #beam_data.get_beam_average_csv()
+    #print(beam_data.get_data('LEBT', '2024-07-15', '14:00:00'))
+    #print(beam_data.get_data('P2DT', '2024-07-15', '14:00:00'))
+    #beam_data.plot_data_lists(['LEBT', 'P2DT'], '2024-07-15', '12:00:00', '17:00:00')
+    mean_ratio, std_ratio = beam_data.get_beam_mean_ratio()
+    print(f'beam_mean_ratio: {mean_ratio*100:.2f}% ± {std_ratio*100:.2f}%')
