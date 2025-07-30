@@ -5,7 +5,7 @@ import os
 import glob
 import matplotlib.dates as mdates
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
 from runtime_data import RunTimeData
 
 class BeamData:
@@ -16,9 +16,12 @@ class BeamData:
             print('beam_data_merged.pkl does not exist')
             print('Please run merging_dataframes() first')
 
-    def get_date_list(self):
+    def get_date_list(self, flagRunOnly=False):
         directory = 'misc/Beam'
-        return [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        date_list = [name for name in os.listdir(directory) if os.path.isdir(os.path.join(directory, name))]
+        if flagRunOnly:
+            date_list = [d for d in date_list if d > '0716']
+        return date_list
 
     def get_dataframe(self, date, sort): # sort can be 'FC1_1K, FC1_1M, FC2_1K, FC2_1M, LEBT, P2DT'
         directory = f'misc/Beam/{date}'
@@ -163,7 +166,7 @@ class BeamData:
 
     def get_data_mean(self, sort, date_start, time_start, time_end, date_end=None):
         """
-        주어진 기간 내에서 nan이 아닌 sort 컬럼 값들의 평균을 반환하는 함수.
+        주어진 기간 내에서 nan이 아닌 sort 컬럼 값들의 평균과 표준편차를 반환하는 함수.
         date_end가 None이면 date_start와 같은 날로 간주.
 
         Args:
@@ -177,12 +180,12 @@ class BeamData:
             float: 평균값 (값이 없으면 None)
         """
         filtered = self.get_data_list(sort, date_start, time_start, time_end, date_end)
-        return filtered[sort].mean()
+        return filtered[sort].mean(), filtered[sort].std()
 
 
     def get_weighted_mean_by_time(self, sort, date_start, time_start, time_end, date_end=None):
         """
-        빔 세기(sort)의 시간에 대한 가중 평균을 계산하는 함수입니다.
+        빔 세기(sort)의 시간에 대한 가중 평균과 표준 편차를 계산하는 함수입니다.
         시간 간격(초 단위)을 가중치로 하여, 각 구간의 빔 세기 평균에 대해 가중 평균을 구합니다.
 
         Args:
@@ -194,10 +197,11 @@ class BeamData:
 
         Returns:
             float: 시간 가중 평균값 (값이 없으면 None)
+            float: 시간 가중 표준 편차값 (값이 없으면 None)
         """
         filtered = self.get_data_list(sort, date_start, time_start, time_end, date_end)
         if filtered is None or filtered.empty:
-            return None
+            return None, None
 
         # datetime 기준으로 정렬
         filtered = filtered.sort_values('datetime').reset_index(drop=True)
@@ -229,8 +233,8 @@ class BeamData:
                 total_weight += w
 
         if total_weight == 0:
-            return None
-        return weighted_sum / total_weight
+            return None, None
+        return weighted_sum / total_weight, np.sqrt(np.sum(time_diffs * (values - weighted_sum / total_weight)**2) / total_weight**2)
 
 
 
@@ -255,12 +259,13 @@ class BeamData:
             plt.show()
         return plt.gca()
 
-    def plot_data_lists_all_days(self, sorts, y_min=None, y_max=None):
+    def plot_data_lists_all_days(self, sorts, y_min=None, y_max=None, date_list=None):
         sort = sorts
 
-        date_list = self.get_date_list()
+        if date_list is None:
+            date_list = self.get_date_list()
         n_dates = len(date_list)
-        ncols = 6
+        ncols = 3
         nrows = math.ceil(n_dates / ncols)
 
         fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16, 3 * nrows), sharex=False)
@@ -340,14 +345,14 @@ class BeamData:
         stop_str = stop_time.strftime('%H:%M:%S')
 
         # 평균값 계산
-        mean_val = self.get_weighted_mean_by_time(sort, start_date_str, start_str, stop_str, stop_date_str)
+        mean_val, std_val = self.get_weighted_mean_by_time(sort, start_date_str, start_str, stop_str, stop_date_str)
         if mean_val is None:
             print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 {sort} 평균값이 없습니다.")
-            return None, None
+            return None, None, None, None
         integral_val = mean_val * (stop_time - start_time).total_seconds()
-        print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 {sort} 평균값: {mean_val}")
-        print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 {sort} 적분값: {integral_val}")
-        return mean_val, integral_val
+        print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 {sort} 평균값: {mean_val} ± {std_val}")
+        print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 {sort} 적분값: {integral_val} ± {std_val * (stop_time - start_time).total_seconds()}")
+        return mean_val, std_val, integral_val, (stop_time - start_time).total_seconds()
 
 
     def get_beam_average_csv(self, runtime_csv_path='misc/midcheck_summary.csv'):
@@ -372,19 +377,19 @@ class BeamData:
             stop_date_str = stop_time.strftime('%Y-%m-%d')
             start_str = start_time.strftime('%H:%M:%S')
             stop_str = stop_time.strftime('%H:%M:%S')
-            mean_val = self.get_weighted_mean_by_time('LEBT', start_date_str, start_str, stop_str, stop_date_str)
+            mean_val, std_val = self.get_weighted_mean_by_time('LEBT', start_date_str, start_str, stop_str, stop_date_str)
             if mean_val is None:
                 print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 LEBT 평균값이 없습니다.")
                 continue
             integral_val = mean_val * (stop_time - start_time).total_seconds()
-            print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 LEBT 평균, 적분값: {mean_val}, {integral_val}")
-            df_result = pd.concat([df_result, pd.DataFrame({'run_number': [run_number], 'start_time': [start_time], 'stop_time': [stop_time], 'LEBT_mean': [mean_val], 'LEBT_integral': [integral_val]})], ignore_index=True)
+            print(f"Run {run_number} ({start_date_str} {start_str} ~ {stop_date_str} {stop_str})의 LEBT 평균, 적분값: {mean_val} ± {std_val}, {integral_val} ± {std_val * (stop_time - start_time).total_seconds()}")
+            df_result = pd.concat([df_result, pd.DataFrame({'run_number': [run_number], 'start_time': [start_time], 'stop_time': [stop_time], 'LEBT_mean': [mean_val], 'LEBT_std': [std_val], 'LEBT_integral': [integral_val], 'LEBR_integral_std': [std_val * (stop_time - start_time).total_seconds()]})], ignore_index=True)
         df_result.to_csv('misc/beam_time.csv', index=False)
         return df_result
 
     def get_beam_ratio(self, date_start, time_start, time_end, date_end=None):
-        lebt_mean = self.get_weighted_mean_by_time('LEBT', date_start, time_start, time_end, date_end)
-        p2dt_mean = self.get_weighted_mean_by_time('P2DT', date_start, time_start, time_end, date_end)
+        lebt_mean, lebt_std = self.get_weighted_mean_by_time('LEBT', date_start, time_start, time_end, date_end)
+        p2dt_mean, p2dt_std = self.get_weighted_mean_by_time('P2DT', date_start, time_start, time_end, date_end)
         if lebt_mean is None or p2dt_mean is None:
             return None
         return p2dt_mean/lebt_mean
@@ -402,6 +407,146 @@ class BeamData:
         std_ratio = np.std(ratio_list)
         return mean_ratio, std_ratio
 
+    def get_groups_above_threshold(self, sort, threshold, date_start, time_start, time_end, date_end = None, upper_limit = 5.5e-7):
+        df = self.get_data_list(sort, date_start, time_start, time_end, date_end)
+        if df is None or df.empty:
+            return None
+        # threshold를 넘는 연속 구간별로 그룹화하여 데이터프레임 리스트로 반환
+        mask = df[sort] > threshold
+        mask = mask & (df[sort] < upper_limit)
+        groups = []
+        current_group = []
+        for idx, above in enumerate(mask):
+            if above:
+                current_group.append(df.iloc[idx])
+            else:
+                if current_group:
+                    groups.append(pd.DataFrame(current_group))
+                    current_group = []
+        if current_group:
+            groups.append(pd.DataFrame(current_group))
+
+        # INSERT_YOUR_CODE
+        # 그룹 간의 시간 차이가 3초 이내면 하나의 그룹으로 합치기
+        if len(groups) <= 1:
+            return groups
+
+        merged_groups = []
+        current_group = groups[0].copy()
+        for i in range(1, len(groups)):
+            prev_group = current_group
+            next_group = groups[i]
+            prev_end_time = prev_group.iloc[-1]['datetime']
+            next_start_time = next_group.iloc[0]['datetime']
+            # 시간 차이가 3초 이내면 병합
+            if (next_start_time - prev_end_time).total_seconds() <= 3:
+                # 두 그룹을 합쳐서 새로운 current_group으로
+                current_group = pd.concat([prev_group, next_group], ignore_index=True)
+            else:
+                merged_groups.append(current_group)
+                current_group = next_group.copy()
+        merged_groups.append(current_group)
+        groups = merged_groups
+
+        # INSERT_YOUR_CODE
+        # 요소가 하나인 그룹은 제거
+        groups = [g for g in groups if len(g) > 1]
+
+        return groups
+
+    def get_timing_nsamples_mean_std(self, df, sort):
+        if df is None or df.empty or sort not in df.columns:
+            return None
+        return df.iloc[0]['datetime'], len(df), df[sort].mean(), df[sort].std()
+
+    def get_group_properties(self, groups, sort):
+        properties = []
+        for group in groups:
+            timing, nsamples, mean, std = self.get_timing_nsamples_mean_std(group, sort)
+            property = {
+                'timing': timing,
+                'nsamples': nsamples,
+                'mean': mean,
+                'std': std
+            }
+            properties.append(property)
+        return properties
+
+    def match_properties_by_timing(self, prop1, prop2, threshold_sec=3, flagWithNoMatch=False, flagPrint=False):
+        matched_pairs = []
+        used_prop2_idx = set()
+
+        for k_idx, k_prop in enumerate(prop1):
+            k_time = k_prop['timing']
+            found = False
+            for m_idx, m_prop in enumerate(prop2):
+                if m_idx in used_prop2_idx:
+                    continue
+                m_time = m_prop['timing']
+                # 둘 다 pandas.Timestamp라고 가정
+                if abs((k_time - m_time).total_seconds()) <= threshold_sec:
+                    matched_pairs.append((k_prop, m_prop))
+                    used_prop2_idx.add(m_idx)
+                    found = True
+                    break
+            if not found:
+                matched_pairs.append((k_prop, None))
+
+        # fc1_1m_properties 중에서 매칭되지 않은 것도 출력
+        for m_idx, m_prop in enumerate(prop2):
+            if m_idx not in used_prop2_idx:
+                matched_pairs.append((None, m_prop))
+
+        matched_pairs_filtered = matched_pairs if flagWithNoMatch else [pair for pair in matched_pairs if pair[0] is not None and pair[1] is not None]
+
+        if flagPrint:
+            print(f"=== timing이 {threshold_sec}초 이내로 매칭된 prop1 - prop2 그룹 ===")
+            for pair in matched_pairs_filtered:
+                k_prop, m_prop = pair
+                k_str = (f"{k_prop['timing'].strftime('%Y-%m-%d %H:%M:%S')} ({k_prop['nsamples']:3d}개, {k_prop['mean']:.2e} ± {k_prop['std']:.2e})") if k_prop else "None"
+                m_str = (f"{m_prop['timing'].strftime('%H:%M:%S')} ({m_prop['nsamples']:3d}개, {m_prop['mean']:.2e} ± {m_prop['std']:.2e})") if m_prop else "None"
+                ratio = k_prop['mean'] / m_prop['mean']
+                ratio_err = ratio * ((k_prop['std']/k_prop['mean'])**2 + (m_prop['std']/m_prop['mean'])**2) ** 0.5
+                print(f"prop1: {k_str}  <==>  prop2: {m_str}, ratio = {ratio:.3f} ± {ratio_err:.3f}")
+
+        return matched_pairs_filtered
+
+    def compare_1k_1m(self, sort, start_date, end_date = None):
+        groups_1k = self.get_groups_above_threshold(sort + '_1K', 1.0e-7, start_date, '08:00:00', '19:00:00', end_date)
+        groups_1m = self.get_groups_above_threshold(sort + '_1M', 2.0e-7, start_date, '08:00:00', '19:00:00', end_date)
+        properties_1k = self.get_group_properties(groups_1k, sort + '_1K')
+        properties_1m = self.get_group_properties(groups_1m, sort + '_1M')
+        matched_pairs = self.match_properties_by_timing(properties_1k, properties_1m, 3, flagPrint=True)
+        # INSERT_YOUR_CODE
+        # ratio의 sample 수에 대한 가중 평균과 에러 계산
+        ratios = []
+        ratio_errs = []
+        weights = []
+        for pair in matched_pairs:
+            k_prop, m_prop = pair
+            if k_prop is not None and m_prop is not None:
+                ratio = k_prop['mean'] / m_prop['mean']
+                ratio_err = ratio * ((k_prop['std']/k_prop['mean'])**2 + (m_prop['std']/m_prop['mean'])**2) ** 0.5
+                n_samples = min(k_prop['nsamples'], m_prop['nsamples'])
+                ratios.append(ratio)
+                ratio_errs.append(ratio_err)
+                weights.append(n_samples)
+        if len(ratios) == 0:
+            print("매칭된 데이터가 없습니다.")
+            return None, None
+        ratios = np.array(ratios)
+        ratio_errs = np.array(ratio_errs)
+        weights = np.array(weights)
+        # 가중 평균
+        weighted_mean = np.average(ratios, weights=weights)
+        # 가중 표준 오차 계산 (샘플 수에 대한 가중치)
+        weighted_var = np.average((ratios - weighted_mean)**2, weights=weights)
+        weighted_std = np.sqrt(weighted_var / len(ratios))
+        # 개별 에러도 고려한 가중 평균의 에러 (propagate)
+        weighted_err = np.sqrt(np.sum((weights * ratio_errs)**2)) / np.sum(weights)
+        print(f"샘플수 가중 평균: {weighted_mean:.4f} ± {weighted_err:.4f} (propagate), ± {weighted_std:.4f} (표본분산)")
+        return weighted_mean, weighted_err
+        #self.plot_data_lists([sort + '_1K', sort + '_1M'], start_date, '08:00:00', '19:00:00', end_date)
 
 if __name__ == '__main__':
     beam_data = BeamData()
@@ -412,7 +557,7 @@ if __name__ == '__main__':
     # print(beam_data.get_data_mean('FC1_1M', '2024-07-07', '09:00:00', '09:10:00'))
     # beam_data.plot_data_list('FC1_1M', '2024-07-07', '09:00:00', '09:10:00')
     #beam_data.plot_data_lists(['FC1_1M', 'FC2_1M', 'LEBT', 'P2DT'], '2024-07-08', '08:00:00', '19:00:00')
-    #beam_data.plot_data_lists_all_days(['FC1_1M', 'FC2_1M'], y_min=-5e-7, y_max=2e-6)
+    #beam_data.plot_data_lists_all_days(['FC1_1K', 'FC1_1M', 'FC2_1K', 'FC2_1M'], y_min=-5e-7, y_max=2e-6)
     #beam_data.plot_fc_all_days()
     #beam_data.plot_beam_all_days()
     # df = beam_data.merging_dataframes()
@@ -421,9 +566,20 @@ if __name__ == '__main__':
     #print(beam_data.get_data_mean('LEBT', '2024-07-10', '10:00:00', '11:00:00'))
     #print(beam_data.get_weighted_mean_by_time('LEBT', '2024-07-10', '10:00:00', '11:00:00'))
     #print(beam_data.get_beam_average_by_run(166, 'LEBT '))
-    #beam_data.get_beam_average_csv()
+    # beam_data.get_beam_average_csv()
     #print(beam_data.get_data('LEBT', '2024-07-15', '14:00:00'))
     #print(beam_data.get_data('P2DT', '2024-07-15', '14:00:00'))
     #beam_data.plot_data_lists(['LEBT', 'P2DT'], '2024-07-15', '12:00:00', '17:00:00')
-    mean_ratio, std_ratio = beam_data.get_beam_mean_ratio()
-    print(f'beam_mean_ratio: {mean_ratio*100:.2f}% ± {std_ratio*100:.2f}%')
+    #mean_ratio, std_ratio = beam_data.get_beam_mean_ratio()
+    #print(f'beam_mean_ratio: {mean_ratio*100:.2f}% ± {std_ratio*100:.2f}%')
+
+
+
+    # 7/16(2024-07-16) 이전 날짜는 제거하여 출력
+    #date_list = beam_data.get_date_list()
+    #filtered_date_list = [d for d in date_list if d > '0716']
+    #beam_data.plot_data_lists_all_days(['FC1_1K', 'FC1_1M'], y_min=-5e-7, y_max=2e-6, date_list=filtered_date_list)
+    #beam_data.plot_data_lists_all_days(['FC2_1K', 'FC2_1M'], y_min=-5e-7, y_max=2e-6, date_list=filtered_date_list)
+    #beam_data.plot_data_lists(['FC1_1K', 'FC1_1M'], '2024-07-17', '08:00:00', '19:00:00', date_end='2024-08-22')
+    beam_data.compare_1k_1m('FC1', '2024-07-17', '2024-08-23')
+    beam_data.compare_1k_1m('FC2', '2024-07-17', '2024-08-23')
