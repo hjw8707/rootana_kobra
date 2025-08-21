@@ -30,6 +30,7 @@
 #include "TSystemDirectory.h"
 #include "TVirtualPad.h"
 #include "kobra_beam.hxx"
+#include "kobra_f0.hxx"
 #include "kobra_scaler.hxx"
 ClassImp(KOBRA);
 
@@ -1116,8 +1117,24 @@ TGraphErrors *KOBRA::GetMomDistGraph(Double_t center, const char *cut, Double_t 
 std::map<std::string, TGraphErrors *> KOBRA::GetMomDistGraphs(std::vector<std::string> iso, Double_t center,
                                                               Double_t f1SlitLowLim, Double_t f1SlitUppLim, Int_t bias,
                                                               Bool_t flagUseF1) {
+    ////////////////////////////////////////////////////////
+    // scale factor
+    //
+    // F2, F3 PPAC efficiency, Live time -> Corrected inversely (all they are less than 1)
+    //
     Double_t scale = 1. / (GetPPACEff(2) * GetPPACEff(3) * KOBRAScaler::GetInstance()->GetLiveTime(runNs));
-
+    //
+    // F0 ratio -> Corrected inversely (less than 1)
+    scale *= (1. / KOBRAF0::GetInstance()->GetRatio(runNs.front()));
+    //
+    // beam intensity -> corrected inversely (cross section is proportional to yield / beam intensity)
+    scale *= (1. / KOBRABeam::GetInstance()->GetMeanBeamIntensity(runNs.front()));
+    //
+    // Others
+    //  Time: already corrected in DrawMomDist (if using F1) or GetMomDistGraph (if not using F1)
+    //  F1 PPAC efficiency: corrected in GetMomDistGraph (if using F1), no correction is necessary if not using F1
+    ////////////////////////////////////////////////////////
+    // more scale factor
     const Double_t momDispersion = 41;  // mm / %
     const Double_t momCenter = -2;      // mm = 0%
 
@@ -1896,7 +1913,18 @@ void KOBRA::MomDistAnalysis(std::string iso) {
     std::map<int, std::vector<int>> mruns_hv_selected = mruns_hv[iso];
     std::map<int, std::vector<double>> mruns_brho_selected = mruns_brho[iso];
 
-    std::vector<std::string> cutiso = {"f21", "f22", "f23", "o19", "o20", "o21", "n17", "n18", "n19"};
+    std::vector<std::string> cutiso;
+    std::vector<std::string> cutiso_o20 = {"f21", "f22", "f23", "o19", "o20", "o21", "n17", "n18", "n19"};
+    std::vector<std::string> cutiso_ne24 = {"o20",  "o21",  "f21",  "f22",  "f23",  "ne23",
+                                            "ne24", "ne25", "na25", "na26", "mg27", "mg28"};
+
+    if (iso == "o20") {
+        cutiso = cutiso_o20;
+    } else if (iso == "ne24") {
+        cutiso = cutiso_ne24;
+    } else {
+        std::cout << "Invalid iso: " << iso << std::endl;
+    }
     ///////////////////////////////////////////////////////////////////
     // TMultiGraphs definitions
     std::map<std::string, TMultiGraph *> mgs;
@@ -1914,6 +1942,7 @@ void KOBRA::MomDistAnalysis(std::string iso) {
         int mom_center = it.first;
         std::vector<std::vector<int>> runs = it.second;
         for (size_t i = 0; i < runs.size(); i++) {
+            if (i > 0) break;
             KOBRA *ko = new KOBRA(Expt::Phys, runs[i], mruns_brho_selected[mom_center][i]);
             auto grs =
                 ko->GetMomDistGraphs(cutiso, float(mom_center), mruns_disp_selected[mom_center][i].first,

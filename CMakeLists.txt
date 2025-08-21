@@ -23,7 +23,7 @@ set(HAVE_THTTP_SERVER 1)
 # 소스 파일 목록 생성 (src/*.cxx)
 file(GLOB SOURCES "src/*.cxx")
 # 추가 소스 파일 명시적으로 추가
-list(APPEND SOURCES "macros/kobra.cxx" "macros/kobra_scaler.cxx" "macros/kobra_beam.cxx")
+list(APPEND SOURCES "macros/kobra.cxx" "macros/kobra_scaler.cxx" "macros/kobra_beam.cxx" "macros/kobra_f0.cxx")
 list(APPEND SOURCES KoBRA_Dict.cxx)
 
 # include 경로 변수 설정 (INC)
@@ -46,6 +46,7 @@ set(DICTHDRS
   "macros/kobra.hxx"
   "macros/kobra_scaler.hxx"
   "macros/kobra_beam.hxx"
+  "macros/kobra_f0.hxx"
   "$ENV{ROOTANASYS}/include/TRootanaDisplay.hxx"
 )
 

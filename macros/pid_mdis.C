@@ -8,7 +8,7 @@
 
 void pid_mdis() {
     bool flagCut = true;
-    const std::string iso = "o20";
+    const std::string iso = "ne24";
     std::map<int, std::vector<std::vector<int>>> runmap = KOBRA::mruns[iso];
     std::map<int, std::vector<std::pair<double, double>>> runmap_disp = KOBRA::mruns_disp[iso];
     std::map<int, std::vector<int>> runmap_hv = KOBRA::mruns_hv[iso];
@@ -39,11 +39,13 @@ void pid_mdis() {
             gPad->GetCanvas()->Print(
                 Form("figs/pid_mdis_%s_%c%d_%zu.png", iso.c_str(), key > 0 ? 'p' : 'n', std::abs(key), i));
             ko->CountIsotopesRunByRun(fout, false, false);
+            gPad->GetCanvas()->Update();
+            getchar();
             delete gPad->GetCanvas();
             delete ko;
         }
     }
-    // pid_sum->Draw("col");
+    pid_sum->Draw("colz");
     // KOBRA ko2(KOBRA::Expt::Phys, KOBRA::mruns["o20"][0][0], KOBRA::mruns_brho["o20"][0][0]);
     // ko2.DrawAllCuts(true);
     fout.close();
