@@ -205,8 +205,10 @@ void KOBRA::Initilize()
   // gcut = "f3ssd@.GetEntriesFast() > 0 && f3ssd@.GetEntriesFast() < 3";
   gcut = "";
   LoadDB("macros/runlog.txt");
-  gStyle->SetPadGridX(true);
-  gStyle->SetPadGridY(true);
+  gStyle->SetPadGridX(false);
+  gStyle->SetPadGridY(false);
+  
+  gStyle->SetOptStat(00000000);
 
   gStyle->SetCanvasDefX(100);
   gStyle->SetCanvasDefY(100);
@@ -622,7 +624,8 @@ void KOBRA::DrawPIDC(Int_t show, const char *cut)
     else
       cuts += Form("&& %s", cut);
   auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
-  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,2.15,2.75,500,4,15)", runNs.front()), cuts.c_str(), "col");
+//  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,2.15,2.75,500,4,15)", runNs.front()), cuts.c_str(), "col");
+  tree->Draw(Form("Z:AoQ>>hpidc_r%d(500,2.0,2.8,500,2,14)", runNs.front()), cuts.c_str(), "col");
 
   TH2 *h2 = static_cast<TH2 *>(gDirectory->Get(Form("hpidc_r%d", runNs.front())));
 
