@@ -80,11 +80,13 @@ def plot_lebt_and_yields(df):
 def plot_lebt_vs_yield_scatter(df_list):
     """
     여러 개의 DataFrame(df_list)에서 LEBT와 각 isotope yield/sec 간의 상관관계를 한 번에 산점도로 그립니다.
-    x축: yield/sec (isotope별)
-    y축: LEBT
+    x축: LEBT
+    y축: yield/sec (isotope별)
     DataFrame마다 컬럼 구조가 다를 수 있으므로, 모든 df에서 가능한 isotope 컬럼을 자동으로 수집합니다.
+    y축 점에 통계적 에러 (yield의 sqrt)를 에러바로 표시합니다.
     """
     import matplotlib.pyplot as plt
+    import numpy as np
 
     if not df_list or not isinstance(df_list, list):
         print("DataFrame 리스트가 필요합니다.")
@@ -94,7 +96,7 @@ def plot_lebt_vs_yield_scatter(df_list):
     isotope_set = set()
     for df in df_list:
         if df is not None:
-            isotope_set.update([col for col in df.columns if col not in ['Run', 'Target', 'Time', 'LEBT']])
+            isotope_set.update([col for col in df.columns if col not in ['Run', 'Target', 'Time', 'LEBT', 'LEBTError']])
     isotope_cols = sorted(list(isotope_set))
     if not isotope_cols:
         print("isotope yield 컬럼이 없습니다.")
@@ -106,22 +108,68 @@ def plot_lebt_vs_yield_scatter(df_list):
     for idx, col in enumerate(isotope_cols):
         x_all = []
         y_all = []
+        yerr_all = []
+        xerr_all = []
         for df in df_list:
-            if df is not None and col in df.columns and 'LEBT' in df.columns and 'Time' in df.columns:
+            if df is not None and col in df.columns and 'LEBT' in df.columns and 'Time' in df.columns and 'LEBTError' in df.columns:
                 # NaN 값은 제외
-                valid = df[[col, 'LEBT', 'Time']].dropna()
+                valid = df[[col, 'LEBT', 'LEBTError', 'Time']].dropna()
                 if not valid.empty:
-                    #x_all.extend((valid[col] / valid['Time']).tolist())
-                    x_all.extend(valid[col].tolist())
-                    y_all.extend((valid['LEBT'] * valid['Time']).tolist())
+                    # X축: LEBT * Time (적분 LEBT), Y축: yield/sec
+                    x_vals = (valid['LEBT'] * valid['Time']).to_numpy()
+                    y_vals = valid[col].to_numpy()
+                    # 통계적 에러: yield/sec의 sqrt (Time을 곱하지 않음)
+                    # 에러(y) = sqrt(yield/sec)
+                    yerr = np.where(y_vals > 0, np.sqrt(y_vals), 0)
+                    xerr = (valid['LEBTError'] * valid['Time']).to_numpy()
+                    x_all.extend(x_vals.tolist())
+                    y_all.extend(y_vals.tolist())
+                    yerr_all.extend(yerr.tolist())
+                    xerr_all.extend(xerr.tolist())
         if x_all and y_all:
-            plt.scatter(x_all, y_all, label=col, color=colors(idx), alpha=0.8)
+            plt.errorbar(x_all, y_all, yerr=yerr_all, xerr=xerr_all, fmt='o', label=col, color=colors(idx), alpha=0.8, capsize=3)
+
+            # 일차함수(원점 통과) 피팅: y = a * x
+            if len(x_all) > 1:
+                def linear_origin(x, a):
+                    return a * x
+                from scipy.optimize import curve_fit
+
+                x_np = np.array(x_all)
+                y_np = np.array(y_all)
+                xerr_np = np.array(xerr_all)
+                yerr_np = np.array(yerr_all)
+
+                # Error가 0인 경우 최소값으로 대체 (curve_fit에서 0 에러 허용 안 함)
+                yerr_np = np.where(yerr_np == 0, 1.0, yerr_np)
+                xerr_np = np.where(xerr_np == 0, 1e-12, xerr_np)  # 아주 작은 값으로 대체 (0/0 예외 방지)
+
+                # xerr 포함 total yerror 계산: (dy/dx = a) → yerr_total^2 = yerr^2 + (a*xerr)^2
+                # iterative fit (a가 모를 때는 a=초기값 1로 추정, 2회 반복)
+                try:
+                    # 1차: xerr 무시, yerr만으로 fit
+                    popt1, pcov1 = curve_fit(linear_origin, x_np, y_np, sigma=yerr_np, absolute_sigma=True)
+                    a1 = popt1[0]
+
+                    # 2차: yerr_total 적용
+                    yerr_total = np.sqrt(yerr_np**2 + (a1 * xerr_np)**2)
+                    popt, pcov = curve_fit(linear_origin, x_np, y_np, sigma=yerr_total, absolute_sigma=True)
+                    a_fit = popt[0]
+                    a_err = np.sqrt(np.diag(pcov))[0]
+                    x_fit = np.linspace(min(x_all), max(x_all), 100)
+                    y_fit = linear_origin(x_fit, a_fit)
+                    plt.plot(x_fit, y_fit, '--', color=colors(idx), alpha=0.7,
+                             label=f"{col} fit: y={a_fit:.2e}x")
+                    percent_err = (a_err / a_fit) * 100 if a_fit != 0 else 0
+                    print(f"[{col}] 피팅 결과: 계수 a = {a_fit:.4e} ± {a_err:.4e} ({percent_err:.2f}%)")
+                except Exception as e:
+                    print(f"{col} 피팅 실패: {e}")
 
     plt.xlim(left=0)
     plt.ylim(bottom=0)
-    plt.xlabel('Yield')
-    plt.ylabel('Integrated LEBT')
-    plt.title(f'LEBT vs Yield ({df_list[0]["Target"].iloc[0]})')
+    plt.xlabel('Integrated LEBT')
+    plt.ylabel('Yield')
+    plt.title(f'Yield vs LEBT ({df_list[0]["Target"].iloc[0]})')
     plt.legend()
     plt.grid(True, linestyle='--', alpha=0.5)
     plt.tight_layout()
@@ -129,11 +177,13 @@ def plot_lebt_vs_yield_scatter(df_list):
 
 
 if __name__ == "__main__":
-    isos = ['18O', '19O', '20O', '21O']
+    isos = ['18O', '19O', '20O', '21O', '22O']
     df_list = []
     for iso in isos:
         df = load_lebt_vs_yield_sheet(iso)
         df_list.append(df)
+        print(df.columns)
 
     for df in df_list:
         plot_lebt_vs_yield_scatter([df])
+

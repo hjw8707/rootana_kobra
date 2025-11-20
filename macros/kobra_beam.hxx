@@ -26,9 +26,9 @@ class KOBRABeam : public TObject {
     std::string GetDatetime(int run, const char *col);
     std::string GetStartTime(int run);
     std::string GetStopTime(int run);
-    double GetElapsedTime(int run);
-    double GetMeanBeamIntensity(int run);
-    double GetIntegralBeamIntensity(int run);
+    double GetElapsedTime(int run);            // in seconds
+    double GetMeanBeamIntensity(int run);      // in A
+    double GetIntegralBeamIntensity(int run);  // in A*s
 
     static KOBRABeam *GetInstance(const char *file = "misc/beam_time.csv");
 

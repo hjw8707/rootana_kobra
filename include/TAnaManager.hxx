@@ -1,30 +1,26 @@
 #ifndef TAnaManager_h
 #define TAnaManager_h
 
-#include "TTree.h"
-
-#include "TKoBRADIGData.hxx"
+#include "TCanvasManager.hxx"
+#include "TDetectorManager.hxx"
+#include "THistManager.hxx"
+#include "THttpServer.h"
 #include "TKoBRAADCData.hxx"
+#include "TKoBRAADCHistogram.hxx"
+#include "TKoBRADIGData.hxx"
+#include "TKoBRADIGHistogram.hxx"
 #include "TKoBRATDCData.hxx"
 #include "TKoBRATDCHistogram.hxx"
-#include "TKoBRAADCHistogram.hxx"
-#include "TKoBRADIGHistogram.hxx"
+#include "TPIDHistogram.hxx"
 #include "TPPACHistogram.hxx"
 #include "TPlasticHistogram.hxx"
 #include "TSSDHistogram.hxx"
-#include "TPIDHistogram.hxx"
 #include "TTrackHistogram.hxx"
-
-#include "TDetectorManager.hxx"
-#include "TCanvasManager.hxx"
-#include "THistManager.hxx"
+#include "TTree.h"
 #include "TTreeManager.hxx"
 
-#include "THttpServer.h"
-
-class TAnaManager
-{
-public:
+class TAnaManager {
+ public:
   TAnaManager();
   virtual ~TAnaManager() {};
 
@@ -50,14 +46,12 @@ public:
   void UpdateTransientPlots(TDataContainer &dataContainer);
 
   // Get the histograms
-  std::vector<THistogramArrayBase *> GetHistograms()
-  {
-    return fHistos;
-  }
+  std::vector<THistogramArrayBase *> GetHistograms() { return fHistos; }
 
   inline void SetTHttpServer(THttpServer *s) { server = s; }
+  inline bool IsTHttpServer() { return server != nullptr; }
 
-private:
+ private:
   std::vector<THistogramArrayBase *> fHistos;
   TDetectorManager *detMan;
   TCanvasManager *canMan;
