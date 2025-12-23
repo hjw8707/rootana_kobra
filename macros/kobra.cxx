@@ -22,6 +22,7 @@
 #include "TMath.h"
 #include "TMultiGraph.h"
 #include "TPaveText.h"
+#include "TROOT.h"
 #include "TScalerData.hxx"
 #include "TSelectorEntries.h"
 #include "TString.h"
@@ -51,11 +52,31 @@ std::vector<int> KOBRA::o22 = {223, 224, 225, 226,  // Right after the newly adj
                                372, 373, 374, 375, 376, 378, 379, 380, 381, 382, 383, 384, 385, 386, 387,
                                388, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399, 400, 402, 403, 404};
 
+std::vector<int> KOBRA::o_all = {
+    251, 252, 253, 254, 259, 260, 261, 262, 263, 264, 265, 266, 267, 271, 272, 273, 274, 275, 276, 277, 278,
+    279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299,
+    304, 305, 306, 307, 308, 309, 310, 316, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330,
+    331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 347, 348, 349, 350, 351, 352,
+    361, 362, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 378, 379, 380, 381, 382, 383,
+    384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399, 400, 402, 403, 404};
+
 std::vector<int> KOBRA::ne24 = {410, 411, 412, 413, 415};
 
 std::vector<int> KOBRA::ne25 = {420, 421, 422};
 
 std::vector<int> KOBRA::ne26 = {425, 426, 427, 428, 429, 430, 431, 433, 434, 435, 436, 437, 438, 439, 440};
+
+std::vector<int> KOBRA::ne_all = {410, 411, 412, 413, 415, 420, 421, 422, 425, 426, 427, 428,
+                                  429, 430, 431, 433, 434, 435, 436, 437, 438, 439, 440};
+
+std::vector<int> KOBRA::cs_all = {
+    251, 252, 253, 254, 259, 260, 261, 262, 263, 264, 265, 266, 267, 271, 272, 273, 274, 275, 276, 277, 278,
+    279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299,
+    304, 305, 306, 307, 308, 309, 310, 316, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330,
+    331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 347, 348, 349, 350, 351, 352,
+    361, 362, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 378, 379, 380, 381, 382, 383,
+    384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399, 400, 402, 403, 404, 410, 411,
+    412, 413, 415, 420, 421, 422, 425, 426, 427, 428, 429, 430, 431, 433, 434, 435, 436, 437, 438, 439, 440};
 
 std::vector<int> KOBRA::o22bl = {527, 528, 529, 530, 531, 532, 533};
 std::vector<int> KOBRA::o21bl = {537, 538, 539, 540, 542};
@@ -138,6 +159,10 @@ std::map<std::string, std::map<int, std::vector<std::vector<int>>>> KOBRA::mruns
             {  4, {{726, 727, 728, 729, 730}}},
             {  6, {{731, 732, 733}}},
             { 10, {{734, 735, 736, 737}}}}}};
+
+std::vector<int> KOBRA::mdis_o20 = {656, 657, 643, 644, 645, 646, 647, 648, 639, 640, 641, 642, 620, 621, 622, 623, 625, 651, 615, 616, 617, 660, 661, 610, 611, 612, 601, 602, 603, 604, 632, 636, 637, 638, 605, 606, 607, 590, 592, 593, 594, 595, 596, 598};
+std::vector<int> KOBRA::mdis_ne24 = {775, 776, 777, 778, 779, 773, 774, 763, 764, 765, 767, 769, 770, 771, 780, 781, 754, 755, 756, 757, 758, 759, 782, 783, 784, 785, 750, 751, 752, 788, 789, 786, 787, 746, 748, 738, 739, 740, 706, 707, 708, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737};
+std::vector<int> KOBRA::mdis_all = {656, 657, 643, 644, 645, 646, 647, 648, 639, 640, 641, 642, 620, 621, 622, 623, 625, 651, 615, 616, 617, 660, 661, 610, 611, 612, 601, 602, 603, 604, 632, 636, 637, 638, 605, 606, 607, 590, 592, 593, 594, 595, 596, 598, 775, 776, 777, 778, 779, 773, 774, 763, 764, 765, 767, 769, 770, 771, 780, 781, 754, 755, 756, 757, 758, 759, 782, 783, 784, 785, 750, 751, 752, 788, 789, 786, 787, 746, 748, 738, 739, 740, 706, 707, 708, 713, 714, 715, 716, 717, 718, 719, 720, 721, 722, 723, 724, 725, 726, 727, 728, 729, 730, 731, 732, 733, 734, 735, 736, 737};
 
 std::map<std::string, std::map<int, std::vector<std::pair<double, double>>>> KOBRA::mruns_disp = {
     {"o20", {
@@ -408,7 +433,7 @@ Bool_t KOBRA::LoadTree(const char *filename) {
   // Add the file to the TChain
   tree->Add(filename);
   headers.push_back(head);
-  std::cout << "TTree kobra from file " << filename << " added to TChain." << std::endl;
+  // std::cout << "TTree kobra from file " << filename << " added to TChain." << std::endl;
   return true;
 }
 
@@ -555,6 +580,10 @@ void KOBRA::SetAlias() {
   tree->SetAlias("f2y", "f2dppac.y");
   tree->SetAlias("f3x", "760.*(f3a/1000.)+f3dppac.x");
   tree->SetAlias("f3y", "760.*(f3b/1000.)+f3dppac.y");
+  tree->SetAlias("f3ux", "f3uppac.x");
+  tree->SetAlias("f3uy", "f3uppac.y");
+  tree->SetAlias("f3dx", "f3dppac.x");
+  tree->SetAlias("f3dy", "f3dppac.y");
   tree->SetAlias("f3ssdx", "160.*(f3a/1000.)+f3uppac.x");
   tree->SetAlias("f3ssdy", "160.*(f3b/1000.)+f3uppac.y");
   tree->SetAlias("f3plax", "310.*(f3a/1000.)+f3uppac.x");
@@ -639,6 +668,11 @@ void KOBRA::AddCut(const char *filename) {
 
     std::vector<std::string> tokens = split(line, ' ', false);
     if (linen == 0) {
+      // Also check if there is a TCutG with the same name in the ROOT memory and delete it
+      TObject *oldCut = gROOT->FindObjectAny(tokens[0].c_str());
+      if (oldCut && dynamic_cast<TCutG *>(oldCut)) {
+        delete oldCut;
+      }
       cut = new TCutG(tokens[0].c_str());
       if (tokens.size() > 1) cut->SetTitle(tokens[1].c_str());
     } else {
@@ -1243,7 +1277,7 @@ Long64_t KOBRA::GetEntries(const char *selection) {
   return res;
 }
 
-void KOBRA::DrawPPACTimings(bool flagLog, const char *cut) {
+void KOBRA::DrawPPACTimings(bool flagLog, const char *cut, bool flagUseF1X) {
   auto c1 = new TCanvas(Form("cptim_r%d", runNs.front()), "PPAC Timings", 1200, 800);
 
   const int nppacs = 4;
@@ -1252,6 +1286,11 @@ void KOBRA::DrawPPACTimings(bool flagLog, const char *cut) {
   c1->Divide(nquants, nppacs);
 
   const char *ppacs[nppacs] = {"f1uppacx", "f2dppac", "f3uppac", "f3dppac"};
+  if (flagUseF1X) {
+    ppacs[0] = "f1uppacx";
+  } else {
+    ppacs[0] = "f1uppac";
+  }
   const char *quants[nquants] = {"tx1", "tx2", "ty1", "ty2", "ta"};
 
   TH1 *h1;
@@ -1268,47 +1307,325 @@ void KOBRA::DrawPPACTimings(bool flagLog, const char *cut) {
   }
 }
 
-void KOBRA::DrawPPACEff(const char *cut) {
+void KOBRA::DrawPPACMultiHits(const char *cut, bool flagUseF1X) {
+  auto c1 = new TCanvas(Form("cppmh_r%d", runNs.front()), "PPAC Multi Hits", 1200, 800);
+  const int nppacs = 4;
+
+  c1->Divide(2, 2);
+
+  const char *ppacs[nppacs] = {"f1uppacx", "f2dppac", "f3uppac", "f3dppac"};
+  if (flagUseF1X) {
+    ppacs[0] = "f1uppacx";
+  } else {
+    ppacs[0] = "f1uppac";
+  }
+  TH1 *h1;
+  for (Int_t i = 0; i < nppacs; i++) {
+    TVirtualPad *vpad = c1->cd(i + 1);
+    tree->Draw(Form("%s@.GetEntriesFast()>>h%s_length_r%d(10,0,10)", ppacs[i], ppacs[i], runNs.front()), cut);
+    h1 = static_cast<TH1 *>(gDirectory->Get(Form("h%s_length_r%d", ppacs[i], runNs.front())));
+    h1->SetMarkerSize(2.0);
+    h1->Draw("HIST, TEXT0");
+    // INSERT_YOUR_CODE
+    // Calculate multi-hit and single-hit (==1) counts
+    double nhits_multi = 0, nhits_single = 0, nhits_total = 0;
+    if (h1) {
+      nhits_total = h1->GetEntries();
+      int bin0 = h1->GetXaxis()->FindBin(0.);  // first bin: zero hit
+      int bin1 = h1->GetXaxis()->FindBin(1.);  // single hit
+      nhits_single = h1->GetBinContent(bin1);
+      nhits_multi = nhits_total - h1->GetBinContent(bin0) - nhits_single;
+      // Avoid division by zero
+      double multi_perc = (nhits_single > 0) ? (nhits_multi / nhits_single) * 100.0 : 0.0;
+      // Draw the percentage on the right center of the pad
+      double x = h1->GetXaxis()->GetBinUpEdge(h1->GetNbinsX()) * 0.98;
+      double y = h1->GetMaximum() * 0.5;
+      TLatex latex;
+      latex.SetTextAlign(32);  // right, vertical center
+      latex.SetTextSize(0.045);
+      latex.SetTextColor(kRed + 2);
+      latex.SetNDC(false);  // axes (not normalized relative pad)
+      latex.DrawLatex(x, y, Form("Multi/Single: %.4f%%", multi_perc));
+
+      double eff = (nhits_total > 0) ? (nhits_single + nhits_multi) / nhits_total * 100.0 : 0.0;
+
+      // Draw the numerator/denominator at about 60% height
+      double y2 = h1->GetMaximum() * 0.3;
+      TLatex latex2;
+      latex2.SetTextAlign(32);  // right, vertical center
+      latex2.SetTextSize(0.045);
+      latex2.SetTextColor(kBlue + 2);
+      latex2.SetNDC(false);
+      latex2.DrawLatex(x, y2, Form("Hit/All: %.4f%%", eff));
+      // INSERT_YOUR_CODE
+      // Also print efficiency (hit/all) to stdout
+      printf("[cpp] r%d %s: Hit/All efficiency = %.4f%% (%g/%g)\n", runNs.front(), ppacs[i], eff,
+             nhits_single + nhits_multi, nhits_total);
+    }
+  }
+}
+
+void KOBRA::DrawPPACCorrelation(const char *ppac, const char *cut) {
+  auto c1 = new TCanvas(Form("cppc_r%d", runNs.front()), "PPAC Correlation", 1200, 800);
+  c1->Divide(3, 4);
+
+  std::vector<const char *> tdcs = {"tx1", "tx2", "ty1", "ty2", "ta"};
+  // INSERT_YOUR_CODE
+  // For each tdcs channel, draw a 1D histogram, find the peak, and define +-10000 limits in a map
+  std::map<std::string, std::pair<double, double>> tdcs_limits;
+  for (const auto &tdcs_name : tdcs) {
+    // Draw 1D histogram for this channel
+    auto htmpname = Form("h_%s_r%d", tdcs_name, runNs.front());
+    tree->Draw(Form("%s.%s>>%s(2000,0,200000)", ppac, tdcs_name, htmpname), cut, "goff");
+    auto htmp = static_cast<TH1 *>(gDirectory->Get(htmpname));
+    if (!htmp) continue;
+    // Find the peak position (bin with max counts)
+    int peak_bin = htmp->GetMaximumBin();
+    double peak_val = htmp->GetXaxis()->GetBinCenter(peak_bin);
+    // Define limits as (peak - 10000, peak + 10000)
+    double lower = peak_val - 10000;
+    double upper = peak_val + 10000;
+    // Bound check within histogram range
+    if (lower < 0) lower = 0;
+    if (upper > 200000) upper = 200000;
+    tdcs_limits[tdcs_name] = std::make_pair(lower, upper);
+  }
+  // INSERT_YOUR_CODE
+  // For "x" and "y", override the limits to (-60, 60)
+  tdcs_limits["x"] = std::make_pair(-60.0, 60.0);
+  tdcs_limits["y"] = std::make_pair(-60.0, 60.0);
+
+  std::vector<std::pair<const char *, const char *>> axis = {
+      {"tx1", "tx2"}, {"tx1", "ta"}, {"tx1", "x"}, {"", ""}, {"tx2", "ta"}, {"tx2", "x"},
+      {"ty1", "ty2"}, {"ty1", "ta"}, {"ty1", "y"}, {"", ""}, {"ty2", "ta"}, {"ty2", "y"}};
+
+  int i = 0;
+  for (const auto &it : axis) {
+    c1->cd(i++ + 1);
+    TH2 *h1;
+    if (std::string(it.first) == "" && std::string(it.second) == "") {
+      continue;
+    }
+    tree->Draw(Form("%s.%s:%s.%s>>h%s_%s_%s_r%d(100,%f,%f, 100,%f,%f)", ppac, it.second, ppac, it.first, ppac, it.first,
+                    it.second, runNs.front(), tdcs_limits[std::string(it.first)].first,
+                    tdcs_limits[std::string(it.first)].second, tdcs_limits[std::string(it.second)].first,
+                    tdcs_limits[std::string(it.second)].second),
+               cut, "goff");
+    h1 = static_cast<TH2 *>(gDirectory->Get(Form("h%s_%s_%s_r%d", ppac, it.first, it.second, runNs.front())));
+    // INSERT_YOUR_CODE
+    if (h1) {
+      h1->GetXaxis()->SetTitle(it.first);
+      h1->GetYaxis()->SetTitle(it.second);
+      h1->GetXaxis()->SetTitleOffset(0.8);
+      h1->GetYaxis()->SetTitleOffset(0.8);
+      h1->GetXaxis()->SetLabelSize(0.045);
+      h1->GetYaxis()->SetLabelSize(0.045);
+      h1->GetXaxis()->SetTitleSize(0.05);
+      h1->GetYaxis()->SetTitleSize(0.05);
+    }
+    h1->Draw("colz");
+  }
+}
+
+void KOBRA::CheckF1PPAC(bool flagLog, bool flagUseF1X) {
+  std::string f1uppac = "f1uppac";
+  if (flagUseF1X) {
+    f1uppac = "f1uppacx";
+  }
+  auto c1 = new TCanvas(Form("cpf1ppac_r%d", runNs.front()), "F1 PPAC Check", 1200, 800);
+  c1->Divide(3, 3);
+
+  const int nquant = 7;
+  const char *quants[nquant] = {"tx1", "tx2", "ty1", "ty2", "ta", "txsum", "tysum"};
+
+  int i = 0;
+  for (const auto &quant : quants) {
+    auto vpad = c1->cd(i++ + 1);
+    tree->Draw(Form("%s.%s>>hf1up_%s_r%d(2000,0,200000)", f1uppac.c_str(), quant, quant, runNs.front()));
+    auto h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf1up_%s_r%d", quant, runNs.front())));
+    h1->GetXaxis()->SetRange(h1->FindFirstBinAbove(0), h1->FindLastBinAbove(0));
+    vpad->SetLogy(flagLog);
+    h1->Draw();
+  }
+  c1->cd(nquant + 1);
+  tree->Draw(Form("%s@.GetEntriesFast()>>hf1up_multi_r%d(10,0,10)", f1uppac.c_str(), runNs.front()));
+  auto h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf1up_multi_r%d", runNs.front())));
+  h1->SetMarkerSize(2.0);
+  h1->Draw("HIST, TEXT0");
+  // INSERT_YOUR_CODE
+  // Calculate multi-hit and single-hit (==1) counts
+  double nhits_multi = 0, nhits_single = 0, nhits_total = 0;
+  if (h1) {
+    nhits_total = h1->GetEntries();
+    int bin0 = h1->GetXaxis()->FindBin(0.);  // first bin: zero hit
+    int bin1 = h1->GetXaxis()->FindBin(1.);  // single hit
+    nhits_single = h1->GetBinContent(bin1);
+    nhits_multi = nhits_total - h1->GetBinContent(bin0) - nhits_single;
+    // Avoid division by zero
+    double multi_perc = (nhits_single > 0) ? (nhits_multi / nhits_single) * 100.0 : 0.0;
+    // Draw the percentage on the right center of the pad
+    double x = h1->GetXaxis()->GetBinUpEdge(h1->GetNbinsX()) * 0.98;
+    double y = h1->GetMaximum() * 0.5;
+    TLatex latex;
+    latex.SetTextAlign(32);  // right, vertical center
+    latex.SetTextSize(0.045);
+    latex.SetTextColor(kRed + 2);
+    latex.SetNDC(false);  // axes (not normalized relative pad)
+    latex.DrawLatex(x, y, Form("Multi/Single: %.4f%%", multi_perc));
+
+    double eff = (nhits_total > 0) ? (nhits_single + nhits_multi) / nhits_total * 100.0 : 0.0;
+
+    // Draw the numerator/denominator at about 60% height
+    double y2 = h1->GetMaximum() * 0.3;
+    TLatex latex2;
+    latex2.SetTextAlign(32);  // right, vertical center
+    latex2.SetTextSize(0.045);
+    latex2.SetTextColor(kBlue + 2);
+    latex2.SetNDC(false);
+    latex2.DrawLatex(x, y2, Form("Hit/All: %.4f%%", eff));
+  }
+}
+
+void KOBRA::DrawPPACEff(const char *cut, std::ostream &out) {
   auto c1 = new TCanvas(Form("cpeff_r%d", runNs.front()), "PPAC Eff.", 800, 1200);
   c1->Divide(2, 3);
 
   TH1 *h1;
   c1->cd(1);
-  tree->Draw(Form("f1uppac@.GetEntriesFast()>>hf1up_r%d(2,0,2)", runNs.front()), cut);
+  tree->Draw(Form("(f1uppac@.GetEntriesFast() > 0)>>hf1up_r%d(2,0,2)", runNs.front()), cut);
   h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf1up_r%d", runNs.front())));
-  std::cout << " F1 Up PPAC Eff. : " << h1->GetMean() << std::endl;
+  out << " F1 Up PPAC Eff. : " << h1->GetMean() << std::endl;
 
   c1->cd(2);
-  tree->Draw(Form("f1uppacx@.GetEntriesFast()>>hf1upx_r%d(2,0,2)", runNs.front()), cut);
+  tree->Draw(Form("(f1uppacx@.GetEntriesFast() > 0)>>hf1upx_r%d(2,0,2)", runNs.front()), cut);
   h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf1upx_r%d", runNs.front())));
-  std::cout << " F1 Up PPACX Eff.: " << h1->GetMean() << std::endl;
+  out << " F1 Up PPACX Eff.: " << h1->GetMean() << std::endl;
 
   c1->cd(4);
-  tree->Draw(Form("f2dppac@.GetEntriesFast()>>hf2dp_r%d(2,0,2)", runNs.front()), cut);
+  tree->Draw(Form("(f2dppac@.GetEntriesFast() > 0)>>hf2dp_r%d(2,0,2)", runNs.front()), cut);
   h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf2dp_r%d", runNs.front())));
-  std::cout << " F2 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
+  out << " F2 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
 
   c1->cd(5);
-  tree->Draw(Form("f3uppac@.GetEntriesFast()>>hf3up_r%d(2,0,2)", runNs.front()), cut);
+  tree->Draw(Form("(f3uppac@.GetEntriesFast() > 0)>>hf3up_r%d(2,0,2)", runNs.front()), cut);
   h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf3up_r%d", runNs.front())));
-  std::cout << " F3 Up PPAC Eff. : " << h1->GetMean() << std::endl;
+  out << " F3 Up PPAC Eff. : " << h1->GetMean() << std::endl;
 
   c1->cd(6);
-  tree->Draw(Form("f3dppac@.GetEntriesFast()>>hf3dp_r%d(2,0,2)", runNs.front()), cut);
+  tree->Draw(Form("(f3dppac@.GetEntriesFast() > 0)>>hf3dp_r%d(2,0,2)", runNs.front()), cut);
   h1 = static_cast<TH1 *>(gDirectory->Get(Form("hf3dp_r%d", runNs.front())));
-  std::cout << " F3 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
+  out << " F3 Dn PPAC Eff. : " << h1->GetMean() << std::endl;
 }
 
-TGraph *KOBRA::PPACRate(int gap) {
+void KOBRA::DrawPPACTSum(bool flagLog, const char *cut, bool noAnodeCut, bool flagFit, bool flagUseF1X) {
+  auto c1 = new TCanvas(Form("cppsum_r%d", runNs.front()), "PPAC TSum", 1400, 600);
+  const int nppacs = 4;
+  const int nquants = 2;
+
+  c1->Divide(nppacs, nquants);
+
+  const char *ppacs[nppacs] = {"f1uppacx", "f2dppac", "f3uppac", "f3dppac"};
+  if (flagUseF1X) {
+    ppacs[0] = "f1uppacx";
+  } else {
+    ppacs[0] = "f1uppac";
+  }
+  const char *quants[nquants] = {"txsum", "tysum"};
+  const char *quants_noanode[nquants] = {"tx", "ty"};
+
+  TH1 *h1;
+  for (Int_t i = 0; i < nppacs; i++) {
+    for (Int_t j = 0; j < nquants; j++) {
+      TVirtualPad *vpad = c1->cd(j * nppacs + i + 1);
+      if (noAnodeCut) {
+        tree->Draw(Form("(%s.%s1+%s.%s2)/2.>>h%s_%s_r%d(1000,0,100000)", ppacs[i], quants_noanode[j], ppacs[i],
+                        quants_noanode[j], ppacs[i], quants[j], runNs.front()),
+                   cut);
+      } else {
+        tree->Draw(Form("%s.%s>>h%s_%s_r%d(1000,0,100000)", ppacs[i], quants[j], ppacs[i], quants[j], runNs.front()),
+                   cut);
+      }
+      vpad->SetLogy(flagLog);
+      auto h1 = static_cast<TH1 *>(gDirectory->Get(Form("h%s_%s_r%d", ppacs[i], quants[j], runNs.front())));
+      h1->GetXaxis()->SetRange(h1->FindFirstBinAbove(0), h1->FindLastBinAbove(0));
+      h1->Draw();
+
+      // INSERT_YOUR_CODE
+      if (flagFit && h1 && h1->GetEntries() > 0) {
+        // Find the maximum bin center
+        int maxBin = h1->GetMaximumBin();
+        double maxCenter = h1->GetXaxis()->GetBinCenter(maxBin);
+
+        // Define new histogram range: maxCenter ± 5000
+        double fitLow = maxCenter - 5000;
+        double fitHigh = maxCenter + 5000;
+        int nBins = 1000;
+
+        // Create new histogram
+        TString newHistName = Form("%s_%s_fit_r%d", ppacs[i], quants[j], runNs.front());
+        tree->Draw(Form("%s.%s>>%s(%d,%f,%f)", ppacs[i], quants[j], newHistName.Data(), nBins, fitLow, fitHigh), cut);
+        TH1 *hfit = static_cast<TH1 *>(gDirectory->Get(newHistName));
+
+        if (hfit && hfit->GetEntries() > 0) {
+          hfit->SetLineColor(kGreen + 2);
+          hfit->SetLineWidth(2);
+
+          // Fit with gaussian
+          // TF1 *gaus = new TF1(Form("%s_gaus", newHistName.Data()), "gaus", fitLow, fitHigh);
+          hfit->Fit("gaus", "Q", "", maxCenter - 500, maxCenter + 500);  // Quiet, use Range, Draw automatically
+          TF1 *gaus = hfit->GetFunction("gaus");
+          gaus->Draw("SAME");
+          double mean = gaus->GetParameter(1);
+          double sigma = gaus->GetParameter(2);
+
+          // Draw ±5 sigma region as dashed lines
+          double xminus = mean - 5 * sigma;
+          double xplus = mean + 5 * sigma;
+          // 콘솔에 결과 출력
+          printf("[cpp] %s %s (r%d): mean=%.3f, sigma=%.3f (%.2f%%), 5sigma=%.3f (%.2f%%), %.0f, %.0f\n", ppacs[i],
+                 quants[j], runNs.front(), mean, sigma, sigma / mean * 100, 5 * sigma, 5 * sigma / mean * 100, xminus,
+                 xplus);
+
+          TLine *l_minus = new TLine(xminus, 0, xminus, hfit->GetMaximum());
+          l_minus->SetLineStyle(2);
+          l_minus->SetLineColor(kMagenta + 2);
+          l_minus->SetLineWidth(2);
+          l_minus->Draw();
+
+          TLine *l_plus = new TLine(xplus, 0, xplus, hfit->GetMaximum());
+          l_plus->SetLineStyle(2);
+          l_plus->SetLineColor(kMagenta + 2);
+          l_plus->SetLineWidth(2);
+          l_plus->Draw();
+        }
+      }
+    }
+  }
+}
+
+TMultiGraph *KOBRA::PPACRate(int gap, int start) {
+  TMultiGraph *mgr = new TMultiGraph("ppacrate", "PPAC Rate");
   TGraph *gr = new TGraph;
+  mgr->Add(gr);
 
   Double_t lastts = -1;
   Double_t lastppac = -1;
-  for (Int_t i = 0; i < tree->GetEntries(); i += gap) {
+  Int_t curTreeNumber = -1;
+  for (Int_t i = start; i < tree->GetEntries(); i += gap) {
     tree->GetEntry(i);
     if (!scaler || scaler->GetEntriesFast() == 0) continue;
     time_t start_ts = GetHeader(tree->GetTreeNumber())->GetStartTimeStamp();
-    time_t day0 = start_ts - (start_ts % 86400) - 9 * 3600;  // 00:00:00 of the day
+    time_t day0 = start_ts - (start_ts % 86400) - 9 * 3600;
+    if (curTreeNumber < 0) curTreeNumber = tree->GetTreeNumber();
+    if (curTreeNumber != tree->GetTreeNumber()) {
+      std::cout << " start_ts: " << start_ts << std::endl;
+      std::cout << " day0: " << day0 << std::endl;
+      curTreeNumber = tree->GetTreeNumber();
+      std::cout << "Switching to tree " << curTreeNumber << std::endl;
+      gr = new TGraph;
+      mgr->Add(gr);
+    }
+    // 00:00:00 of the day
     if (i > 1) {
       Double_t dt = (double)(static_cast<TScalerData *>(scaler->At(0))->ts - lastts);
       Double_t dppac = (double)(static_cast<TScalerData *>(scaler->At(0))->ppac - lastppac);
@@ -1320,13 +1637,22 @@ TGraph *KOBRA::PPACRate(int gap) {
     lastppac = (double)(static_cast<TScalerData *>(scaler->At(0))->ppac);
   }
 
-  gr->GetXaxis()->SetTimeDisplay(1);
-  gr->GetXaxis()->SetTimeFormat("%m-%d %H:%M");
-  gr->GetXaxis()->SetNdivisions(505);
-
-  gr->SetTitle("PPAC Or Rate;Time [s];Rate [pps]");
-  gr->Draw("AL");
-  return gr;
+  for (Int_t i = 0; i < mgr->GetListOfGraphs()->GetEntries(); i++) {
+    TObject *obj = mgr->GetListOfGraphs()->At(i);
+    TGraph *gr = static_cast<TGraph *>(obj);
+    gr->SetLineColor(i + 1);
+    gr->GetXaxis()->SetTimeDisplay(1);
+    gr->GetXaxis()->SetTimeFormat("%m-%d %H:%M");
+    gr->GetXaxis()->SetNdivisions(505);
+    gr->SetTitle("PPAC Or Rate;Time [s];Rate [pps]");
+  }
+  mgr->SetTitle("PPAC Or Rate;Time [s];Rate [pps]");
+  mgr->GetXaxis()->SetTimeDisplay(1);
+  mgr->GetXaxis()->SetTimeFormat("%m-%d %H:%M");
+  mgr->GetXaxis()->SetNdivisions(505);
+  mgr->GetYaxis()->SetRangeUser(0, mgr->GetYaxis()->GetXmax() * 1.5);
+  mgr->Draw("AL");
+  return mgr;
 }
 
 TGraph *KOBRA::TriggerRate(int gap) {

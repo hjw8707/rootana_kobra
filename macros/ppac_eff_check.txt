@@ -1,0 +1,30 @@
+c Element
+ F1 Up PPAC Eff. : 0.771619
+ F1 Up PPACX Eff.: 0.895536
+ F2 Dn PPAC Eff. : 0.890207
+ F3 Up PPAC Eff. : 1
+ F3 Dn PPAC Eff. : 0.887675
+n Element
+ F1 Up PPAC Eff. : 0.844557
+ F1 Up PPACX Eff.: 0.914565
+ F2 Dn PPAC Eff. : 0.883937
+ F3 Up PPAC Eff. : 1
+ F3 Dn PPAC Eff. : 0.88008
+o Element
+ F1 Up PPAC Eff. : 0.866424
+ F1 Up PPACX Eff.: 0.91671
+ F2 Dn PPAC Eff. : 0.878909
+ F3 Up PPAC Eff. : 1
+ F3 Dn PPAC Eff. : 0.867407
+f Element
+ F1 Up PPAC Eff. : 0.87242
+ F1 Up PPACX Eff.: 0.919745
+ F2 Dn PPAC Eff. : 0.866176
+ F3 Up PPAC Eff. : 1
+ F3 Dn PPAC Eff. : 0.860523
+ne Element
+ F1 Up PPAC Eff. : 0.861949
+ F1 Up PPACX Eff.: 0.909356
+ F2 Dn PPAC Eff. : 0.855832
+ F3 Up PPAC Eff. : 1
+ F3 Dn PPAC Eff. : 0.851383

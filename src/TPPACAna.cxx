@@ -12,6 +12,7 @@ TPPACAna::TPPACAna(const char *_name, const char *_parfile) {
   flagSet = false;
   flagData = false;
 
+  rawdata = new TPPACRawData();
   outdata = new TClonesArray("TPPACData", 10);
   SetParameters(_parfile);
 }
@@ -19,11 +20,12 @@ TPPACAna::TPPACAna(const char *_name, const char *_parfile) {
 TPPACAna::~TPPACAna() {
   outdata->Clear("C");
   delete outdata;
+  delete rawdata;
 };
 
 void TPPACAna::Clear() {
   for (int i = 0; i < n; i++) data[i].clear();
-
+  rawdata->Clear();
   outdata->Clear("C");
 }
 
@@ -86,8 +88,25 @@ void TPPACAna::SetData(TGenericData *rdata) {
   }
 
   flagData = true;
+  ////////////////////////////////////////////////////////////////////
+  // append raw data to rawdata
+  for (int i = 0; i < data[0].size(); i++) rawdata->AppendTX1(data[0][i]);
+  for (int i = 0; i < data[1].size(); i++) rawdata->AppendTX2(data[1][i]);
+  for (int i = 0; i < data[2].size(); i++) rawdata->AppendTY1(data[2][i]);
+  for (int i = 0; i < data[3].size(); i++) rawdata->AppendTY2(data[3][i]);
+  for (int i = 0; i < data[4].size(); i++) rawdata->AppendTA(data[4][i]);
+  ////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////
+  // for checking all data including empty channels
+  // for (int i = 0; i < n; i++)
+  //   if (data[i].empty()) data[i].push_back(0);
+  //////////////////////////////////////////////////////////////
   for (int i = 0; i < n; i++)
     if (data[i].empty()) flagData = false;
+
+  // if (!flagData && name == "f3uppac" && data[0].size() > 0) {
+  //   static_cast<TKoBRATDCData *>(rdata)->Print();
+  // }
 }
 void TPPACAna::Analysis() {
   if (!flagSet) return;
@@ -132,6 +151,7 @@ TPPACData *TPPACAna::Processing(uint32_t tx1, uint32_t tx2, uint32_t ty1, uint32
 void TPPACAna::SetTree() {
   TTree *tree = TTreeManager::GetInstance()->GetTree();
   tree->Branch(Form("%s", name.c_str()), &outdata);
+  tree->Branch(Form("%s_raw", name.c_str()), &rawdata);
   // tree->Branch(Form("%sppac", name.c_str()), &flagSet, "flagSet/B");
 }
 

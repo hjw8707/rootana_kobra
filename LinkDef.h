@@ -4,6 +4,8 @@
 
 #pragma link C++ class THeader;
 #pragma link C++ class TPPACData;
+#pragma link C++ class TPPACRawData;
+#pragma link C++ class TLPPACRawData;
 #pragma link C++ class TSSDData;
 #pragma link C++ class TLPPACData;
 #pragma link C++ class TPlasticData;

@@ -12,6 +12,7 @@
 #include "TGraph.h"
 #include "TGraphErrors.h"
 #include "TH2.h"
+#include "TMultiGraph.h"
 #include "TObject.h"
 #include "TPad.h"
 
@@ -129,9 +130,15 @@ class KOBRA : public TObject {
                                                          Double_t f1SlitLowLim, Double_t f1SlitUppLim, Int_t bias = 0,
                                                          Bool_t flagUseF1 = true);
 
-  void DrawPPACTimings(bool flagLog = false, const char *cut = NULL);
+  void DrawPPACTimings(bool flagLog = false, const char *cut = NULL, bool flagUseF1X = true);
+  void DrawPPACMultiHits(const char *cut = NULL, bool flagUseF1X = true);
+  void DrawPPACTSum(bool flagLog = false, const char *cut = NULL, bool noAnodeCut = false, bool flagFit = false,
+                    bool flagUseF1X = true);
+  void DrawPPACCorrelation(const char *ppac, const char *cut = NULL);
 
-  void DrawPPACEff(const char *cut = NULL);
+  void CheckF1PPAC(bool flagLog = false, bool flagUseF1X = true);
+
+  void DrawPPACEff(const char *cut = NULL, std::ostream &out = std::cout);
   void PrintSetting(std::ostream &out = std::cout);
 
   void CountIsotopes(std::ostream &out = std::cout, bool flagTitle = true);
@@ -152,7 +159,7 @@ class KOBRA : public TObject {
 
   Long64_t GetEntries(const char *selection);
 
-  TGraph *PPACRate(int gap = 10);
+  TMultiGraph *PPACRate(int gap = 10, int start = 0);
   TGraph *TriggerRate(int gap = 10);
 
   Double_t GetPPACEff(Int_t id, const char *cut = NULL, bool flagTable = false, std::string iso = "", int bias = 0);
@@ -199,6 +206,7 @@ class KOBRA : public TObject {
   //////////////////////////////////////////////////////////////////////////////
   // run group for each isotope (defined at kobra.cxx)
   static std::vector<int> o18, o19, o20, o21, o22, ne24, ne25, ne26;
+  static std::vector<int> o_all, ne_all, cs_all;
   static std::vector<int> o22bl, o21bl, o20bl, totbl;
   static std::vector<std::string> o18_iso, o19_iso, o20_iso, o21_iso, o22_iso, ne24_iso, ne25_iso, ne26_iso;
   static std::vector<int> mom_14, mom_12, mom_10, mom_08, mom_07, mom_06, mom_05, mom_04;
@@ -220,6 +228,7 @@ class KOBRA : public TObject {
   // isotopes, (center momentum in %, [(left limit, right limit) in mm, ...])
   // isotopes, (center momentum in %, [F1UP PPAC HV, ...])
   static std::map<std::string, std::map<int, std::vector<std::vector<int>>>> mruns;
+  static std::vector<int> mdis_o20, mdis_ne24, mdis_all;
   static std::map<std::string, std::map<int, std::vector<std::pair<double, double>>>> mruns_disp;
   static std::map<std::string, std::map<int, std::vector<int>>> mruns_hv;
   static std::map<std::string, std::map<int, std::vector<double>>> mruns_brho;

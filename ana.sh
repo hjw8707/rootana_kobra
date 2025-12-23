@@ -5,7 +5,11 @@ echo '======================================================='
 
 # 인수가 없으면 오류 메시지 출력
 if [ "$#" -eq 0 ]; then
-    echo "Usage: $0 [comm|phys] (start_run) (end_run)"
+    echo "Usage:"
+    echo "(1) general: $0 [comm|phys] (start_run) (end_run)"
+    echo "(2) all cross section measurement runs: $0 phys all_cs"
+    echo "(3) all momentum distribution measurement runs: $0 phys all_mdis"
+    echo "(4) all BLS runs: $0 phys all_bls"
     exit 1
 fi
 

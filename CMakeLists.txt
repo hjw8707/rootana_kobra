@@ -38,7 +38,9 @@ set(INC
 set(DICTHDRS
   "include/THeader.hxx"
   "include/TPPACData.hxx"
+  "include/TPPACRawData.hxx"
   "include/TLPPACData.hxx"
+  "include/TLPPACRawData.hxx"
   "include/TPlasticData.hxx"
   "include/TSSDData.hxx"
   "include/TScalerData.hxx"
