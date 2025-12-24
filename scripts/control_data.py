@@ -47,8 +47,10 @@ class ControlData:
 
         if time_cut:
             df = self.df.between_time('08:00', '20:00')
+        else:
+            df = self.df
 
-        df = self.df[self.df[self.df.columns[0]] >= start_date]
+        df = df[df[df.columns[0]] >= start_date]
         if end_date is not None:
             df = df[df[df.columns[0]] <= end_date + pd.Timedelta(days=1)]
         else:
@@ -149,10 +151,10 @@ class ControlData:
 
 
     def plot_multiple_dates(self, dates, cols = [1, 2, 4, 5], save_name = None, time_cut=False, show_plot = True, ncol = 6):
-        df = self.df
+        df_base = self.df
 
         if time_cut:
-            df = df.between_time('08:00', '20:00')
+            df_base = df_base.between_time('08:00', '20:00')
 
         nrows = (len(dates) + ncol - 1) // ncol  # 필요한 행 수 계산
         # 전체 그림의 사이즈를 픽셀 단위로 지정 (예: 2000x1000 픽셀)
@@ -164,7 +166,7 @@ class ControlData:
 
         # 첫 번째 날짜의 데이터로 범례를 설정
         first_date = pd.to_datetime(dates[0])
-        df_first = df[df[df.columns[0]].dt.date == first_date.date()]
+        df_first = df_base[df_base[df_base.columns[0]].dt.date == first_date.date()]
         columns = [df_first.columns[col] for col in cols]
         colors = plt.cm.tab10(np.linspace(0, 1, len(columns)))  # 색상 설정
 
@@ -176,18 +178,24 @@ class ControlData:
         y_min, y_max = float('inf'), float('-inf')
         for date in dates:
             start_date = pd.to_datetime(date)
-            df = df[df[df.columns[0]].dt.date == start_date.date()]
+            df_day = df_base[df_base[df_base.columns[0]].dt.date == start_date.date()]
+            if df_day.empty:
+                continue
             for column in columns:
-                y_min = min(y_min, df[column].min())
-                y_max = max(y_max, df[column].max())
+                y_min = min(y_min, df_day[column].min())
+                y_max = max(y_max, df_day[column].max())
+
+        # 모든 날짜에서 데이터가 하나도 없으면(또는 전부 NaN이면) 기본 범위로 폴백
+        if not np.isfinite(y_min) or not np.isfinite(y_max):
+            y_min, y_max = 0.0, 1.0
 
         for i, date in enumerate(dates):
             row, col = i // ncol, i % ncol
             start_date = pd.to_datetime(date)
-            df = df[df[df.columns[0]].dt.date == start_date.date()]
+            df_day = df_base[df_base[df_base.columns[0]].dt.date == start_date.date()]
 
             for column, color in zip(columns, colors):
-                axs[row, col].plot(df[df.columns[0]], df[column], color=color)
+                axs[row, col].plot(df_day[df_day.columns[0]], df_day[column], color=color)
             axs[row, col].set_ylabel('Values')
             axs[row, col].set_title(f'{start_date.date()}')
             axs[row, col].grid(True)
@@ -225,5 +233,8 @@ if __name__ == '__main__':
     #plot_multiple_dates(dates, cols = [1, 2], time_cut=True, save_name = 'D1_plot.png', show_plot = False)
     #plot_multiple_dates(dates, cols = [4, 5], time_cut=True, save_name = 'D2_plot.png', show_plot = False)
     #plot_multiple_dates(dates, cols = [7, 8], time_cut=True, save_name = 'Swinger_plot.png', show_plot = False)
-    cd.analysis_control_data_time('2024-07-18', '14:40', '15:50', columns = [1, 2], flucData = 'misc/aoq_reft.csv')
+    #cd.analysis_control_data_time('2024-07-18', '14:40', '15:50', columns = [1, 2], flucData = 'misc/aoq_reft.csv')
     #cd.plotting_control_data_time('2024-07-18', '14:40', '15:50', columns = [1, 2], flucData = 'misc/aoq_reft.csv')
+    #print(cd.df.columns)
+    #cd.plot_multiple_dates(dates = dates, cols = [9], time_cut=True, save_name = 'Dump_plot.png', show_plot = True)
+    cd.plot_multiple_dates(dates = dates, cols = [10], time_cut=True, save_name = 'Collimator_plot.png', show_plot = True)
