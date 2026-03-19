@@ -95,14 +95,17 @@ class KOBRA : public TObject {
 
   inline void SetUseSSD() {
     SetUseSSDorPla(true);
-    AddCuts("./cut");
+    AddCuts("./cut", true);  // flagPla = true
   }
   inline void SetUsePla() {
     SetUseSSDorPla(false);
     // AddCuts("./cut");
-    AddCuts("./cut_pla");
+    AddCuts("./cut_pla", true);
   }
   // inline void SetUsePla() { SetUseSSDorPla(false); }
+
+  void SetUseFPLC();
+  void SetUseFPL0();
 
   inline void SetZ(Double_t a, Double_t b) { tree->SetAlias("Z", Form("%f*z+%f", a, b)); }
   void SetZ(Int_t iz1, Double_t z1, Int_t iz2, Double_t z2);
@@ -117,10 +120,14 @@ class KOBRA : public TObject {
   inline Double_t GetPathLength() { return pathLength; }
 
   TH2 *DrawPID0(const char *cut = NULL);
-  TH2 *DrawPID(Int_t show = 0, const char *cut = NULL);   // show = 0: nothing, 1: count, 2: pps
+  TH2 *DrawPID(Int_t show = 0, const char *cut = NULL, bool flagCor = false, bool flagPla = false,
+               bool flagLargeArea = false);               // show = 0: nothing, 1: count, 2: pps
   TH2 *DrawPIDC(Int_t show = 0, const char *cut = NULL);  // show = 0: nothing, 1: count, 2: pps
 
+  TH2 *DrawCorPID(const char *title = nullptr);
+
   std::vector<TH1 *> DrawXDist(const char *cut = NULL, bool flagDraw = true);
+  std::vector<TH1 *> DrawXYDist(const char *cut = NULL, bool flagDraw = true);
   TH1 *DrawMomDist(const char *cut = NULL, Bool_t flagRate = false, Bool_t flagDraw = true, Int_t nBin = 32,
                    Double_t lowLim = -160, Double_t highLim = 160);
   TGraphErrors *GetMomDistGraph(Double_t center = 0, const char *cut = NULL, Double_t momBinSize = 0.5,
@@ -145,15 +152,15 @@ class KOBRA : public TObject {
   void RateIsotopes(std::ostream &out = std::cout, bool flagTitle = true);
   void CountIsotopesRunByRun(std::ostream &out = std::cout, bool flagTitle = true, bool flagHeader = true);
 
-  void AddCut(const char *filename);
-  void AddCuts(const char *path);
+  void AddCut(const char *filename, bool flagPla = false);
+  void AddCuts(const char *path, bool flagPla = false);
 
   Long64_t Draw(const char *name, const char *cut = NULL, const char *option = "");
 
   void DrawCut(const char *cut, bool flagName = false);
   void DrawAllCuts(bool flagName = false);
 
-  void PrintCutCoord(TCutG *cut, Double_t xoff = 0, Double_t yoff = 0);
+  static void PrintCutCoord(TCutG *cut, Double_t xoff = 0, Double_t yoff = 0);
 
   Double_t GetElapsedTime();
 
@@ -180,8 +187,8 @@ class KOBRA : public TObject {
 
   ////////////////////////////////////////////////////////
   // SSD calibration
-  void F3SSDPedestal(const char *cut, int low = 0, int high = 200);
-  void F3SSDPeak(const char *cut, int low = 200, int high = 2000);
+  void F3SSDPedestal(const char *cut = NULL, int low = 0, int high = 200);
+  void F3SSDPeak(const char *cut = NULL, int low = 200, int high = 2000);
   ////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////
@@ -252,12 +259,15 @@ class KOBRA : public TObject {
   static void PPACEffCurve();
 
   std::map<std::string, TCutG *> cutgs;
+  std::vector<std::string> cutgsOrder;  // 정렬된 순서를 유지하는 벡터 (원자번호, 원자량 순)
   std::map<std::string, std::map<Int_t, Double_t>> effF1UPPACX;
   std::string allcut;
 
+ public:
+  std::vector<Int_t> runNs;
+
  private:
   Expt expt;
-  std::vector<Int_t> runNs;
   std::vector<THeader *> headers;
 
   Double_t centBrho;

@@ -247,25 +247,34 @@ class BeamData:
 
 
     def plot_data_lists(self, sorts, date_start, time_start, time_end, date_end=None, ax=None):
-        for sort in sorts:
+        handles = []
+        labels = []
+        for i, sort in enumerate(sorts):
             filtered = self.get_data_list(sort, date_start, time_start, time_end, date_end)
             if filtered is None or filtered.empty:
                 continue
+            color = plt.cm.tab10(i % 10)
             if ax is None:
-                plt.plot(filtered['datetime'], filtered[sort])
+                line, = plt.plot(filtered['datetime'], filtered[sort], label=sort, color=color)
             else:
-                ax.plot(filtered['datetime'], filtered[sort])
+                line, = ax.plot(filtered['datetime'], filtered[sort], label=sort, color=color)
+            handles.append(line)
+            labels.append(sort)
         if ax is None:
+            plt.legend()
             plt.show()
-        return plt.gca()
+            return plt.gca()
+        else:
+            ax.legend()
+            return ax
 
-    def plot_data_lists_all_days(self, sorts, y_min=None, y_max=None, date_list=None):
+    def plot_data_lists_all_days(self, sorts, y_min=None, y_max=None, date_list=None, filename=None):
         sort = sorts
 
         if date_list is None:
             date_list = self.get_date_list()
         n_dates = len(date_list)
-        ncols = 3
+        ncols = 4
         nrows = math.ceil(n_dates / ncols)
 
         fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(16, 3 * nrows), sharex=False)
@@ -274,7 +283,7 @@ class BeamData:
         for idx, date in enumerate(date_list):
             # date가 mmdd 형식이므로, 연도를 현재 연도로 지정하여 pandas datetime으로 변환
             year = '2024'
-            date_pd = pd.to_datetime(f"{year}{date}", format="%Y-%m-%d")
+            date_pd = pd.to_datetime(f"{year}{date}", format="%Y%m%d")
             ax = axes[idx]
             self.plot_data_lists(sort, date_pd, '08:00:00', '19:00:00', ax=ax)
             ax.set_title(f"{date_pd.strftime('%Y-%m-%d')}")
@@ -302,6 +311,10 @@ class BeamData:
             labels.append(s)
         fig.legend(handles=handles, labels=labels, loc='lower right')
         plt.show()
+        # INSERT_YOUR_CODE
+        # 모든 날짜 플롯(fig)을 PDF로 저장 (예: 'misc/all_days_plot.pdf')
+        if filename is not None:
+            fig.savefig(f'figs/beam/{filename}.png', bbox_inches='tight')
         return fig
 
     def plot_fc_all_days(self):
@@ -427,7 +440,7 @@ class BeamData:
             groups.append(pd.DataFrame(current_group))
 
         # INSERT_YOUR_CODE
-        # 그룹 간의 시간 차이가 3초 이내면 하나의 그룹으로 합치기
+        # 그룹 간의 시간 차이가 10초 이내면 하나의 그룹으로 합치기
         if len(groups) <= 1:
             return groups
 
@@ -439,7 +452,7 @@ class BeamData:
             prev_end_time = prev_group.iloc[-1]['datetime']
             next_start_time = next_group.iloc[0]['datetime']
             # 시간 차이가 3초 이내면 병합
-            if (next_start_time - prev_end_time).total_seconds() <= 3:
+            if (next_start_time - prev_end_time).total_seconds() <= 10:
                 # 두 그룹을 합쳐서 새로운 current_group으로
                 current_group = pd.concat([prev_group, next_group], ignore_index=True)
             else:
@@ -449,8 +462,8 @@ class BeamData:
         groups = merged_groups
 
         # INSERT_YOUR_CODE
-        # 요소가 하나인 그룹은 제거
-        groups = [g for g in groups if len(g) > 1]
+        # 요소가 10개 이하인 그룹은 제거
+        groups = [g for g in groups if len(g) > 10]
 
         return groups
 
@@ -459,12 +472,19 @@ class BeamData:
             return None
         return df.iloc[0]['datetime'], len(df), df[sort].mean(), df[sort].std()
 
+    def get_timings_nsamples_mean_std(self, df, sort):
+        if df is None or df.empty or sort not in df.columns:
+            return None
+        return df.iloc[0]['datetime'], df.iloc[-1]['datetime'], len(df), df[sort].mean(), df[sort].std()
+
     def get_group_properties(self, groups, sort):
         properties = []
         for group in groups:
-            timing, nsamples, mean, std = self.get_timing_nsamples_mean_std(group, sort)
+            #timing, nsamples, mean, std = self.get_timing_nsamples_mean_std(group, sort)
+            start_time, end_time, nsamples, mean, std = self.get_timings_nsamples_mean_std(group, sort)
             property = {
-                'timing': timing,
+                'timing': start_time,
+                'end_time': end_time,
                 'nsamples': nsamples,
                 'mean': mean,
                 'std': std
@@ -548,6 +568,159 @@ class BeamData:
         return weighted_mean, weighted_err
         #self.plot_data_lists([sort + '_1K', sort + '_1M'], start_date, '08:00:00', '19:00:00', end_date)
 
+    def get_fc_group_properties(self, sort):
+        groups = self.get_groups_above_threshold(sort, 1.0e-7, '2024-07-17', '08:00:00', '19:00:00', '2024-08-23')
+        properties = self.get_group_properties(groups, sort)
+        return properties
+
+
+    def get_lebt_group_properties(self, threshold=1.0e-6, date_start='2024-07-17', time_start='08:00:00', time_end='19:00:00', date_end='2024-08-23', upper_limit=None):
+        """
+        LEBT의 그룹 속성들을 반환하는 함수
+
+        Parameters:
+        -----------
+        threshold : float
+            LEBT 그룹을 찾기 위한 threshold (기본값: 1.0e-6)
+        date_start : str
+            시작 날짜
+        time_start : str
+            시작 시간
+        time_end : str
+            끝 시간
+        date_end : str
+            끝 날짜
+        upper_limit : float, optional
+            상한값 (기본값: None, 제한 없음)
+
+        Returns:
+        --------
+        list
+            LEBT 그룹 속성들의 리스트
+        """
+        groups = self.get_groups_above_threshold('LEBT', threshold, date_start, time_start, time_end, date_end, upper_limit)
+        if groups is None:
+            return []
+        properties = self.get_group_properties(groups, 'LEBT')
+        return properties
+
+    def get_fc2_lebt_ratio(self, threshold_fc2=1.0e-7, threshold_lebt=1.0e-6, date_start='2024-07-17', time_start='08:00:00', time_end='19:00:00', date_end='2024-08-23', threshold_sec=3, flagPrint=True):
+        """
+        FC2_1M과 LEBT의 각 그룹별 평균 간의 ratio를 구하는 함수
+
+        Parameters:
+        -----------
+        threshold_fc2 : float
+            FC2_1M 그룹을 찾기 위한 threshold (기본값: 1.0e-7)
+        threshold_lebt : float
+            LEBT 그룹을 찾기 위한 threshold (기본값: 1.0e-6)
+        date_start : str
+            시작 날짜 (기본값: '2024-07-17')
+        time_start : str
+            시작 시간 (기본값: '08:00:00')
+        time_end : str
+            끝 시간 (기본값: '19:00:00')
+        date_end : str
+            끝 날짜 (기본값: '2024-08-23')
+        threshold_sec : float
+            timing 매칭을 위한 시간 차이 threshold (초 단위, 기본값: 3)
+        flagPrint : bool
+            결과를 출력할지 여부 (기본값: True)
+
+        Returns:
+        --------
+        tuple
+            (matched_pairs, weighted_mean, weighted_err)
+            matched_pairs: 매칭된 (FC2_1M, LEBT) 속성 쌍들의 리스트
+            weighted_mean: 샘플 수 가중 평균 ratio
+            weighted_err: 가중 평균의 에러
+        """
+        # FC2_1M 그룹 속성 가져오기
+        fc2_groups = self.get_groups_above_threshold('FC2_1M', threshold_fc2, date_start, time_start, time_end, date_end)
+        if fc2_groups is None or len(fc2_groups) == 0:
+            print("FC2_1M 그룹을 찾을 수 없습니다.")
+            return None, None, None
+        fc2_props = self.get_group_properties(fc2_groups, 'FC2_1M')
+
+        # LEBT 그룹 속성 가져오기
+        lebt_props = self.get_lebt_group_properties(threshold_lebt, date_start, time_start, time_end, date_end)
+        if len(lebt_props) == 0:
+            print("LEBT 그룹을 찾을 수 없습니다.")
+            return None, None, None
+
+        # timing으로 매칭
+        matched_pairs = self.match_properties_by_timing(fc2_props, lebt_props, threshold_sec, flagPrint=flagPrint)
+
+        if len(matched_pairs) == 0:
+            print("매칭된 그룹이 없습니다.")
+            return matched_pairs, None, None
+
+        # ratio 계산 (FC2_1M / LEBT)
+        ratios = []
+        ratio_errs = []
+        weights = []
+
+        for pair in matched_pairs:
+            fc2_prop, lebt_prop = pair
+            if fc2_prop is not None and lebt_prop is not None:
+                if lebt_prop['mean'] != 0:
+                    ratio = fc2_prop['mean'] / lebt_prop['mean']
+                    # 에러 전파 공식 사용
+                    ratio_err = ratio * ((fc2_prop['std']/fc2_prop['mean'])**2 + (lebt_prop['std']/lebt_prop['mean'])**2) ** 0.5
+                    n_samples = min(fc2_prop['nsamples'], lebt_prop['nsamples'])
+                    ratios.append(ratio)
+                    ratio_errs.append(ratio_err)
+                    weights.append(n_samples)
+
+        if len(ratios) == 0:
+            print("유효한 ratio를 계산할 수 없습니다.")
+            return matched_pairs, None, None
+
+        ratios = np.array(ratios)
+        ratio_errs = np.array(ratio_errs)
+        weights = np.array(weights)
+
+        # 가중 평균 계산
+        weighted_mean = np.average(ratios, weights=weights)
+        # 가중 표준 오차 계산 (샘플 수에 대한 가중치)
+        weighted_var = np.average((ratios - weighted_mean)**2, weights=weights)
+        weighted_std = np.sqrt(weighted_var / len(ratios))
+        # 개별 에러도 고려한 가중 평균의 에러 (propagate)
+        weighted_err = np.sqrt(np.sum((weights * ratio_errs)**2)) / np.sum(weights)
+
+        if flagPrint:
+            print(f"\n=== FC2_1M / LEBT Ratio 통계 ===")
+            print(f"매칭된 그룹 수: {len(ratios)}")
+            print(f"샘플수 가중 평균: {weighted_mean:.6e} ± {weighted_err:.6e} (propagate), ± {weighted_std:.6e} (표본분산)")
+
+        return matched_pairs, weighted_mean, weighted_err
+
+    def get_fc1_fc2_group_properties_df(self, sort='1M'):
+# INSERT_YOUR_CODE
+        # Get properties for both FC1 and FC2
+        fc1_props = self.get_fc_group_properties('FC1_' + sort)
+        fc2_props = self.get_fc_group_properties('FC2_' + sort)
+
+        # Add identifier for each
+        for prop in fc1_props:
+            prop['FC'] = 'FC1'
+        for prop in fc2_props:
+            prop['FC'] = 'FC2'
+
+        # Combine the lists
+        props_combined = fc1_props + fc2_props
+
+        # Create DataFrame
+        df = pd.DataFrame(props_combined)
+
+        # Sort by timestamp column if exists.
+        # If the timestamp key might have different names, adjust here
+        # Assume 'timestamp' key exists, otherwise modify as needed
+        if 'timing' in df.columns:
+            df = df.sort_values(by='timing')
+        df = df.reset_index(drop=True)
+        return df
+
 if __name__ == '__main__':
     beam_data = BeamData()
     #print(beam_data.df.head())
@@ -556,7 +729,7 @@ if __name__ == '__main__':
     # print(beam_data.get_data_list('FC1_1M', '2024-07-07', '09:00:00', '09:10:00'))
     # print(beam_data.get_data_mean('FC1_1M', '2024-07-07', '09:00:00', '09:10:00'))
     #beam_data.plot_data_list('FC1_1M', '2024-07-07', '09:00:00', '09:10:00')
-    beam_data.plot_data_lists(['LEBT'], '2024-08-13', '13:05:00', '13:50:00')
+    #beam_data.plot_data_lists(['LEBT', 'P2DT', 'FC1_1K', 'FC1_1M'], '2024-07-15', '08:00:00', '20:00:00')
     #beam_data.plot_data_lists_all_days(['FC1_1K', 'FC1_1M', 'FC2_1K', 'FC2_1M'], y_min=-5e-7, y_max=2e-6)
     #beam_data.plot_fc_all_days()
     #beam_data.plot_beam_all_days()
@@ -578,8 +751,35 @@ if __name__ == '__main__':
     # 7/16(2024-07-16) 이전 날짜는 제거하여 출력
     #date_list = beam_data.get_date_list()
     #filtered_date_list = [d for d in date_list if d > '0716']
-    #beam_data.plot_data_lists_all_days(['FC1_1K', 'FC1_1M'], y_min=-5e-7, y_max=2e-6, date_list=filtered_date_list)
+    #beam_data.plot_data_lists_all_days(['LEBT', 'FC2_1K', 'FC2_1M'], y_min=-3e-6, y_max=5e-5, date_list=filtered_date_list, filename='beam_plot_fc2_plot_all_days')
+    #beam_data.plot_data_lists_all_days(['FC1_1K', 'FC1_1M', 'FC2_1K', 'FC2_1M'], y_min=-5e-7, y_max=2e-6, date_list=filtered_date_list, filename='fc1_1k_fc1_1m_fc2_1k_fc2_1m_all_days_plot')
+    #beam_data.plot_data_lists_all_days(['FC1_1M', 'FC2_1M'], y_min=-5e-7, y_max=1e-6, date_list=date_list, filename='fc1_1m_fc2_1m_all_days_plot')
     #beam_data.plot_data_lists_all_days(['FC2_1K', 'FC2_1M'], y_min=-5e-7, y_max=2e-6, date_list=filtered_date_list)
     #beam_data.plot_data_lists(['FC1_1K', 'FC1_1M'], '2024-07-17', '08:00:00', '19:00:00', date_end='2024-08-22')
     #beam_data.compare_1k_1m('FC1', '2024-07-17', '2024-08-23')
     #beam_data.compare_1k_1m('FC2', '2024-07-17', '2024-08-23')
+
+    #df = beam_data.get_fc1_fc2_group_properties_df(sort='1M')
+    # DataFrame 전체를 중간 생략없이 출력
+    #with pd.option_context('display.max_rows', None, 'display.max_columns', None, 'display.width', None):
+    #    print(df)
+    # INSERT_YOUR_CODE
+    # DataFrame을 엑셀 파일로 저장 (예: 'misc/fc1_fc2_group_properties_1K.xlsx')
+    #df.to_excel('misc/fc1_fc2_group_properties_1M.xlsx', index=False)
+    #print(beam_data.df.head())
+
+    #matched_pairs, weighted_mean, weighted_err = beam_data.get_fc2_lebt_ratio()
+
+    # 또는 파라미터를 커스터마이징
+    fc_props = beam_data.get_fc_group_properties('FC2_1M')
+    for prop in fc_props:
+        start_time = prop['timing']
+        stop_time = prop['end_time']
+        start_date_str = start_time.strftime('%Y-%m-%d')
+        stop_date_str = stop_time.strftime('%Y-%m-%d')
+        start_str = start_time.strftime('%H:%M:%S')
+        stop_str = stop_time.strftime('%H:%M:%S')
+        mean_val, std_val = beam_data.get_weighted_mean_by_time('LEBT', start_date_str, start_str, stop_str, stop_date_str)
+        #print(f"FC2_1M: {start_time} - {stop_time}, LEBT: {mean_val} ± {std_val}")
+        #print(f"FC2_1M: {start_time} - {stop_time}, LEBT: {mean_val} ± {std_val}, FC2_1M: {prop['mean']} ± {prop['std']}, Ratio: {prop['mean']/mean_val:.3e} ± {prop['std']/mean_val:.3e}")
+        print(f"{start_time},{stop_time},{mean_val:.3e},{std_val:.3e},{prop['mean']:.3e},{prop['std']:.3e}")

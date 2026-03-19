@@ -158,7 +158,9 @@ TPPACData *TLPPACAna::Processing(uint32_t tx1, uint32_t tx2, uint32_t ty1, uint3
   float y = (static_cast<float>(ty1) - static_cast<float>(ty2)) * factor[3] + offset[3];
   float txsum = static_cast<float>(tx1) + static_cast<float>(tx2) - 2.0f * static_cast<float>(ta) + txsum_offset[lcr];
   float tysum = static_cast<float>(ty1) + static_cast<float>(ty2) - 2.0f * static_cast<float>(ta);
-  new ((*outdata)[outdata->GetEntriesFast()]) TPPACData(tx1, tx2, ty1, ty2, ta, x, y, txsum, tysum);
+  float tcavg =
+      (static_cast<float>(tx1) + static_cast<float>(tx2) + static_cast<float>(ty1) + static_cast<float>(ty2)) / 4.0f;
+  new ((*outdata)[outdata->GetEntriesFast()]) TPPACData(tx1, tx2, ty1, ty2, ta, x, y, txsum, tysum, tcavg);
   return static_cast<TPPACData *>(outdata->Last());
 }
 

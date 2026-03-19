@@ -128,9 +128,19 @@ double KOBRABeam::GetElapsedTime(int run) {
   return static_cast<double>(difftime(t_stop, t_start));
 }
 
-double KOBRABeam::GetMeanBeamIntensity(int run) { return GetFloat(run, "LEBT_mean"); }
+double KOBRABeam::GetMeanLEBTIntensity(int run) { return GetFloat(run, "LEBT_mean"); }
 
-double KOBRABeam::GetIntegralBeamIntensity(int run) { return GetFloat(run, "LEBT_integral"); }
+double KOBRABeam::GetIntegralLEBTIntensity(int run) { return GetFloat(run, "LEBT_integral"); }
+
+double KOBRABeam::GetIntegralTSLEBTIntensity(int run) { return GetFloat(run, "LEBT_integral_ts"); }
+
+double KOBRABeam::GetMeanLEBT1kIntensity(int run) { return GetFloat(run, "LEBT_1K"); }
+double KOBRABeam::GetIntegralTSLEBT1kIntensity(int run) { return GetFloat(run, "LEBT_integral_ts_1K"); }
+
+double KOBRABeam::GetMeanACCTIntensity(int run) { return GetFloat(run, "ACCT"); }
+double KOBRABeam::GetMeanACCTIntensityError(int run) { return GetFloat(run, "ACCT_std"); }
+double KOBRABeam::GetIntegralTSACCTIntensity(int run) { return GetFloat(run, "ACCT_integral"); }
+double KOBRABeam::GetIntegralTSACCTIntensityError(int run) { return GetFloat(run, "ACCT_integral_std"); }
 
 KOBRABeam *KOBRABeam::GetInstance(const char *file) {
   if (!instance) {

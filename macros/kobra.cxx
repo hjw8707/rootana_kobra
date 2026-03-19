@@ -40,7 +40,7 @@ ClassImp(KOBRA);
 std::vector<int> KOBRA::o18 = {251, 252, 253, 254};
 std::vector<int> KOBRA::o19 = {259, 260, 261, 262, 263, 264, 265, 266, 267, 271, 272, 273, 274,
                                275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287,
-                               288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299};
+                               289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299};
 
 std::vector<int> KOBRA::o20 = {304, 305, 306, 307, 308, 309, 310};
 
@@ -54,11 +54,11 @@ std::vector<int> KOBRA::o22 = {223, 224, 225, 226,  // Right after the newly adj
 
 std::vector<int> KOBRA::o_all = {
     251, 252, 253, 254, 259, 260, 261, 262, 263, 264, 265, 266, 267, 271, 272, 273, 274, 275, 276, 277, 278,
-    279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299,
-    304, 305, 306, 307, 308, 309, 310, 316, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330,
-    331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 347, 348, 349, 350, 351, 352,
-    361, 362, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 378, 379, 380, 381, 382, 383,
-    384, 385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399, 400, 402, 403, 404};
+    279, 280, 281, 282, 283, 284, 285, 286, 287, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 304,
+    305, 306, 307, 308, 309, 310, 316, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331,
+    332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 347, 348, 349, 350, 351, 352, 361,
+    362, 364, 365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376, 378, 379, 380, 381, 382, 383, 384,
+    385, 386, 387, 388, 389, 390, 391, 392, 393, 394, 395, 396, 398, 399, 400, 402, 403, 404};
 
 std::vector<int> KOBRA::ne24 = {410, 411, 412, 413, 415};
 
@@ -87,10 +87,14 @@ std::map<std::string, std::vector<int>> KOBRA::csruns = {
     {"o18", o18},   {"o19", o19},   {"o20", o20},     {"o21", o21},     {"o22", o22},     {"ne24", ne24},
     {"ne25", ne25}, {"ne26", ne26}, {"o22bl", o22bl}, {"o21bl", o21bl}, {"o20bl", o20bl}, {"totbl", totbl}};
 
-std::map<std::string, float> KOBRA::brhoValue = {{"o18", 1.2959},     {"o19", 1.3198},     {"o20", 1.3734},
-                                                 {"o21", 1.3879},     {"o22", 1.4600},     {"ne24", 1.2646443},
-                                                 {"ne25", 1.3201144}, {"ne26", 1.3741834}, {"o22bl", 1.4600},
-                                                 {"o21bl", 1.3879},   {"o20bl", 1.3734},   {"totbl", 1.3734}};
+// std::map<std::string, float> KOBRA::brhoValue = {{"o18", 1.2959},     {"o19", 1.3198},     {"o20", 1.3734},
+//                                                  {"o21", 1.3879},     {"o22", 1.4600},     {"ne24", 1.2646443},
+//                                                  {"ne25", 1.3201144}, {"ne26", 1.3741834}, {"o22bl", 1.4600},
+//                                                  {"o21bl", 1.3879},   {"o20bl", 1.3734},   {"totbl", 1.3734}};
+
+std::map<std::string, float> KOBRA::brhoValue = {
+    {"o18", 1.28228},   {"o19", 1.31128},   {"o20", 1.37264},  {"o21", 1.39346},  {"o22", 1.46843},  {"ne24", 1.25933},
+    {"ne25", 1.321554}, {"ne26", 1.382238}, {"o22bl", 1.4600}, {"o21bl", 1.3879}, {"o20bl", 1.3734}, {"totbl", 1.3734}};
 
 std::vector<std::string> KOBRA::o18_iso = {"c13", "c14", "c15", "n15", "n16", "n17",  "o17",
                                            "o18", "o19", "f19", "f20", "f21", "ne21", "ne22"};
@@ -226,33 +230,33 @@ std::map<std::string, std::map<int, std::vector<int>>> KOBRA::mruns_hv = {
 
 std::map<std::string, std::map<int, std::vector<double>>> KOBRA::mruns_brho = {
     {"o20", {
-            {-14, {1.2064 * 0.9600000}},
-            {-12, {1.2384 * 0.9590333}},
-            {-10, {1.2666 * 0.9632790}},
-            { -8, {1.2947 * 0.9665260}},
-            { -7, {1.3088 * 0.9671648}},
-            { -6, {1.3299 * 0.9642969}},
-            { -5, {1.3369 * 0.9701535}},
-            { -4, {1.3510 * 0.9702033}},
-            {  0, {1.4073 * 0.9758002, 1.4087 * 0.975682, 1.4087 * 0.975409}},
-            {  4, {1.4636 * 0.9795254}},
-            {  7, {1.5065 * 0.9816280}}}},
+            {-14, {1.15293}},
+            {-12, {1.18312}},
+            {-10, {1.21594}},
+            { -8, {1.24833}},
+            { -7, {1.26328}},
+            { -6, {1.27992}},
+            { -5, {1.29574}},
+            { -4, {1.31197}},
+            {  0, {1.37449, 1.37465, 1.37451}},
+            {  4, {1.43728}},
+            {  7, {1.48424}}}},
     {"ne24", {
-            {-10, {1.1768, 1.1768}},
-            { -8, {1.2030, 1.2030, 1.2030}},
-            { -7, {1.2161}},
-            { -6, {1.2291}},
-            { -5, {1.2422}},
-            { -4, {1.2553, 1.2553}},
-            { -3, {1.2684}},
-            { -2, {1.2814}},
-            { -1, {1.2945}},
-            {  0, {1.3076}},
-            {  1, {1.3207}},
-            {  2, {1.3337}},
-            {  4, {1.3599}},
-            {  6, {1.3861}},
-            { 10, {1.4384}}}}};
+            {-10, {1.1768 * 0.945, 1.1768 * 0.945}},
+            { -8, {1.14338, 1.14338, 1.14338}},
+            { -7, {1.15739}},
+            { -6, {1.17222}},
+            { -5, {1.18555}},
+            { -4, {1.20291, 1.20291}},
+            { -3, {1.21487}},
+            { -2, {1.23331}},
+            { -1, {1.24827}},
+            {  0, {1.26314}},
+            {  1, {1.27727}},
+            {  2, {1.29178}},
+            {  4, {1.32062}},
+            {  6, {1.34923}},
+            { 10, {1.40728}}}}};
 
 // clang-format on
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -599,6 +603,7 @@ void KOBRA::SetAlias() {
                              tofOff));  // only choose the first candidate (avoid confusing from multiple counts)
   tree->SetAlias("tofp", Form("(f3pla.GetTAve()[0] - f2dppt.tsum[0]) + 103.8 - 6.62 + %f",
                               tofOff));  // only choose the first candidate (avoid confusing from multiple counts)
+  tree->SetAlias("tofc", "(f3uppac.tcavg - f2dppt.tl)*0.025 - (f2dppac.tcavg - f2dppac.ta)*0.025 + 99.5855");
   //  tree->SetAlias("de", "Max$(f2ssd.acal)");
   tree->SetAlias("ycor", "(-0.00245304*f3uppac.y[0]^2-0.034376*f3uppac.y[0]+19.8065)/20");
   tree->SetAlias("ycord", "(-0.743174*f3uppac.y[0]^2+5.14862*f3uppac.y[0]+3216.66)/3000");
@@ -610,16 +615,32 @@ void KOBRA::SetAlias() {
 
   tree->SetAlias("brho", Form("(1+db/4100)*%f", centBrho));
 
-  tree->SetAlias("beta", "12398.5/tof/299.");  // F2 DPPAC - F3 UPPAC
+  tree->SetAlias("fpl", "12398.5");
+  tree->SetAlias("fplp", "12698.5");
+  // tree->SetAlias("fpl", "sqrt(fpl0**2+(f3ux-f2x)**2+(f3uy-f2y)**2)");
+  tree->SetAlias("beta", "fpl/tof/299.");  // F2 DPPAC - F3 UPPAC
   tree->SetAlias("gamma", "1/sqrt(1-beta*beta)");
   tree->SetAlias("pp", "gamma*beta");
 
-  tree->SetAlias("betap", "12398.5/tofp/299.");  // F2 DPPAC - F3 UPPAC
+  tree->SetAlias("betap", "fpl/tofp/299.");  // F2 DPPAC - F3 UPPAC
   tree->SetAlias("gammap", "1/sqrt(1-betap*betap)");
   tree->SetAlias("ppp", "gammap*betap");
 
+  tree->SetAlias("betac", "fpl/tofc/299.");  // F2 DPPAC - F3 UPPAC
+  tree->SetAlias("gammac", "1/sqrt(1-betac*betac)");
+  tree->SetAlias("ppc", "gammac*betac");
+
   tree->SetAlias("aoq", useF1 ? "brho/(3.1*pp)" : Form("%f/(3.1*pp)", centBrho));
   tree->SetAlias("aoqp", useF1 ? "brho/(3.1*ppp)" : Form("%f/(3.1*ppp)", centBrho));
+  tree->SetAlias("aoqc", useF1 ? "brho/(3.1*ppc)" : Form("%f/(3.1*ppc)", centBrho));
+
+  tree->SetAlias("f1xcor", "(-5.10859E-5*f1x[0]-2.86761e-7*f1x[0]**2-2.69198e-10*f1x[0]**3)");
+  tree->SetAlias("f1xcorp", "(-7.52796e-05*f1x[0]-3.17575e-07*f1x[0]**2-1.92832e-10*f1x[0]**3)");
+
+  tree->SetAlias("aoqcor", "aoq-f1xcor");
+  tree->SetAlias("aoqcorp", "aoqp-f1xcorp");
+
+  tree->SetAlias("aoqcorpx", "0.0759424+1.03812*aoqcorp-0.0274074*aoqcorp*aoqcorp");
 
   tree->SetAlias("AoQ", "0.941841*aoq+0.095597");
   tree->SetAlias("AoQp", "0.941841*aoqp+0.095597");
@@ -632,12 +653,15 @@ void KOBRA::SetAlias() {
   tree->SetAlias("z_pla", "sqrt(depla)*beta/sqrt(corfac_pla)");
 
   tree->SetAlias("Z_ssd3", "21.540118*z_ssd3+0.444610");
+  tree->SetAlias("Z_ssd3c", "0.103664+22.367234*z_ssd3+0.359779*z_ssd3*z_ssd3");
   tree->SetAlias("Z_ssd2", "21.540118*z_ssd2+0.444610");
   tree->SetAlias("Z_pla", "40.1885*z_pla-1.51331");
+  tree->SetAlias("Z_placs", "-10.400662+204.200166*z_pla+-477.664509*z_pla*z_pla");
 
   tree->SetAlias("z", useSSDorPla ? (useF2orF3 ? "z_ssd2" : "z_ssd3") : "z_pla");
   tree->SetAlias("Z", useSSDorPla ? (useF2orF3 ? "Z_ssd2" : "Z_ssd3") : "Z_pla");
 
+  tree->SetAlias("Zc", "Z_ssd3c");
   ////////////////////////////////////////////
   // de-tof cut
   tree->SetAlias("detof", "de-0.12*(tof-230)");
@@ -648,7 +672,11 @@ void KOBRA::SetAlias() {
   ////////////////////////////////////////////
 }
 
-void KOBRA::AddCut(const char *filename) {
+void KOBRA::SetUseFPLC() { tree->SetAlias("fpl", "sqrt(fpl0**2+(f3ux-f2x)**2+(f3uy-f2y)**2)"); }
+
+void KOBRA::SetUseFPL0() { tree->SetAlias("fpl", "fpl0"); }
+
+void KOBRA::AddCut(const char *filename, bool flagPla) {
   std::ifstream file(filename);
   if (!file.is_open()) {
     std::cerr << "파일을 열 수 없습니다: " << filename << std::endl;
@@ -685,20 +713,25 @@ void KOBRA::AddCut(const char *filename) {
     linen++;
   }
   if (cut) {
-    cut->SetVarX("aoq");
+    // cut->SetVarX("aoq");
+    cut->SetVarX(flagPla ? "aoqcorp" : "aoqcor");
     cut->SetVarY("Z");
     cut->SetFillStyle(1000);
     cut->SetLineStyle(2);
-    cutgs[cut->GetName()] = cut;
+    std::string name = cut->GetName();
+    cutgs[name] = cut;
+    // cutgsOrder가 비어있지 않으면 순서 유지를 위해 추가하지 않음
+    // (AddCuts에서 전체를 다시 정렬하므로)
   }
   file.close();
 }
 
-void KOBRA::AddCuts(const char *path) {
+void KOBRA::AddCuts(const char *path, bool flagPla) {
   for (const auto it : cutgs) {
     delete (it.second);
   }
   cutgs.clear();
+  cutgsOrder.clear();
   TSystemDirectory dir(path, path);
 
   TList *filesList = dir.GetListOfFiles();
@@ -707,24 +740,93 @@ void KOBRA::AddCuts(const char *path) {
     return;
   }
 
+  // 모든 파일을 먼저 읽어서 cutgs에 추가
   TIter next(filesList);
   TSystemFile *file;
   while ((file = (TSystemFile *)next())) {
     TString fileName = file->GetName();
     if (!file->IsDirectory() && fileName.EndsWith("txt")) {
-      AddCut(Form("%s/%s", path, fileName.Data()));
+      AddCut(Form("%s/%s", path, fileName.Data()), flagPla);
     }
+  }
+
+  // 원소 기호를 원자번호로 변환하는 맵
+  std::map<std::string, int> elementToZ = {{"h", 1},   {"he", 2},  {"li", 3},  {"be", 4},  {"b", 5},   {"c", 6},
+                                           {"n", 7},   {"o", 8},   {"f", 9},   {"ne", 10}, {"na", 11}, {"mg", 12},
+                                           {"al", 13}, {"si", 14}, {"p", 15},  {"s", 16},  {"cl", 17}, {"ar", 18},
+                                           {"k", 19},  {"ca", 20}, {"sc", 21}, {"ti", 22}, {"v", 23},  {"cr", 24},
+                                           {"mn", 25}, {"fe", 26}, {"co", 27}, {"ni", 28}, {"cu", 29}, {"zn", 30}};
+
+  // 이름에서 원소 기호와 원자량을 파싱하는 함수
+  auto parseIsotope = [&elementToZ](const std::string &name) -> std::pair<int, int> {
+    // 숫자가 시작하는 위치 찾기
+    size_t numStart = 0;
+    for (size_t i = 0; i < name.length(); ++i) {
+      if (std::isdigit(name[i])) {
+        numStart = i;
+        break;
+      }
+    }
+    if (numStart == 0) return {0, 0};  // 숫자를 찾지 못한 경우
+
+    std::string element = name.substr(0, numStart);
+    std::transform(element.begin(), element.end(), element.begin(), ::tolower);
+    int mass = 0;
+    try {
+      mass = std::stoi(name.substr(numStart));
+    } catch (...) {
+      return {0, 0};
+    }
+
+    auto it = elementToZ.find(element);
+    int Z = (it != elementToZ.end()) ? it->second : 0;
+    return {Z, mass};
+  };
+
+  // 임시 맵에 현재 cutgs 복사
+  std::map<std::string, TCutG *> tempCutgs = cutgs;
+  cutgs.clear();
+
+  // 정렬을 위한 벡터 생성 (원자번호, 원자량, 이름, TCutG*)
+  std::vector<std::tuple<int, int, std::string, TCutG *>> sortedCuts;
+  for (const auto &it : tempCutgs) {
+    auto [Z, A] = parseIsotope(it.first);
+    sortedCuts.push_back({Z, A, it.first, it.second});
+  }
+
+  // 정렬: 원자번호 우선, 그 다음 원자량
+  std::sort(sortedCuts.begin(), sortedCuts.end(), [](const auto &a, const auto &b) {
+    if (std::get<0>(a) != std::get<0>(b)) {
+      return std::get<0>(a) < std::get<0>(b);  // 원자번호 순서
+    }
+    return std::get<1>(a) < std::get<1>(b);  // 원자량 순서
+  });
+
+  // 정렬된 순서대로 cutgs에 다시 넣기 및 cutgsOrder에 순서 저장
+  for (const auto &cut : sortedCuts) {
+    std::string name = std::get<2>(cut);
+    cutgs[name] = std::get<3>(cut);
+    cutgsOrder.push_back(name);  // 정렬된 순서 저장
   }
 
   SetCutStyle(2, 2);
 
   ////////////////////////////////////////////////////////////
-  // add a cut for all isotopes
-  for (const auto &it : cutgs) {
-    if (!allcut.empty()) {
-      allcut += "||";
+  // add a cut for all isotopes (정렬된 순서 사용, cutgsOrder가 비어있으면 기존 방식 사용)
+  if (cutgsOrder.empty()) {
+    for (const auto &it : cutgs) {
+      if (!allcut.empty()) {
+        allcut += "||";
+      }
+      allcut += it.second->GetName();
     }
-    allcut += it.second->GetName();
+  } else {
+    for (const auto &name : cutgsOrder) {
+      if (!allcut.empty()) {
+        allcut += "||";
+      }
+      allcut += name;
+    }
   }
   ////////////////////////////////////////////////////////////
 }
@@ -749,7 +851,7 @@ TH2 *KOBRA::DrawPID0(const char *cut) {
   return static_cast<TH2 *>(gDirectory->Get("hpid0"));
 }
 
-TH2 *KOBRA::DrawPID(Int_t show, const char *cut) {
+TH2 *KOBRA::DrawPID(Int_t show, const char *cut, bool flagCor, bool flagPla, bool flagLargeArea) {
   if (show < 0 || show > 2) return nullptr;
   if (!tree) return nullptr;
 
@@ -761,9 +863,27 @@ TH2 *KOBRA::DrawPID(Int_t show, const char *cut) {
       cuts += Form("&& %s", cut);
     }
   }
-  auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
-  tree->Draw(Form("Z:aoq>>hpid_r%d(500,2.0,3.2,500,4,15)", runNs.front()), cuts.c_str(), "col");
+  TString xvar;
+  if (flagCor) {
+    if (flagPla) {
+      xvar = "aoqcorp";
+    } else {
+      xvar = "aoqcor";
+    }
+  } else {
+    if (flagPla) {
+      xvar = "aoqp";
+    } else {
+      xvar = "aoq";
+    }
+  }
 
+  auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
+  if (flagLargeArea) {
+    tree->Draw(Form("Z:%s>>hpid_r%d(1000,2.0,3.2,1000,4,20)", xvar.Data(), runNs.front()), cuts.c_str(), "col");
+  } else {
+    tree->Draw(Form("Z:%s>>hpid_r%d(1000,2.0,3.2,1000,4,15)", xvar.Data(), runNs.front()), cuts.c_str(), "col");
+  }
   std::string runstr;
   if (runNs.size() > 1)
     runstr = Form("Run %d-%d", runNs.front(), runNs.back());
@@ -886,6 +1006,17 @@ TH2 *KOBRA::DrawPIDC(Int_t show, const char *cut) {
   return h2;
 }
 
+TH2 *KOBRA::DrawCorPID(const char *title) {
+  if (!tree) return nullptr;
+
+  auto c1 = new TCanvas(Form("cpid_r%d", runNs.front()), "PID", 1600, 1200);
+  tree->Draw(Form("Zc:aoqcorpx>>hpid_r%d(1000,2.0,3.2,1000,4,20)", runNs.front()), 0, "col");
+
+  auto h2 = static_cast<TH2 *>(gDirectory->Get(Form("hpid_r%d", runNs.front())));
+  h2->SetTitle(Form("PID for %s;A/Q;Z", title));
+  return h2;
+}
+
 void KOBRA::SetZ(Int_t iz1, Double_t z1, Int_t iz2, Double_t z2) {
   Double_t a = static_cast<Double_t>(iz2 - iz1) / (z2 - z1);
   Double_t b = static_cast<Double_t>(iz1) - a * z1;
@@ -921,12 +1052,26 @@ void KOBRA::CountIsotopes(std::ostream &out, bool flagTitle) {
     ss << "   Counts of Isotopes " << std::endl;
     ss << "=========================================" << std::endl;
   }
-  for (const auto &it : cutgs) {
-    ss << " ";
-    ss << it.second->GetTitle();
-    ss << ": ";
-    ss << GetEntries(it.second->GetName());
-    ss << std::endl;
+  // 정렬된 순서로 출력 (cutgsOrder가 비어있으면 기존 방식 사용)
+  if (cutgsOrder.empty()) {
+    for (const auto &it : cutgs) {
+      ss << " ";
+      ss << it.second->GetTitle();
+      ss << ": ";
+      ss << GetEntries(it.second->GetName());
+      ss << std::endl;
+    }
+  } else {
+    for (const auto &name : cutgsOrder) {
+      auto it = cutgs.find(name);
+      if (it != cutgs.end()) {
+        ss << " ";
+        ss << it->second->GetTitle();
+        ss << ": ";
+        ss << GetEntries(it->second->GetName());
+        ss << std::endl;
+      }
+    }
   }
   if (flagTitle) {
     ss << "=========================================" << std::endl;
@@ -946,12 +1091,26 @@ void KOBRA::RateIsotopes(std::ostream &out, bool flagTitle) {
     ss << "   Rates of Isotopes " << std::endl;
     ss << "=========================================" << std::endl;
   }
-  for (const auto &it : cutgs) {
-    ss << " ";
-    ss << it.second->GetTitle();
-    ss << ": ";
-    ss << static_cast<double>(GetEntries(it.second->GetName()) / time);
-    ss << std::endl;
+  // 정렬된 순서로 출력 (cutgsOrder가 비어있으면 기존 방식 사용)
+  if (cutgsOrder.empty()) {
+    for (const auto &it : cutgs) {
+      ss << " ";
+      ss << it.second->GetTitle();
+      ss << ": ";
+      ss << static_cast<double>(GetEntries(it.second->GetName()) / time);
+      ss << std::endl;
+    }
+  } else {
+    for (const auto &name : cutgsOrder) {
+      auto it = cutgs.find(name);
+      if (it != cutgs.end()) {
+        ss << " ";
+        ss << it->second->GetTitle();
+        ss << ": ";
+        ss << static_cast<double>(GetEntries(it->second->GetName()) / time);
+        ss << std::endl;
+      }
+    }
   }
   if (flagTitle) {
     ss << "=========================================" << std::endl;
@@ -977,9 +1136,20 @@ void KOBRA::CountIsotopesRunByRun(std::ostream &out, bool flagTitle, bool flagHe
   }
   if (flagHeader) {
     ss << "Run | ";
-    for (const auto &it : cutgs) {
-      ss << it.second->GetTitle();
-      ss << " | ";
+    // 정렬된 순서로 헤더 출력 (cutgsOrder가 비어있으면 기존 방식 사용)
+    if (cutgsOrder.empty()) {
+      for (const auto &it : cutgs) {
+        ss << it.second->GetTitle();
+        ss << " | ";
+      }
+    } else {
+      for (const auto &name : cutgsOrder) {
+        auto it = cutgs.find(name);
+        if (it != cutgs.end()) {
+          ss << it->second->GetTitle();
+          ss << " | ";
+        }
+      }
     }
     ss << std::endl;
   }
@@ -989,8 +1159,18 @@ void KOBRA::CountIsotopesRunByRun(std::ostream &out, bool flagTitle, bool flagHe
     tree->Draw(Form(">>elist_%d", run), Form("runN==%d", run));
     auto elist = static_cast<TEventList *>(gDirectory->Get(Form("elist_%d", run)));
     tree->SetEventList(elist);
-    for (const auto &it : cutgs) {
-      ss << tree->GetEntries(it.second->GetName()) << " | ";
+    // 정렬된 순서로 데이터 출력 (헤더와 순서 일치, cutgsOrder가 비어있으면 기존 방식 사용)
+    if (cutgsOrder.empty()) {
+      for (const auto &it : cutgs) {
+        ss << tree->GetEntries(it.second->GetName()) << " | ";
+      }
+    } else {
+      for (const auto &name : cutgsOrder) {
+        auto it = cutgs.find(name);
+        if (it != cutgs.end()) {
+          ss << tree->GetEntries(it->second->GetName()) << " | ";
+        }
+      }
     }
     ss << std::endl;
     delete elist;
@@ -1056,6 +1236,58 @@ std::vector<TH1 *> KOBRA::DrawXDist(const char *cut, bool flagDraw) {
   if (flagDraw) c1->cd(4);
   tree->Draw(Form("f3uppac.x>>hf3ux_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
   hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf3ux_r%d_%s", runNs.front(), cutname.Data()))));
+
+  return hists;
+}
+
+std::vector<TH1 *> KOBRA::DrawXYDist(const char *cut, bool flagDraw) {
+  TString cutname;
+  if (cut)
+    cutname = cut;
+  else
+    cutname = "nocut";
+
+  TString drawopt;
+  TCanvas *c1;
+  if (flagDraw) {
+    c1 = new TCanvas(Form("cxd_r%d_%s", runNs.front(), cutname.Data()), "X Distribution", 1600, 800);
+    c1->Divide(4, 2);
+  } else
+    drawopt = "goff";
+
+  std::vector<TH1 *> hists;
+
+  if (flagDraw) c1->cd(1);
+  tree->Draw(Form("f1x>>hf1x_r%d_%s(100,-200,200)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf1x_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(2);
+  tree->Draw(Form("f2x>>hf2x_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf2x_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(3);
+  tree->Draw(Form("f3x>>hf3x_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf3x_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(4);
+  tree->Draw(Form("f3uppac.x>>hf3ux_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf3ux_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(5);
+  tree->Draw(Form("f1y>>hf1y_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf1y_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(6);
+  tree->Draw(Form("f2y>>hf2y_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf2y_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(7);
+  tree->Draw(Form("f3y>>hf3y_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf3y_r%d_%s", runNs.front(), cutname.Data()))));
+
+  if (flagDraw) c1->cd(8);
+  tree->Draw(Form("f3uppac.y>>hf3uy_r%d_%s(120,-60,60)", runNs.front(), cutname.Data()), cut, drawopt.Data());
+  hists.push_back(static_cast<TH1 *>(gDirectory->Get(Form("hf3uy_r%d_%s", runNs.front(), cutname.Data()))));
 
   return hists;
 }
@@ -1127,7 +1359,8 @@ TGraphErrors *KOBRA::GetMomDistGraph(Double_t center, const char *cut, Double_t 
   Double_t highLim = momUppLim * momDispersion + momCenter;
   ////////////////////////////////////////////////////////
   auto h1 = DrawMomDist(cut, true, false, nBin, lowLim, highLim);
-
+  // gPad->GetCanvas()->SaveAs(Form("figs/momdist_%.0f_%.0f_%s.png", momLowLim, momUppLim, cut));
+  //  getchar();
   TGraphErrors *gr = new TGraphErrors;
   gr->SetTitle(Form("Momentum Distribution of %s;Momentum Dispersion (%%);Rate per Mom. %% (pps/%%)", cut));
 
@@ -1158,17 +1391,22 @@ std::map<std::string, TGraphErrors *> KOBRA::GetMomDistGraphs(std::vector<std::s
   //
   // F2, F3 PPAC efficiency, Live time -> Corrected inversely (all they are less than 1)
   //
-  Double_t scale = 1. / (GetPPACEff(2) * GetPPACEff(3) * KOBRAScaler::GetInstance()->GetLiveTime(runNs));
-  //
-  // F0 ratio -> Corrected inversely (less than 1)
-  scale *= (1. / KOBRAF0::GetInstance()->GetRatio(runNs.front()));
-  //
+  Double_t scale = 1.;  // = 1. / (GetPPACEff(2) * GetPPACEff(3) * KOBRAScaler::GetInstance()->GetLiveTime(runNs));
+                        //
+                        // F0 ratio -> Corrected inversely (less than 1)
+                        // scale *= (1. / KOBRAF0::GetInstance()->GetRatio(runNs.front()));
+                        //
   // beam intensity -> corrected inversely (cross section is proportional to yield / beam intensity)
-  scale *= (1. / KOBRABeam::GetInstance()->GetMeanBeamIntensity(runNs.front()));
+  scale *= (1. / KOBRABeam::GetInstance()->GetMeanACCTIntensity(runNs.front()));
+  // scale *= (1. / KOBRABeam::GetInstance()->GetMeanLEBTIntensity(runNs.front()));
+  scale *= (1. / KOBRAF0::GetInstance()->GetRatio(runNs.front()));
+  scale *= (1. / KOBRAScaler::GetInstance()->GetLiveTime(runNs));
+  scale *= (1. / GetPPACEff(2));
+  scale *= (1. / GetPPACEff(3));
   //
-  // Others
-  //  Time: already corrected in DrawMomDist (if using F1) or GetMomDistGraph (if not using F1)
-  //  F1 PPAC efficiency: corrected in GetMomDistGraph (if using F1), no correction is necessary if not using F1
+  //  Others
+  //   Time: already corrected in DrawMomDist (if using F1) or GetMomDistGraph (if not using F1)
+  //   F1 PPAC efficiency: corrected in GetMomDistGraph (if using F1), no correction is necessary if not using F1
   ////////////////////////////////////////////////////////
   // more scale factor
   const Double_t momDispersion = 41;  // mm / %
@@ -1205,6 +1443,7 @@ std::map<std::string, TGraphErrors *> KOBRA::GetMomDistGraphs(std::vector<std::s
     if (flagUseF1)
       gr = GetMomDistGraph(center, it.c_str(), momBinSize, momLowLim, momUppLim,
                            scale / GetPPACEff(1, NULL, true, it, bias));
+    // scale);
     else
       gr = GetMomDistGraph(center, it.c_str(), momBinSize, momLowLim, momUppLim, scale, flagUseF1);
     momgraphs[it] = gr;
@@ -1285,6 +1524,9 @@ void KOBRA::DrawPPACTimings(bool flagLog, const char *cut, bool flagUseF1X) {
 
   c1->Divide(nquants, nppacs);
 
+  std::vector<double> means;
+  std::vector<double> sigmas;
+
   const char *ppacs[nppacs] = {"f1uppacx", "f2dppac", "f3uppac", "f3dppac"};
   if (flagUseF1X) {
     ppacs[0] = "f1uppacx";
@@ -1303,6 +1545,23 @@ void KOBRA::DrawPPACTimings(bool flagLog, const char *cut, bool flagUseF1X) {
       auto h1 = static_cast<TH1 *>(gDirectory->Get(Form("h%s_%s_r%d", ppacs[i], quants[j], runNs.front())));
       h1->GetXaxis()->SetRange(h1->FindFirstBinAbove(0), h1->FindLastBinAbove(0));
       h1->Draw();
+
+      h1->Fit("gaus", "w");
+      TF1 *f1 = h1->GetFunction("gaus");
+      double mean = f1->GetParameter(1);
+      double sigma = f1->GetParameter(2);
+      means.push_back(mean);
+      sigmas.push_back(sigma);
+    }
+  }
+
+  for (Int_t i = 0; i < nppacs; i++) {
+    for (Int_t j = 0; j < nquants; j++) {
+      std::cout << Form("PPAC: %s, Quant: %s, Mean: %f, Sigma: %f, +5sigma: %f, -5sigma: %f", ppacs[i], quants[j],
+                        means[i * nquants + j], sigmas[i * nquants + j],
+                        means[i * nquants + j] + 5 * sigmas[i * nquants + j],
+                        means[i * nquants + j] - 5 * sigmas[i * nquants + j])
+                << std::endl;
     }
   }
 }
@@ -1713,7 +1972,11 @@ void KOBRA::SetCutStyle(Int_t color, Int_t width, Int_t style) {
 
 Double_t KOBRA::GetPPACEff(Int_t id, const char *cut, bool flagTable, std::string iso, int bias) {
   if (flagTable) {
-    auto eff = effF1UPPACX[iso][bias];
+    std::string isoElement;
+    for (char c : iso) {
+      if (!std::isdigit(c)) isoElement += std::tolower(c);
+    }
+    auto eff = effF1UPPACX[isoElement][bias];
     if (eff > 0) return eff;
   }
   TString ccut = "de > 0";
@@ -2239,8 +2502,7 @@ void KOBRA::MomDistAnalysis(std::string iso) {
 
   std::vector<std::string> cutiso;
   std::vector<std::string> cutiso_o20 = {"f21", "f22", "f23", "o19", "o20", "o21", "n17", "n18", "n19"};
-  std::vector<std::string> cutiso_ne24 = {"o20",  "o21",  "f21",  "f22",  "f23",  "ne23",
-                                          "ne24", "ne25", "na25", "na26", "mg27", "mg28"};
+  std::vector<std::string> cutiso_ne24 = {"o20", "o21", "f21", "f22", "f23", "ne23", "ne24", "na26"};
 
   if (iso == "o20") {
     cutiso = cutiso_o20;
@@ -2477,4 +2739,25 @@ void KOBRA::DrawLength(const char *bname, const char *cut, bool flag01, int nbin
   h->SetTitle(Form("Length of %s;Length;Count", bname_str.c_str()));
   h->SetMarkerSize(2.0);  // 폰트 사이즈 키우기 (숫자 크기 증가)
   h->Draw("hist,text0");
+}
+
+void KOBRA::F3SSDPedestal(const char *cut, int low, int high) {
+  TCanvas *c1 = new TCanvas("c1", "F3SSD Pedestal", 1200, 900);
+  c1->Divide(4, 4);
+  tree->Draw("f3ssd.adc:f3ssd.ch>>hf3ped(16,0,16,200,0,200)", cut, "goff");
+  TH2 *h2 = static_cast<TH2 *>(gDirectory->Get("hf3ped"));
+
+  std::vector<double> pedestals;
+  for (int i = 1; i <= 16; i++) {
+    c1->cd(i);
+    auto h = h2->ProjectionY(Form("hf3ped_%d", i), i, i);
+    h->SetTitle(Form("F3SSD Pedestal Channel %d", i));
+    h->Fit("gaus");
+    h->Draw();
+    pedestals.push_back(h->GetFunction("gaus")->GetParameter(1));
+  }
+  for (const auto &it : pedestals) {
+    std::cout << it << " ";
+  }
+  std::cout << std::endl;
 }
